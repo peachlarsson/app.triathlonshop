@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="peach.triathlonshop.app.client/peach.triathlonshop.app.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="Peach.TriathlonShop.App.Server/Peach.TriathlonShop.App.Server.csproj" />
+  <Project Path="Peach.TriathlonShop.Database/Peach.TriathlonShop.Database.csproj" />
+</Solution>
