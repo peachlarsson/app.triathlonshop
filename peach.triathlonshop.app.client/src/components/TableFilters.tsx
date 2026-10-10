@@ -7,13 +7,8 @@ export interface SortOption {
 
 export interface TableFiltersProps {
     searchQuery: string;
-    sortBy: string;
-    sortOrder: string;
-    sortOptions: SortOption[];
     placeholder: string;
     onSearchChange: (query: string) => void;
-    onSortByChange: (sortBy: string) => void;
-    onSortOrderChange: (sortOrder: string) => void;
     tableSize: number;
     onTableSizeChange: (size: number) => void;
     tableSizeOptions?: number[];
@@ -22,13 +17,8 @@ export interface TableFiltersProps {
 
 export function TableFilters({
     searchQuery,
-    sortBy,
-    sortOrder,
-    sortOptions,
     placeholder,
     onSearchChange,
-    onSortByChange,
-    onSortOrderChange,
     tableSize,
     onTableSizeChange,
     tableSizeOptions = [10, 50, 100, 500],
@@ -45,31 +35,6 @@ export function TableFilters({
                     onChange={(e) => onSearchChange(e.target.value)}
                     sx={{ flex: 1 }}
                 />
-                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
-                    <InputLabel>Sort By</InputLabel>
-                    <Select
-                        value={sortBy}
-                        onChange={(e) => onSortByChange(e.target.value)}
-                        label="Sort By"
-                    >
-                        {sortOptions.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
-                    <InputLabel>Order</InputLabel>
-                    <Select
-                        value={sortOrder}
-                        onChange={(e) => onSortOrderChange(e.target.value)}
-                        label="Order"
-                    >
-                        <MenuItem value="Asc">Ascending</MenuItem>
-                        <MenuItem value="Desc">Descending</MenuItem>
-                    </Select>
-                </FormControl>
                 <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
                     <InputLabel>Rows</InputLabel>
                     <Select
