@@ -62,6 +62,12 @@ namespace Peach.TriathlonShop.App.Server.Controllers
                 SortKey.RowPrice => sortOrder == SortDirection.Asc
                     ? query.OrderBy(q => q.RowPrice)
                     : query.OrderByDescending(q => q.RowPrice),
+                SortKey.CustomerId => sortOrder == SortDirection.Asc
+                    ? query.OrderBy(q => q.CustomerId)
+                    : query.OrderByDescending(q => q.CustomerId),
+                SortKey.CustomerName => sortOrder == SortDirection.Asc
+                    ? query.OrderBy(q => q.CustomerName)
+                    : query.OrderByDescending(q => q.CustomerName),
                 SortKey.CreatedAt => sortOrder == SortDirection.Asc
                     ? query.OrderBy(q => q.CreatedAt)
                     : query.OrderByDescending(q => q.CreatedAt),

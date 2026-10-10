@@ -8,6 +8,8 @@ public enum SortKey
     UnitPrice,
     Quantity,
     RowPrice,
+    CustomerId,
+    CustomerName,
     CreatedAt,
     UpdatedAt,
 }
