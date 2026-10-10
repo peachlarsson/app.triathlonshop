@@ -23,7 +23,10 @@ namespace Peach.TriathlonShop.App.Server.Controllers
                     ArticleId = or.ArticleId,
                     ArticleName = or.Article.Name,
                     UnitPrice = or.Article.UnitPrice,
-                    Quantity = or.Quantity
+                    Quantity = or.Quantity,
+                    RowPrice = or.RowPrice,
+                    CustomerId = or.Order.CustomerId,
+                    CustomerName = or.Order.Customer.Name ?? "MissingName",
                 })
                 .ToListAsync();
         }

@@ -12,4 +12,7 @@ public class OrderRowDto
     public required string ArticleName { get; set; }
     public required decimal UnitPrice { get; set; }
     public required int Quantity { get; set; }
+    public required decimal RowPrice { get; set; }
+    public required long CustomerId { get; set; }
+    public required string CustomerName { get; set; }
 }

@@ -11,6 +11,7 @@ import {
     TableContainer,
     TableHead,
     TableRow,
+    TextField,
     Typography
 } from '@mui/material';
 
@@ -44,13 +45,20 @@ interface OrderRow {
     articleName: string;
     unitPrice: number;
     quantity: number;
+    rowPrice: number;
+    customerId: number;
+    customerName: string;
 }
 
 function App() {
     const [articles, setArticles] = useState<Article[]>();
+    const [articleSearchQuery, setArticleSearchQuery] = useState<string>('');
+
     const [customers, setCustomers] = useState<Customer[]>();
     const [orders, setOrders] = useState<Order[]>();
+
     const [orderRows, setOrderRows] = useState<OrderRow[]>();
+    const [orderRowSearchQuery, setOrderRowSearchQuery] = useState<string>('');
 
     useEffect(() => {
         getArticles();
@@ -72,9 +80,13 @@ function App() {
         </Typography>
     );
 
+    const filteredArticles = articles?.filter(article =>
+        article.name.toLowerCase().includes(articleSearchQuery.toLowerCase())
+    );
+
     const articleContents = articles === undefined
         ? renderLoading('Loading articles...')
-        : articles.length === 0
+        : filteredArticles?.length === 0
             ? renderNoData('No articles found.')
             : (
                 <TableContainer component={Paper} variant="outlined">
@@ -87,7 +99,7 @@ function App() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {articles.map((article) => (
+                            {filteredArticles?.map((article) => (
                                 <TableRow key={article.id} hover>
                                     <TableCell>{article.id}</TableCell>
                                     <TableCell>{article.name}</TableCell>
@@ -157,50 +169,85 @@ function App() {
                 </TableContainer>
             );
 
+    const filteredOrderRows = orderRows?.filter(orderRow =>
+        orderRow.articleName.toLowerCase().includes(orderRowSearchQuery.toLowerCase())
+    );
+
     const orderRowContents = orderRows === undefined
         ? renderLoading('Loading order rows...')
-        : orderRows.length === 0
+        : filteredOrderRows.length === 0
             ? renderNoData('No order rows found.')
-            : (
-                <TableContainer component={Paper} variant="outlined">
-                    <Table size="small" aria-labelledby="orderRowsTableLabel">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Id</TableCell>
-                                <TableCell>OrderId</TableCell>
-                                <TableCell>OrderNumber</TableCell>
-                                <TableCell>LineNumber</TableCell>
-                                <TableCell>ArticleId</TableCell>
-                                <TableCell>ArticleName</TableCell>
-                                <TableCell align="right">UnitPrice</TableCell>
-                                <TableCell align="right">Quantity</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {orderRows.map((orderRow) => (
-                                <TableRow key={orderRow.id} hover>
-                                    <TableCell>{orderRow.id}</TableCell>
-                                    <TableCell>{orderRow.orderId}</TableCell>
-                                    <TableCell>{orderRow.orderNumber}</TableCell>
-                                    <TableCell>{orderRow.lineNumber}</TableCell>
-                                    <TableCell>{orderRow.articleId}</TableCell>
-                                    <TableCell>{orderRow.articleName}</TableCell>
-                                    <TableCell align="right">{orderRow.unitPrice.toFixed(2)}</TableCell>
-                                    <TableCell align="right">{orderRow.quantity}</TableCell>
+            : orderRows.length === 0
+                ? renderNoData('No order rows found.')
+                : (
+                    <TableContainer component={Paper} variant="outlined">
+                        <Table size="small" aria-labelledby="orderRowsTableLabel">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Id</TableCell>
+                                    <TableCell>OrderId</TableCell>
+                                    <TableCell>OrderNumber</TableCell>
+                                    <TableCell>LineNumber</TableCell>
+                                    <TableCell>ArticleId</TableCell>
+                                    <TableCell>ArticleName</TableCell>
+                                    <TableCell>UnitPrice</TableCell>
+                                    <TableCell>Quantity</TableCell>
+                                    <TableCell>RowPrice</TableCell>
+                                    <TableCell>CustomerId</TableCell>
+                                    <TableCell>CustomerName</TableCell>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            );
+                            </TableHead>
+                            <TableBody>
+                                {filteredOrderRows?.map((orderRow) => (
+                                    <TableRow key={orderRow.id} hover>
+                                        <TableCell>{orderRow.id}</TableCell>
+                                        <TableCell>{orderRow.orderId}</TableCell>
+                                        <TableCell>{orderRow.orderNumber}</TableCell>
+                                        <TableCell>{orderRow.lineNumber}</TableCell>
+                                        <TableCell>{orderRow.articleId}</TableCell>
+                                        <TableCell>{orderRow.articleName}</TableCell>
+                                        <TableCell>{orderRow.unitPrice.toFixed(2)}</TableCell>
+                                        <TableCell>{orderRow.quantity}</TableCell>
+                                        <TableCell>{orderRow.rowPrice.toFixed(2)}</TableCell>
+                                        <TableCell>{orderRow.customerId}</TableCell>
+                                        <TableCell>{orderRow.customerName}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                );
 
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
             <Stack spacing={4}>
                 <Box>
+                    <Typography id="orderRowsTableLabel" variant="h4" gutterBottom>
+                        Order Rows
+                    </Typography>
+                    <TextField
+                        placeholder="Artikelnamn"
+                        variant="outlined"
+                        size="small"
+                        value={orderRowSearchQuery}
+                        onChange={(e) => setOrderRowSearchQuery(e.target.value)}
+                        sx={{ mb: 2 }}
+                    />
+                    {orderRowContents}
+                </Box>
+
+                <Box>
                     <Typography id="articlesTableLabel" variant="h4" gutterBottom>
                         Articles
                     </Typography>
+                    <TextField
+                        placeholder="Artikelnamn"
+                        variant="outlined"
+                        size="small"
+                        value={articleSearchQuery}
+                        onChange={(e) => setArticleSearchQuery(e.target.value)}
+                        sx={{ mb: 2 }}
+                    />
                     {articleContents}
                 </Box>
 
@@ -216,13 +263,6 @@ function App() {
                         Orders
                     </Typography>
                     {orderContents}
-                </Box>
-
-                <Box>
-                    <Typography id="orderRowsTableLabel" variant="h4" gutterBottom>
-                        Order Rows
-                    </Typography>
-                    {orderRowContents}
                 </Box>
             </Stack>
         </Container>
