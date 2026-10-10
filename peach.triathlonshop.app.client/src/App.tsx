@@ -14,7 +14,7 @@ import {
     Typography
 } from '@mui/material';
 
-interface Product {
+interface Article {
     id: number;
     name: string;
     unitPrice: number;
@@ -40,20 +40,20 @@ interface OrderRow {
     orderId: number;
     orderNumber: string;
     lineNumber: number;
-    productId: number;
-    productName: string;
+    articleId: number;
+    articleName: string;
     unitPrice: number;
     quantity: number;
 }
 
 function App() {
-    const [products, setProducts] = useState<Product[]>();
+    const [articles, setArticles] = useState<Article[]>();
     const [customers, setCustomers] = useState<Customer[]>();
     const [orders, setOrders] = useState<Order[]>();
     const [orderRows, setOrderRows] = useState<OrderRow[]>();
 
     useEffect(() => {
-        getProducts();
+        getArticles();
         getCustomers();
         getOrders();
         getOrderRows();
@@ -72,13 +72,13 @@ function App() {
         </Typography>
     );
 
-    const productContents = products === undefined
-        ? renderLoading('Loading products...')
-        : products.length === 0
-            ? renderNoData('No products found.')
+    const articleContents = articles === undefined
+        ? renderLoading('Loading articles...')
+        : articles.length === 0
+            ? renderNoData('No articles found.')
             : (
                 <TableContainer component={Paper} variant="outlined">
-                    <Table size="small" aria-labelledby="productsTableLabel">
+                    <Table size="small" aria-labelledby="articlesTableLabel">
                         <TableHead>
                             <TableRow>
                                 <TableCell>Id</TableCell>
@@ -87,11 +87,11 @@ function App() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {products.map((product) => (
-                                <TableRow key={product.id} hover>
-                                    <TableCell>{product.id}</TableCell>
-                                    <TableCell>{product.name}</TableCell>
-                                    <TableCell align="right">{product.unitPrice.toFixed(2)}</TableCell>
+                            {articles.map((article) => (
+                                <TableRow key={article.id} hover>
+                                    <TableCell>{article.id}</TableCell>
+                                    <TableCell>{article.name}</TableCell>
+                                    <TableCell align="right">{article.unitPrice.toFixed(2)}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -170,8 +170,8 @@ function App() {
                                 <TableCell>OrderId</TableCell>
                                 <TableCell>OrderNumber</TableCell>
                                 <TableCell>LineNumber</TableCell>
-                                <TableCell>ProductId</TableCell>
-                                <TableCell>ProductName</TableCell>
+                                <TableCell>ArticleId</TableCell>
+                                <TableCell>ArticleName</TableCell>
                                 <TableCell align="right">UnitPrice</TableCell>
                                 <TableCell align="right">Quantity</TableCell>
                             </TableRow>
@@ -183,8 +183,8 @@ function App() {
                                     <TableCell>{orderRow.orderId}</TableCell>
                                     <TableCell>{orderRow.orderNumber}</TableCell>
                                     <TableCell>{orderRow.lineNumber}</TableCell>
-                                    <TableCell>{orderRow.productId}</TableCell>
-                                    <TableCell>{orderRow.productName}</TableCell>
+                                    <TableCell>{orderRow.articleId}</TableCell>
+                                    <TableCell>{orderRow.articleName}</TableCell>
                                     <TableCell align="right">{orderRow.unitPrice.toFixed(2)}</TableCell>
                                     <TableCell align="right">{orderRow.quantity}</TableCell>
                                 </TableRow>
@@ -198,10 +198,10 @@ function App() {
         <Container maxWidth="lg" sx={{ py: 4 }}>
             <Stack spacing={4}>
                 <Box>
-                    <Typography id="productsTableLabel" variant="h4" gutterBottom>
-                        Products
+                    <Typography id="articlesTableLabel" variant="h4" gutterBottom>
+                        Articles
                     </Typography>
-                    {productContents}
+                    {articleContents}
                 </Box>
 
                 <Box>
@@ -228,14 +228,14 @@ function App() {
         </Container>
     );
 
-    async function getProducts() {
-        const response = await fetch('/product');
+    async function getArticles() {
+        const response = await fetch('/article');
 
         if (response.ok) {
-            const data: Product[] = await response.json();
-            setProducts(data);
+            const data: Article[] = await response.json();
+            setArticles(data);
         } else {
-            console.error('Failed to fetch products:', response.status, response.statusText);
+            console.error('Failed to fetch articles:', response.status, response.statusText);
         }
     }
 

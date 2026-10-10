@@ -7,12 +7,12 @@ namespace Peach.TriathlonShop.App.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ProductController(TriathlonShopDbContext context) : ControllerBase
+    public class ArticleController(TriathlonShopDbContext context) : ControllerBase
     {
         [HttpGet]
-        public async Task<List<Product>> Get()
+        public async Task<List<Article>> Get()
         {
-            return await context.Products
+            return await context.Articles
                 .ToListAsync();
         }
     }
