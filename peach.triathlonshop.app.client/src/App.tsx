@@ -1,5 +1,18 @@
 import { useEffect, useState } from 'react';
-import './App.css';
+import {
+    Box,
+    CircularProgress,
+    Container,
+    Paper,
+    Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography
+} from '@mui/material';
 
 interface Product {
     id: number;
@@ -46,188 +59,215 @@ function App() {
         getOrderRows();
     }, []);
 
+    const renderLoading = (text: string) => (
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <CircularProgress size={18} />
+            <Typography variant="body2">{text}</Typography>
+        </Stack>
+    );
+
+    const renderNoData = (text: string) => (
+        <Typography variant="body2" color="text.secondary">
+            {text}
+        </Typography>
+    );
+
     const productContents = products === undefined
-        ? <p><em>Loading products...</em></p>
+        ? renderLoading('Loading products...')
         : products.length === 0
-            ? <p><em>No products found.</em></p>
-            : <table className="table table-striped" aria-labelledby="productsTableLabel">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {products.map(product =>
-                        <tr key={product.id}>
-                            <td>{product.id}</td>
-                            <td>{product.name}</td>
-                            <td>{product.unitPrice.toFixed(2)}</td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>;
+            ? renderNoData('No products found.')
+            : (
+                <TableContainer component={Paper} variant="outlined">
+                    <Table size="small" aria-labelledby="productsTableLabel">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Id</TableCell>
+                                <TableCell>Name</TableCell>
+                                <TableCell align="right">Price</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {products.map((product) => (
+                                <TableRow key={product.id} hover>
+                                    <TableCell>{product.id}</TableCell>
+                                    <TableCell>{product.name}</TableCell>
+                                    <TableCell align="right">{product.unitPrice.toFixed(2)}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            );
 
     const customerContents = customers === undefined
-        ? <p><em>Loading customers...</em></p>
+        ? renderLoading('Loading customers...')
         : customers.length === 0
-            ? <p><em>No customers found.</em></p>
-            : <table className="table table-striped" aria-labelledby="customersTableLabel">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>GuestCustomer</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {customers.map(customer =>
-                        <tr key={customer.id}>
-                            <td>{customer.id}</td>
-                            <td>{customer.isGuest ? 'Yes' : 'No'}</td>
-                            <td>{customer.name}</td>
-                            <td>{customer.email}</td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>;
+            ? renderNoData('No customers found.')
+            : (
+                <TableContainer component={Paper} variant="outlined">
+                    <Table size="small" aria-labelledby="customersTableLabel">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Id</TableCell>
+                                <TableCell>Guest Customer</TableCell>
+                                <TableCell>Name</TableCell>
+                                <TableCell>Email</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {customers.map((customer) => (
+                                <TableRow key={customer.id} hover>
+                                    <TableCell>{customer.id}</TableCell>
+                                    <TableCell>{customer.isGuest ? 'Yes' : 'No'}</TableCell>
+                                    <TableCell>{customer.name}</TableCell>
+                                    <TableCell>{customer.email}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            );
 
     const orderContents = orders === undefined
-        ? <p><em>Loading orders...</em></p>
+        ? renderLoading('Loading orders...')
         : orders.length === 0
-            ? <p><em>No orders found.</em></p>
-            : <table className="table table-striped" aria-labelledby="ordersTableLabel">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>CustomerId</th>
-                        <th>OrderNumber</th>
-                        <th>TotalPrice</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {orders.map(order =>
-                        <tr key={order.id}>
-                            <td>{order.id}</td>
-                            <td>{order.customerId}</td>
-                            <td>{order.orderNumber}</td>
-                            <td>{order.totalPrice.toFixed(2)}</td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>;
+            ? renderNoData('No orders found.')
+            : (
+                <TableContainer component={Paper} variant="outlined">
+                    <Table size="small" aria-labelledby="ordersTableLabel">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Id</TableCell>
+                                <TableCell>CustomerId</TableCell>
+                                <TableCell>OrderNumber</TableCell>
+                                <TableCell align="right">TotalPrice</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {orders.map((order) => (
+                                <TableRow key={order.id} hover>
+                                    <TableCell>{order.id}</TableCell>
+                                    <TableCell>{order.customerId}</TableCell>
+                                    <TableCell>{order.orderNumber}</TableCell>
+                                    <TableCell align="right">{order.totalPrice.toFixed(2)}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            );
 
     const orderRowContents = orderRows === undefined
-        ? <p><em>Loading order rows...</em></p>
+        ? renderLoading('Loading order rows...')
         : orderRows.length === 0
-            ? <p><em>No order rows found.</em></p>
-            : <table className="table table-striped" aria-labelledby="orderRowsTableLabel">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>OrderId</th>
-                        <th>OrderNumber</th>
-                        <th>LineNumber</th>
-                        <th>ProductId</th>
-                        <th>ProductName</th>
-                        <th>UnitPrice</th>
-                        <th>Quantity</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {orderRows.map(orderRow =>
-                        <tr key={orderRow.id}>
-                            <td>{orderRow.id}</td>
-                            <td>{orderRow.orderId}</td>
-                            <td>{orderRow.orderNumber}</td>
-                            <td>{orderRow.lineNumber}</td>
-                            <td>{orderRow.productId}</td>
-                            <td>{orderRow.productName}</td>
-                            <td>{orderRow.unitPrice.toFixed(2)}</td>
-                            <td>{orderRow.quantity}</td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>;
+            ? renderNoData('No order rows found.')
+            : (
+                <TableContainer component={Paper} variant="outlined">
+                    <Table size="small" aria-labelledby="orderRowsTableLabel">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Id</TableCell>
+                                <TableCell>OrderId</TableCell>
+                                <TableCell>OrderNumber</TableCell>
+                                <TableCell>LineNumber</TableCell>
+                                <TableCell>ProductId</TableCell>
+                                <TableCell>ProductName</TableCell>
+                                <TableCell align="right">UnitPrice</TableCell>
+                                <TableCell align="right">Quantity</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {orderRows.map((orderRow) => (
+                                <TableRow key={orderRow.id} hover>
+                                    <TableCell>{orderRow.id}</TableCell>
+                                    <TableCell>{orderRow.orderId}</TableCell>
+                                    <TableCell>{orderRow.orderNumber}</TableCell>
+                                    <TableCell>{orderRow.lineNumber}</TableCell>
+                                    <TableCell>{orderRow.productId}</TableCell>
+                                    <TableCell>{orderRow.productName}</TableCell>
+                                    <TableCell align="right">{orderRow.unitPrice.toFixed(2)}</TableCell>
+                                    <TableCell align="right">{orderRow.quantity}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            );
 
     return (
-        <div>
-            <h1 id="productsTableLabel">Products</h1>
-            <p>This component demonstrates fetching product data from the server.</p>
-            {productContents}
+        <Container maxWidth="lg" sx={{ py: 4 }}>
+            <Stack spacing={4}>
+                <Box>
+                    <Typography id="productsTableLabel" variant="h4" gutterBottom>
+                        Products
+                    </Typography>
+                    {productContents}
+                </Box>
 
-            <h1 id="customersTableLabel">Customers</h1>
-            <p>This component demonstrates fetching customer data from the server.</p>
-            {customerContents}
+                <Box>
+                    <Typography id="customersTableLabel" variant="h4" gutterBottom>
+                        Customers
+                    </Typography>
+                    {customerContents}
+                </Box>
 
-            <h1 id="ordersTableLabel">Orders</h1>
-            <p>This component demonstrates fetching order data from the server.</p>
-            {orderContents}
+                <Box>
+                    <Typography id="ordersTableLabel" variant="h4" gutterBottom>
+                        Orders
+                    </Typography>
+                    {orderContents}
+                </Box>
 
-            <h1 id="orderRowsTableLabel">Order Rows</h1>
-            <p>This component demonstrates fetching order row data from the server.</p>
-            {orderRowContents}
-        </div>
+                <Box>
+                    <Typography id="orderRowsTableLabel" variant="h4" gutterBottom>
+                        Order Rows
+                    </Typography>
+                    {orderRowContents}
+                </Box>
+            </Stack>
+        </Container>
     );
 
     async function getProducts() {
+        const response = await fetch('/product');
 
-        const response = await fetch('product');
-
-        if (response.ok)
-        {
+        if (response.ok) {
             const data: Product[] = await response.json();
             setProducts(data);
-        }
-        else
-        {
+        } else {
             console.error('Failed to fetch products:', response.status, response.statusText);
         }
     }
 
     async function getCustomers() {
+        const response = await fetch('/customer');
 
-        const response = await fetch('customer');
-
-        if (response.ok)
-        {
+        if (response.ok) {
             const data: Customer[] = await response.json();
             setCustomers(data);
-        }
-        else
-        {
+        } else {
             console.error('Failed to fetch customers:', response.status, response.statusText);
         }
     }
 
     async function getOrders() {
+        const response = await fetch('/order');
 
-        const response = await fetch('order');
-
-        if (response.ok)
-        {
+        if (response.ok) {
             const data: Order[] = await response.json();
             setOrders(data);
-        }
-        else
-        {
+        } else {
             console.error('Failed to fetch orders:', response.status, response.statusText);
         }
     }
 
     async function getOrderRows() {
+        const response = await fetch('/orderrow');
 
-        const response = await fetch('orderRow');
-
-        if (response.ok)
-        {
+        if (response.ok) {
             const data: OrderRow[] = await response.json();
             setOrderRows(data);
-        }
-        else
-        {
+        } else {
             console.error('Failed to fetch order rows:', response.status, response.statusText);
         }
     }
