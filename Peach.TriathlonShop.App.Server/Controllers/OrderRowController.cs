@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Peach.TriathlonShop.App.Server.Controllers.Enums.Common;
+using Peach.TriathlonShop.App.Server.Controllers.Enums.OrderRow;
 using Peach.TriathlonShop.App.Server.Controllers.Models;
+using Peach.TriathlonShop.App.Server.Models;
+using Peach.TriathlonShop.App.Server.Utilities;
 using Peach.TriathlonShop.Database;
-using Peach.TriathlonShop.Database.Models;
 
 namespace Peach.TriathlonShop.App.Server.Controllers
 {
@@ -11,24 +14,68 @@ namespace Peach.TriathlonShop.App.Server.Controllers
     public class OrderRowController(TriathlonShopDbContext context) : ControllerBase
     {
         [HttpGet]
-        public async Task<List<OrderRowDto>> Get()
+        public async Task<ActionResult<PaginatedResponse<OrderRowDto>>> Get(
+            SortKey sortBy = SortKey.Id,
+            SortDirection sortOrder = SortDirection.Asc,
+            int pageNumber = 1,
+            int pageSize = 100,
+            string? articleName = null)
         {
-            return await context.OrderRows
-                .Select(or => new OrderRowDto
+            var query = context.OrderRows
+                .Select(q => new OrderRowDto
                 {
-                    Id = or.Id,
-                    LineNumber = or.LineNumber,
-                    OrderId = or.OrderId,
-                    OrderNumber = or.Order.OrderNumber,
-                    ArticleId = or.ArticleId,
-                    ArticleName = or.Article.Name,
-                    UnitPrice = or.Article.UnitPrice,
-                    Quantity = or.Quantity,
-                    RowPrice = or.RowPrice,
-                    CustomerId = or.Order.CustomerId,
-                    CustomerName = or.Order.Customer.Name ?? "MissingName",
+                    Id = q.Id,
+                    OrderId = q.OrderId,
+                    OrderNumber = q.Order.OrderNumber,
+                    LineNumber = q.LineNumber,
+                    ArticleId = q.ArticleId,
+                    ArticleName = q.Article.Name,
+                    UnitPrice = q.Article.UnitPrice,
+                    Quantity = q.Quantity,
+                    RowPrice = q.RowPrice,
+                    CustomerId = q.Order.CustomerId,
+                    CustomerName = q.Order.Customer.Name ?? "MissingName",
+                    CreatedAt = q.CreatedAt,
+                    UpdatedAt = q.UpdatedAt,
                 })
-                .ToListAsync();
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(articleName))
+            {
+                query = query.Where(q => q.ArticleName.ToLower().Contains(articleName.ToLower()));
+            }
+
+            query = sortBy switch
+            {
+                SortKey.OrderNumber => sortOrder == SortDirection.Asc
+                    ? query.OrderBy(q => q.OrderNumber)
+                    : query.OrderByDescending(q => q.OrderNumber),
+                SortKey.ArticleName => sortOrder == SortDirection.Asc
+                    ? query.OrderBy(q => q.ArticleName)
+                    : query.OrderByDescending(q => q.ArticleName),
+                SortKey.UnitPrice => sortOrder == SortDirection.Asc
+                    ? query.OrderBy(q => q.UnitPrice)
+                    : query.OrderByDescending(q => q.UnitPrice),
+                SortKey.Quantity => sortOrder == SortDirection.Asc
+                    ? query.OrderBy(q => q.Quantity)
+                    : query.OrderByDescending(q => q.Quantity),
+                SortKey.RowPrice => sortOrder == SortDirection.Asc
+                    ? query.OrderBy(q => q.RowPrice)
+                    : query.OrderByDescending(q => q.RowPrice),
+                SortKey.CreatedAt => sortOrder == SortDirection.Asc
+                    ? query.OrderBy(q => q.CreatedAt)
+                    : query.OrderByDescending(q => q.CreatedAt),
+                SortKey.UpdatedAt => sortOrder == SortDirection.Asc
+                    ? query.OrderBy(q => q.UpdatedAt)
+                    : query.OrderByDescending(q => q.UpdatedAt),
+                _ => sortOrder == SortDirection.Asc
+                    ? query.OrderBy(q => q.Id)
+                    : query.OrderByDescending(q => q.Id)
+            };
+
+            var paginatedResult = await PaginationHelper.PaginateAsync(query, pageNumber, pageSize);
+            return Ok(paginatedResult);
         }
     }
 }
+

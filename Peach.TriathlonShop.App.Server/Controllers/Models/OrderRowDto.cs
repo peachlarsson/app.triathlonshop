@@ -15,4 +15,6 @@ public class OrderRowDto
     public required decimal RowPrice { get; set; }
     public required long CustomerId { get; set; }
     public required string CustomerName { get; set; }
+    public required DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset? UpdatedAt { get; set; }
 }
