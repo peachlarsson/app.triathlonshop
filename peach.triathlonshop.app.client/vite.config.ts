@@ -47,7 +47,7 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '^/product': {
+            '^/article': {
                 target,
                 secure: false
             },

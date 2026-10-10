@@ -20,9 +20,9 @@ namespace Peach.TriathlonShop.App.Server.Controllers
                     LineNumber = or.LineNumber,
                     OrderId = or.OrderId,
                     OrderNumber = or.Order.OrderNumber,
-                    ProductId = or.ProductId,
-                    ProductName = or.Product.Name,
-                    UnitPrice = or.Product.UnitPrice,
+                    ArticleId = or.ArticleId,
+                    ArticleName = or.Article.Name,
+                    UnitPrice = or.Article.UnitPrice,
                     Quantity = or.Quantity
                 })
                 .ToListAsync();
