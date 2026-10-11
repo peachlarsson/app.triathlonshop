@@ -29,6 +29,9 @@ namespace Peach.TriathlonShop.App.Server.Controllers
 
             query = sortBy switch
             {
+                SortKey.Number => sortOrder == SortDirection.Asc
+                    ? query.OrderBy(q => q.Number)
+                    : query.OrderByDescending(q => q.Number),
                 SortKey.Name => sortOrder == SortDirection.Asc
                     ? query.OrderBy(q => q.Name)
                     : query.OrderByDescending(q => q.Name),

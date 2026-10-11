@@ -29,14 +29,16 @@ function App() {
         searchQueryParam: 'articleName'
     });
 
-    // Pagination info and display data for order rows
+    // Pagination info and display data
     const orderRowPaginationInfo = orderRowActions.getPaginationInfo();
     const orderRowDisplayData = orderRowActions.getDisplayData();
 
-    // Column definitions for order rows and articles
+    // Column definitions
     const orderRowColumns: ColumnDefinition[] = [
         { key: 'id', label: 'Id' },
+        { key: 'orderId', label: 'Order Id' },
         { key: 'orderNumber', label: 'Order Number' },
+        { key: 'lineNumber', label: 'Line Number' },
         { key: 'articleName', label: 'Article Name' },
         { key: 'unitPrice', label: 'Unit Price', isPrice: true },
         { key: 'quantity', label: 'Quantity' },

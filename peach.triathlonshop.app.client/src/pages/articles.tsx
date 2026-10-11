@@ -6,6 +6,7 @@ import { TableFilters } from '../components/TableFilters';
 
 interface Article {
     id: number;
+    number: string;
     name: string;
     unitPrice: number;
 }
@@ -28,6 +29,7 @@ function App() {
     // Column definitions
     const columns: ColumnDefinition[] = [
         { key: 'id', label: 'Id' },
+        { key: 'number', label: 'Number' },
         { key: 'name', label: 'Name' },
         { key: 'unitPrice', label: 'Unit Price', isPrice: true },
     ];
@@ -35,8 +37,8 @@ function App() {
     return (
         <Stack spacing={4}>
             <Box>
-                <Typography id="orderRowsTableLabel" variant="h4" gutterBottom>
-                    Order Rows
+                <Typography id="articlesTableLabel" variant="h4" gutterBottom>
+                    Articles
                 </Typography>
 
                 <TableFilters

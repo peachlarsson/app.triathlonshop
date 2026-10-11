@@ -3,7 +3,9 @@
 public enum SortKey
 {
     Id,
+    OrderId,
     OrderNumber,
+    LineNumber,
     ArticleName,
     UnitPrice,
     Quantity,

@@ -3,6 +3,7 @@
 public enum SortKey
 {
     Id,
+    Number,
     Name,
     UnitPrice,
     CreatedAt,

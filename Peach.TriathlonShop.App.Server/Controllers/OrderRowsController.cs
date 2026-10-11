@@ -26,7 +26,7 @@ namespace Peach.TriathlonShop.App.Server.Controllers
                 {
                     Id = q.Id,
                     OrderId = q.OrderId,
-                    OrderNumber = q.Order.OrderNumber,
+                    OrderNumber = q.Order.Number,
                     LineNumber = q.LineNumber,
                     ArticleId = q.ArticleId,
                     ArticleName = q.Article.Name,
@@ -47,9 +47,15 @@ namespace Peach.TriathlonShop.App.Server.Controllers
 
             query = sortBy switch
             {
+                SortKey.OrderId => sortOrder == SortDirection.Asc
+                    ? query.OrderBy(q => q.OrderId)
+                    : query.OrderByDescending(q => q.OrderId),
                 SortKey.OrderNumber => sortOrder == SortDirection.Asc
                     ? query.OrderBy(q => q.OrderNumber)
                     : query.OrderByDescending(q => q.OrderNumber),
+                SortKey.LineNumber => sortOrder == SortDirection.Asc
+                    ? query.OrderBy(q => q.LineNumber)
+                    : query.OrderByDescending(q => q.LineNumber),
                 SortKey.ArticleName => sortOrder == SortDirection.Asc
                     ? query.OrderBy(q => q.ArticleName)
                     : query.OrderByDescending(q => q.ArticleName),
