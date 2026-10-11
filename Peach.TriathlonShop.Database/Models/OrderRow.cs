@@ -8,6 +8,6 @@ public class OrderRow : BaseEntity
     public required int Quantity { get; set; }
     public required decimal RowPrice { get; set; }
 
-    public required Order Order { get; set; }
-    public required Article Article { get; set; }
+    public Order? Order { get; set; }
+    public Article? Article { get; set; }
 }
