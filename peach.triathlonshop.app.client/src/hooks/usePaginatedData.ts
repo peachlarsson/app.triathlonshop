@@ -201,19 +201,13 @@ export function usePaginatedData<T>(
     // Handle table page size changes
     const getPaginationInfo = useCallback(() => {
         const totalPages = Math.ceil(totalCount / tablePageSize);
-        const isSearchMode = searchQuery.trim().length > 0;
-
-        if (isSearchMode) {
-            return { displayPage: currentDisplayPage, totalPages };
-        }
-
         const effectiveApiPageSize = Math.max(apiPageSize, tablePageSize);
         const itemsBeforeCurrentBatch = (currentApiPage - 1) * effectiveApiPageSize;
         const currentBatchStartPage = Math.floor(itemsBeforeCurrentBatch / tablePageSize) + 1;
         const displayPage = data ? currentBatchStartPage + currentDisplayPage - 1 : 1;
 
         return { displayPage, totalPages };
-    }, [totalCount, tablePageSize, currentApiPage, apiPageSize, currentDisplayPage, data, searchQuery]);
+    }, [totalCount, tablePageSize, currentApiPage, apiPageSize, currentDisplayPage, data]);
 
     // Get the data to display on the current table page
     const getDisplayData = useCallback(() => {
@@ -229,12 +223,6 @@ export function usePaginatedData<T>(
             const totalPages = Math.ceil(totalCount / tablePageSize);
             if (newPage < 1 || newPage > totalPages) return;
 
-            const isSearchMode = searchQuery.trim().length > 0;
-            if (isSearchMode) {
-                setCurrentDisplayPage(newPage);
-                return;
-            }
-
             const effectiveApiPageSize = Math.max(apiPageSize, tablePageSize);
             const totalApiPages = Math.ceil(totalCount / effectiveApiPageSize);
             const itemsBeforeNewPage = (newPage - 1) * tablePageSize;
@@ -248,7 +236,7 @@ export function usePaginatedData<T>(
                 setCurrentDisplayPage(localPageInBatch);
             }
         },
-        [totalCount, tablePageSize, apiPageSize, currentApiPage, searchQuery]
+        [totalCount, tablePageSize, apiPageSize, currentApiPage]
     );
 
     const state: UsePaginatedDataState<T> = {
