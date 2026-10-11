@@ -16,7 +16,7 @@ function App() {
     // Data fetching and pagination
     const [state, actions] = usePaginatedData<Article>({
         tablePageSize: 10,
-        apiPageSize: 20,
+        apiPageSize: 100,
         endpointPagination: '/api/articles',
         endpointSearchBar: '/api/articles',
         searchQueryParam: 'name'

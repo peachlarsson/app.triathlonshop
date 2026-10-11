@@ -23,7 +23,7 @@ function App() {
     // Data fetching and pagination
     const [orderRowState, orderRowActions] = usePaginatedData<OrderRow>({
         tablePageSize: 10,
-        apiPageSize: 20,
+        apiPageSize: 100,
         endpointPagination: '/api/orderrows',
         endpointSearchBar: '/api/orderrows',
         searchQueryParam: 'articleName'
