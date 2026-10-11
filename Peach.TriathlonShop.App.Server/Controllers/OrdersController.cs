@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Peach.TriathlonShop.App.Server.Controllers.Enums.Common;
 using Peach.TriathlonShop.App.Server.Controllers.Enums.Order;
 using Peach.TriathlonShop.App.Server.Controllers.Models;
 using Peach.TriathlonShop.App.Server.Models;
 using Peach.TriathlonShop.App.Server.Utilities;
 using Peach.TriathlonShop.Database;
+using Peach.TriathlonShop.Database.Models;
 
 namespace Peach.TriathlonShop.App.Server.Controllers
 {
@@ -13,7 +15,7 @@ namespace Peach.TriathlonShop.App.Server.Controllers
     public class OrdersController(TriathlonShopDbContext context) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<PaginatedResponse<OrderDto>>> GetPaginated(
+        public async Task<ActionResult<PaginatedResponse<OrderDto>>> Get(
             SortKey sortBy = SortKey.Id,
             SortDirection sortOrder = SortDirection.Asc,
             int pageNumber = 1,
@@ -27,7 +29,7 @@ namespace Peach.TriathlonShop.App.Server.Controllers
                     Number = q.Number,
                     TotalPrice = q.TotalPrice,
                     CustomerId = q.CustomerId,
-                    CustomerName = q.Customer.Name ?? "MissingName",
+                    CustomerName = q.Customer != null && q.Customer.Name != null ? q.Customer.Name : "MissingName",
                     CreatedAt = q.CreatedAt,
                     UpdatedAt = q.UpdatedAt,
                 })
@@ -65,6 +67,77 @@ namespace Peach.TriathlonShop.App.Server.Controllers
 
             var paginatedResult = await PaginationHelper.PaginateAsync(query, pageNumber, pageSize);
             return Ok(paginatedResult);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Create([FromBody] CreateOrderRequest request)
+        {
+            var customer = await context.Customers.FindAsync(request.CustomerId);
+
+            if (customer is null)
+                return BadRequest("Customer does not exist.");
+
+            if (request.OrderRows.Count == 0)
+                return BadRequest("At least one order row is required.");
+
+            if (request.OrderRows.Any(row => row.Quantity <= 0))
+                return BadRequest("Order row quantity must be greater than 0.");
+
+            var articleIds = request.OrderRows.Select(row => row.ArticleId).Distinct().ToList();
+
+            var articles = await context.Articles
+                .Where(article => articleIds.Contains(article.Id))
+                .ToDictionaryAsync(article => article.Id);
+
+            if (articles.Count != articleIds.Count)
+                return BadRequest("One or more selected articles do not exist.");
+
+            var orderRows = request.OrderRows
+                .Select(row => new
+                {
+                    Row = row,
+                    Article = articles[row.ArticleId]
+                })
+                .ToList();
+
+            var order = new Order
+            {
+                Id = 0,
+                Number = "ORD-" + Guid.NewGuid(),
+                TotalPrice = orderRows.Sum(row => row.Article.UnitPrice * row.Row.Quantity),
+                CustomerId = request.CustomerId,
+                Customer = customer,
+            };
+
+            context.Orders.Add(order);
+            await context.SaveChangesAsync();
+
+            var orderRowsToAdd = request.OrderRows.Select(row => new OrderRow
+            {
+                OrderId = order.Id,
+                Order = order,
+                LineNumber = row.LineNumber,
+                ArticleId = row.ArticleId,
+                Article = articles[row.ArticleId],
+                Quantity = row.Quantity,
+                RowPrice = row.Quantity * articles[row.ArticleId].UnitPrice,
+            }).ToList();
+
+            context.OrderRows.AddRange(orderRowsToAdd);
+            await context.SaveChangesAsync();
+
+            var createdOrder = new OrderDto
+            {
+                Id = order.Id,
+                Number = order.Number,
+                TotalPrice = order.TotalPrice,
+                CustomerId = order.CustomerId,
+                CustomerName = customer.Name ?? "MissingName",
+                CreatedAt = order.CreatedAt,
+                UpdatedAt = order.UpdatedAt,
+            };
+
+            return CreatedAtAction(nameof(Get), new { id = order.Id }, createdOrder);
         }
     }
 }

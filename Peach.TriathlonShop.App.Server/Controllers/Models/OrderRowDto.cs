@@ -1,6 +1,4 @@
-﻿using Peach.TriathlonShop.Database.Models;
-
-namespace Peach.TriathlonShop.App.Server.Controllers.Models;
+﻿namespace Peach.TriathlonShop.App.Server.Controllers.Models;
 
 public class OrderRowDto
 {
