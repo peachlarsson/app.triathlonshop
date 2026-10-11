@@ -93,7 +93,7 @@ export function DataTable(
     };
 
     return (
-        <TableContainer component={Paper} variant="outlined">
+        <TableContainer component={Paper} variant="outlined" sx={{ mb: 3 }}>
             <Table size="small" aria-labelledby={tableId}>
                 <TableHead>
                     <TableRow>

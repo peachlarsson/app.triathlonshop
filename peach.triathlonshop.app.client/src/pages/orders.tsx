@@ -3,6 +3,7 @@ import { usePaginatedData } from '../hooks/usePaginatedData';
 import { DataTable, type ColumnDefinition } from '../components/DataTable';
 import { PaginationControls } from '../components/PaginationControls';
 import { TableFilters } from '../components/TableFilters';
+import AddOrderCard from '../components/AddOrderCard';
 
 interface Order {
     id: number;
@@ -74,6 +75,8 @@ function App() {
                         actions.setSortOrder(sortOrder);
                     }}
                 />
+
+                <AddOrderCard onOrderCreated={actions.refresh} />
             </Box>
         </Stack>
     );

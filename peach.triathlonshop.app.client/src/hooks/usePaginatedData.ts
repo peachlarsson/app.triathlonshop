@@ -33,6 +33,7 @@ export interface UsePaginatedDataActions<T> {
     setSortOrder: (sortOrder: string) => void;
     setTablePageSize: (size: number) => void;
     goToPage: (page: number) => void;
+    refresh: () => Promise<void>;
     getPaginationInfo: () => { displayPage: number; totalPages: number };
     getDisplayData: () => T[];
 }
@@ -114,8 +115,11 @@ export function usePaginatedData<T>(
                 pageSize: pageSize.toString(),
                 sortBy: sortByValue,
                 sortOrder: sortOrderValue,
-                [searchQueryParam]: searchQueryValue
             });
+
+            if (searchQueryParam) {
+                searchParams.set(searchQueryParam, searchQueryValue);
+            }
 
             try {
                 const searchResponse = await fetch(`${endpointSearchBar}?${searchParams}`);
@@ -239,6 +243,11 @@ export function usePaginatedData<T>(
         [totalCount, tablePageSize, apiPageSize, currentApiPage]
     );
 
+    const refresh = useCallback(async () => {
+        batchCacheRef.current.clear();
+        await fetchData(currentApiPage, searchQuery, sortBy, sortOrder);
+    }, [currentApiPage, fetchData, searchQuery, sortBy, sortOrder]);
+
     const state: UsePaginatedDataState<T> = {
         data,
         isLoading,
@@ -256,6 +265,7 @@ export function usePaginatedData<T>(
         setSortOrder,
         setTablePageSize,
         goToPage,
+        refresh,
         getPaginationInfo,
         getDisplayData
     };

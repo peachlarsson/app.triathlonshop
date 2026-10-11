@@ -54,7 +54,7 @@ function HomePage() {
             const [totalOrders, totalArticles, totalCustomers] = await Promise.all([
                 fetchTotalCount('/api/orders'),
                 fetchTotalCount('/api/articles'),
-                fetchTotalCount('/api/customers/paginated')
+                fetchTotalCount('/api/customers')
             ]);
 
             setErrorMessage(null);
