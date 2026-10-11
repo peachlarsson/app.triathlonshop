@@ -8,8 +8,8 @@ using Peach.TriathlonShop.Database.Models;
 namespace Peach.TriathlonShop.App.Server.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class OrderController(TriathlonShopDbContext context) : ControllerBase
+    [Route("api/[controller]")]
+    public class OrdersController(TriathlonShopDbContext context) : ControllerBase
     {
         [HttpGet]
         public async Task<List<Order>> Get()
