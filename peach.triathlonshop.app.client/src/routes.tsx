@@ -4,6 +4,7 @@ import HomePage from './pages/home'
 import OrderRowsPage from './pages/orderrows'
 import OrdersPage from './pages/orders'
 import ArticlesPage from './pages/articles'
+import CustomersPage from './pages/customers'
 
 export const router = createBrowserRouter(
     [{
@@ -14,6 +15,7 @@ export const router = createBrowserRouter(
             { path: 'orderrows', element: <OrderRowsPage /> },
             { path: 'orders', element: <OrdersPage /> },
             { path: 'articles', element: <ArticlesPage /> },
+            { path: 'customers', element: <CustomersPage /> },
             { path: '*', element: <Navigate to="/" replace /> },
         ]
     }]
