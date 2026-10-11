@@ -7,7 +7,7 @@ export interface PaginationControlsProps {
     isLoading?: boolean;
 }
 
-function getVisiblePages(currentPage: number, totalPages: number, maxButtons = 5): number[] {
+function getVisiblePages(currentPage: number, totalPages: number, maxButtons = 3): number[] {
     if (totalPages <= 0) return [];
     if (totalPages <= maxButtons) {
         return Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -33,7 +33,7 @@ export function PaginationControls({
 }: PaginationControlsProps) {
     const displayTotalPages = Math.max(totalPages, 1);
     const displayCurrentPage = Math.min(Math.max(currentPage, 1), displayTotalPages);
-    const pages = getVisiblePages(displayCurrentPage, totalPages, 5);
+    const pages = getVisiblePages(displayCurrentPage, totalPages, 3);
 
     const firstVisible = pages[0];
     const lastVisible = pages[pages.length - 1];

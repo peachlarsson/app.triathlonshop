@@ -47,19 +47,19 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '^/article': {
+            '^/api/articles': {
                 target,
                 secure: false
             },
-            '^/customer': {
+            '^/api/customers': {
                 target,
                 secure: false
             },
-            '^/order': {
+            '^/api/orders': {
                 target,
                 secure: false
             },
-            '^/orderrow': {
+            '^/api/orderrows': {
                 target,
                 secure: false
             }

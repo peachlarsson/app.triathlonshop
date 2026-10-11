@@ -70,14 +70,18 @@ export function usePaginatedData<T>(
                 sortOrder: sortOrderValue
             });
 
-            const response = await fetch(`${endpointPagination}?${params}`);
-            if (response.ok) {
-                const result: PaginatedResponse<T> = await response.json();
-                setData(result.data);
-                batchCacheRef.current.set(pageNumber, result.data);
-                setTotalCount(result.totalCount);
-            } else {
-                console.error('Failed to fetch data:', response.status, response.statusText);
+            try {
+                const response = await fetch(`${endpointPagination}?${params}`);
+                if (response.ok) {
+                    const result: PaginatedResponse<T> = await response.json();
+                    setData(result.data);
+                    batchCacheRef.current.set(pageNumber, result.data);
+                    setTotalCount(result.totalCount);
+                } else {
+                    console.error('Failed to fetch data:', response.status, response.statusText);
+                }
+            } catch (error) {
+                console.error('Network error while fetching paginated data:', error);
             }
         },
         [endpointPagination]
@@ -113,24 +117,28 @@ export function usePaginatedData<T>(
                 [searchQueryParam]: searchQueryValue
             });
 
-            const searchResponse = await fetch(`${endpointSearchBar}?${searchParams}`);
+            try {
+                const searchResponse = await fetch(`${endpointSearchBar}?${searchParams}`);
 
-            if (searchResponse.ok) {
-                const result: PaginatedResponse<T> | T[] = await searchResponse.json();
+                if (searchResponse.ok) {
+                    const result: PaginatedResponse<T> | T[] = await searchResponse.json();
 
-                if (Array.isArray(result)) {
-                    const sortedResult = sortClientResults(result, sortByValue, sortOrderValue);
-                    setData(sortedResult);
-                    batchCacheRef.current.set(1, sortedResult);
-                    setTotalCount(sortedResult.length);
-                    return;
+                    if (Array.isArray(result)) {
+                        const sortedResult = sortClientResults(result, sortByValue, sortOrderValue);
+                        setData(sortedResult);
+                        batchCacheRef.current.set(1, sortedResult);
+                        setTotalCount(sortedResult.length);
+                        return;
+                    }
+
+                    setData(result.data);
+                    batchCacheRef.current.set(pageNumber, result.data);
+                    setTotalCount(result.totalCount);
+                } else {
+                    console.error('Failed to fetch data:', searchResponse.status, searchResponse.statusText);
                 }
-
-                setData(result.data);
-                batchCacheRef.current.set(pageNumber, result.data);
-                setTotalCount(result.totalCount);
-            } else {
-                console.error('Failed to fetch data:', searchResponse.status, searchResponse.statusText);
+            } catch (error) {
+                console.error('Network error while fetching search data:', error);
             }
         },
         [endpointSearchBar, searchQueryParam, sortClientResults]
