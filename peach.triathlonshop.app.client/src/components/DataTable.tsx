@@ -11,6 +11,7 @@ import {
     TableSortLabel,
     Typography
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 export interface ColumnDefinition
 {
@@ -25,6 +26,7 @@ export interface DataTableProps
 {
     columns: ColumnDefinition[];
     data: object[];
+    isClickable?: boolean;
     isLoading?: boolean;
     tableId?: string;
     sortBy?: string;
@@ -58,7 +60,7 @@ function toSortKey(columnKey: string)
     return columnKey.charAt(0).toUpperCase() + columnKey.slice(1);
 }
 
-function getRowKey(row: object, rowIndex: number): React.Key
+function getRowId(row: object): string | number | undefined
 {
     const record = row as Record<string, unknown>;
     const id = record.id ?? record.Id;
@@ -67,19 +69,26 @@ function getRowKey(row: object, rowIndex: number): React.Key
         return id;
     }
 
-    return rowIndex;
+    return undefined;
+}
+
+function getRowKey(row: object, rowIndex: number): React.Key {
+    return getRowId(row) ?? rowIndex;
 }
 
 export function DataTable(
-{
-    columns,
-    data,
-    isLoading = false,
-    tableId = 'dataTable',
-    sortBy,
-    sortOrder,
-    onSortChange
-}: DataTableProps) {
+    {
+        columns,
+        data,
+        isClickable = false,
+        isLoading = false,
+        tableId = 'dataTable',
+        sortBy,
+        sortOrder,
+        onSortChange
+    }: DataTableProps) {
+
+    const navigate = useNavigate();
 
     const handleSortClick = (column: ColumnDefinition) =>
     {
@@ -88,7 +97,7 @@ export function DataTable(
         const nextSortBy = column.sortKey ?? toSortKey(column.key);
         const isSameColumn = sortBy === nextSortBy;
         const nextSortOrder = isSameColumn && sortOrder?.toLowerCase() === 'asc' ? 'desc' : 'asc';
- 
+
         onSortChange(nextSortBy, nextSortOrder);
     };
 
@@ -124,17 +133,31 @@ export function DataTable(
                                 <LoadingState />
                             </TableCell>
                         </TableRow>
-                    ) : data.length > 0 ? (
-                        data.map((row, rowIndex) => (
-                            <TableRow key={getRowKey(row, rowIndex)} hover>
-                                {columns.map((column) => (
-                                    <TableCell key={String(column.key)}>
-                                        {getCellValue(column, row)}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        ))
-                    ) : null}
+                    ) : data.length > 0 ?
+                        (
+                            data.map((row, rowIndex) => 
+                            {
+                                const rowId = getRowId(row);
+                                const canClick = isClickable && rowId !== undefined;
+
+                                return (
+                                    <TableRow
+                                        key={getRowKey(row, rowIndex)}
+                                        hover={canClick}
+                                        onClick={canClick ? () => navigate(`/orders/${rowId}`) : undefined}
+                                        sx={canClick ? { cursor: 'pointer' } : undefined}
+                                    >
+                                        {columns.map((column) => (
+                                            <TableCell key={String(column.key)}>
+                                                {getCellValue(column, row)}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                );
+                            })
+                        )
+                        : null
+                    }
                 </TableBody>
             </Table>
         </TableContainer>

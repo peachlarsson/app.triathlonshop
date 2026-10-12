@@ -66,6 +66,7 @@ function App() {
                 <DataTable
                     columns={columns}
                     data={displayData}
+                    isClickable={true}
                     isLoading={state.isLoading}
                     tableId="ordersTableLabel"
                     sortBy={state.sortBy}
