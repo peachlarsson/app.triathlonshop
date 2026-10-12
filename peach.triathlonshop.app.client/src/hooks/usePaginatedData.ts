@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 export interface PaginatedResponse<T> {
     data: T[];
     totalCount: number;
+    totalPrice: number;
     pageNumber: number;
     pageSize: number;
     totalPages: number;
@@ -20,6 +21,7 @@ export interface UsePaginatedDataState<T> {
     data: T[] | undefined;
     isLoading: boolean;
     totalCount: number;
+    totalPrice: number;
     currentDisplayPage: number;
     searchQuery: string;
     sortBy: string;
@@ -52,6 +54,7 @@ export function usePaginatedData<T>(
     const [data, setData] = useState<T[] | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(false);
     const [totalCount, setTotalCount] = useState(0);
+    const [totalPrice, setTotalPrice] = useState(0);
     const [currentApiPage, setCurrentApiPage] = useState(1);
     const [currentDisplayPage, setCurrentDisplayPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
@@ -78,6 +81,7 @@ export function usePaginatedData<T>(
                     setData(result.data);
                     batchCacheRef.current.set(pageNumber, result.data);
                     setTotalCount(result.totalCount);
+                    setTotalPrice(result.totalPrice);
                 } else {
                     console.error('Failed to fetch data:', response.status, response.statusText);
                 }
@@ -132,12 +136,14 @@ export function usePaginatedData<T>(
                         setData(sortedResult);
                         batchCacheRef.current.set(1, sortedResult);
                         setTotalCount(sortedResult.length);
+                        setTotalPrice(0);
                         return;
                     }
 
                     setData(result.data);
                     batchCacheRef.current.set(pageNumber, result.data);
                     setTotalCount(result.totalCount);
+                    setTotalPrice(result.totalPrice);
                 } else {
                     console.error('Failed to fetch data:', searchResponse.status, searchResponse.statusText);
                 }
@@ -252,6 +258,7 @@ export function usePaginatedData<T>(
         data,
         isLoading,
         totalCount,
+        totalPrice,
         currentDisplayPage,
         searchQuery,
         sortBy,

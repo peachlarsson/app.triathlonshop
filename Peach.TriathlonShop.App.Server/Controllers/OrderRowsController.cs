@@ -86,6 +86,8 @@ namespace Peach.TriathlonShop.App.Server.Controllers
             };
 
             var paginatedResult = await PaginationHelper.PaginateAsync(query, pageNumber, pageSize);
+            paginatedResult.TotalPrice = await query.SumAsync(q => q.RowPrice);
+
             return Ok(paginatedResult);
         }
     }

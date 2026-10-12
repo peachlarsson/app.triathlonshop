@@ -83,6 +83,12 @@ function App() {
                         orderRowActions.setSortOrder(sortOrder);
                     }}
                 />
+
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+                    <Typography variant="body2" color="text.secondary">
+                        Total Row Price: {orderRowState.totalPrice?.toFixed(2)}
+                    </Typography>
+                </Box>
             </Box>
         </Stack>
     );
