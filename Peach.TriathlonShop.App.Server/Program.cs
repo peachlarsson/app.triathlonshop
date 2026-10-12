@@ -5,6 +5,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 /// Database
 var dbConnString = builder.Configuration.GetSection("DatabaseConnectionString").Value;
+
+if (string.IsNullOrEmpty(dbConnString))
+    throw new InvalidOperationException("Database connection string is not configured.");
+
 builder.Services.AddDbContext<TriathlonShopDbContext>(opt => opt.UseSqlServer(dbConnString));
 
 builder.Services.AddControllers();

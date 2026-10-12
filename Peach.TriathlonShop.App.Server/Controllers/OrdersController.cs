@@ -14,6 +14,83 @@ namespace Peach.TriathlonShop.App.Server.Controllers
     [Route("api/[controller]")]
     public class OrdersController(TriathlonShopDbContext context) : ControllerBase
     {
+        [HttpGet("{id}")]
+        public async Task<ActionResult<OrderDto>> GetById(
+            int id,
+            SortKey sortBy = SortKey.Id,
+            SortDirection sortOrder = SortDirection.Asc)
+        {
+            var query = context.Orders
+                .Where(q => q.Id == id)
+                .Select(q => new OrderDto
+                {
+                    Id = q.Id,
+                    Number = q.Number,
+                    Items = q.OrderRows.Select(row => new OrderRowDto
+                    {
+                        OrderId = row.Id,
+                        OrderNumber = row.Order!.Number,
+                        LineNumber = row.LineNumber,
+                        ArticleId = row.ArticleId,
+                        ArticleName = row.Article!.Name,
+                        UnitPrice = row.Article!.UnitPrice,
+                        Quantity = row.Quantity,
+                        RowPrice = row.RowPrice,
+                        CustomerId = row.Order!.CustomerId,
+                        CustomerName = row.Order!.Customer!.Name ?? "MissingName",
+                        CreatedAt = row.CreatedAt,
+                        UpdatedAt = row.UpdatedAt,
+                    }).ToList(),
+                    TotalPrice = q.TotalPrice,
+                    CustomerId = q.CustomerId,
+                    CustomerName = q.Customer != null && q.Customer.Name != null ? q.Customer.Name : "MissingName",
+                    CreatedAt = q.CreatedAt,
+                    UpdatedAt = q.UpdatedAt,
+                })
+                .AsQueryable();
+
+            switch (sortBy)
+            {
+                case SortKey.Number:
+                    query = sortOrder == SortDirection.Asc
+                        ? query.OrderBy(q => q.Number)
+                        : query.OrderByDescending(q => q.Number);
+                    break;
+                case SortKey.CustomerId:
+                    query = sortOrder == SortDirection.Asc
+                        ? query.OrderBy(q => q.CustomerId)
+                        : query.OrderByDescending(q => q.CustomerId);
+                    break;
+                case SortKey.CustomerName:
+                    query = sortOrder == SortDirection.Asc
+                        ? query.OrderBy(q => q.CustomerName)
+                        : query.OrderByDescending(q => q.CustomerName);
+                    break;
+                case SortKey.CreatedAt:
+                    query = sortOrder == SortDirection.Asc
+                        ? query.OrderBy(q => q.CreatedAt)
+                        : query.OrderByDescending(q => q.CreatedAt);
+                    break;
+                case SortKey.UpdatedAt:
+                    query = sortOrder == SortDirection.Asc
+                        ? query.OrderBy(q => q.UpdatedAt)
+                        : query.OrderByDescending(q => q.UpdatedAt);
+                    break;
+                default:
+                    query = sortOrder == SortDirection.Asc
+                        ? query.OrderBy(q => q.Id)
+                        : query.OrderByDescending(q => q.Id);
+                    break;
+            }
+
+            var order = await query.FirstOrDefaultAsync();
+
+            if (order is null)
+                return NotFound();
+
+            return Ok(order);
+        }
+
         [HttpGet]
         public async Task<ActionResult<PaginatedResponse<OrderDto>>> Get(
             SortKey sortBy = SortKey.Id,

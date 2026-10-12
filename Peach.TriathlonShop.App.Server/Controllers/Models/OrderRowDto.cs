@@ -2,7 +2,7 @@
 
 public class OrderRowDto
 {
-    public required long Id { get; set; }
+    public long Id { get; set; }
     public required long OrderId { get; set; }
     public required string OrderNumber { get; set; }
     public required int LineNumber { get; set; }

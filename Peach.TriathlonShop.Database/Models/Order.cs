@@ -8,5 +8,5 @@ public class Order : BaseEntity
     public required decimal TotalPrice { get; set; }
     public List<OrderRow> OrderRows { get; set; } = [];
 
-    public Customer? Customer { get; set; }
+    public Customer? Customer { get; set; } = null!;
 }
