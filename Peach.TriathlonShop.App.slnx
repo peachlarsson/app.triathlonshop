@@ -5,4 +5,5 @@
   </Project>
   <Project Path="Peach.TriathlonShop.App.Server/Peach.TriathlonShop.App.Server.csproj" />
   <Project Path="Peach.TriathlonShop.Database/Peach.TriathlonShop.Database.csproj" />
+  <Project Path="Peach.TriathlonShop.FunctionApp/Peach.TriathlonShop.FunctionApp.csproj" Id="3cd8e965-c874-4206-b710-2086defd322c" />
 </Solution>

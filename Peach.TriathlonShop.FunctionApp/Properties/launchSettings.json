@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Peach.TriathlonShop.FunctionApp": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7285",
+      "launchBrowser": false
+    }
+  }
+}
