@@ -28,7 +28,7 @@ namespace Peach.TriathlonShop.App.Server.Controllers
                     Number = q.Number,
                     Items = q.OrderRows.Select(row => new OrderRowDto
                     {
-                        OrderId = row.Id,
+                        OrderId = q.Id,
                         OrderNumber = row.Order!.Number,
                         LineNumber = row.LineNumber,
                         ArticleId = row.ArticleId,
@@ -105,6 +105,21 @@ namespace Peach.TriathlonShop.App.Server.Controllers
                     Id = q.Id,
                     Number = q.Number,
                     TotalPrice = q.TotalPrice,
+                    Items = q.OrderRows.Select(row => new OrderRowDto
+                    {
+                        OrderId = q.Id,
+                        OrderNumber = row.Order!.Number,
+                        LineNumber = row.LineNumber,
+                        ArticleId = row.ArticleId,
+                        ArticleName = row.Article!.Name,
+                        UnitPrice = row.Article!.UnitPrice,
+                        Quantity = row.Quantity,
+                        RowPrice = row.RowPrice,
+                        CustomerId = row.Order!.CustomerId,
+                        CustomerName = row.Order!.Customer!.Name ?? "MissingName",
+                        CreatedAt = row.CreatedAt,
+                        UpdatedAt = row.UpdatedAt,
+                    }).ToList(),
                     CustomerId = q.CustomerId,
                     CustomerName = q.Customer != null && q.Customer.Name != null ? q.Customer.Name : "MissingName",
                     CreatedAt = q.CreatedAt,

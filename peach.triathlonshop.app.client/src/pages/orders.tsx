@@ -9,6 +9,7 @@ interface Order {
     id: number;
     number: string;
     totalPrice: number;
+    orderRowsCount: number;
     customerId: number;
     customerName: string;
     createdAt: string;
@@ -34,6 +35,7 @@ function App() {
         { key: 'id', label: 'Id' },
         { key: 'number', label: 'Number' },
         { key: 'totalPrice', label: 'Total Price', isPrice: true },
+        { key: 'orderRowsCount', label: 'Order Rows Count' },
         { key: 'customerId', label: 'Customer Id' },
         { key: 'customerName', label: 'Customer Name' },
         { key: 'createdAt', label: 'Created Timestamp' },

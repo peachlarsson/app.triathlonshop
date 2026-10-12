@@ -102,8 +102,8 @@ export function DataTable(
     };
 
     return (
-        <TableContainer component={Paper} variant="outlined" sx={{ mb: 3 }}>
-            <Table size="small" aria-labelledby={tableId}>
+        <TableContainer component={Paper} variant="outlined" sx={{ mb: 3, width: 'fit-content' }}>
+            <Table size="small" aria-labelledby={tableId} sx={{ tableLayout: 'auto', width: 'max-content' }}>
                 <TableHead>
                     <TableRow>
                         {columns.map((column) => {
@@ -115,7 +115,7 @@ export function DataTable(
                                 <TableCell
                                     key={String(column.key)}
                                     sortDirection={isActive ? direction : false}
-                                    sx={{ cursor: onSortChange ? 'pointer' : 'default', userSelect: 'none' }}
+                                    sx={{ cursor: onSortChange ? 'pointer' : 'default', userSelect: 'none', whiteSpace: 'nowrap' }}
                                     onClick={onSortChange ? () => handleSortClick(column) : undefined}
                                 >
                                     <TableSortLabel active={isActive} direction={direction} hideSortIcon={!onSortChange}>
@@ -129,7 +129,7 @@ export function DataTable(
                 <TableBody>
                     {isLoading ? (
                         <TableRow>
-                            <TableCell colSpan={columns.length}>
+                            <TableCell colSpan={columns.length} sx={{ whiteSpace: 'nowrap' }}>
                                 <LoadingState />
                             </TableCell>
                         </TableRow>
@@ -148,7 +148,7 @@ export function DataTable(
                                         sx={canClick ? { cursor: 'pointer' } : undefined}
                                     >
                                         {columns.map((column) => (
-                                            <TableCell key={String(column.key)}>
+                                            <TableCell key={String(column.key)} sx={{ whiteSpace: 'nowrap' }}>
                                                 {getCellValue(column, row)}
                                             </TableCell>
                                         ))}

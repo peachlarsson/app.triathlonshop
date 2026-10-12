@@ -39,8 +39,6 @@ function App() {
     const [sortOrder, setSortOrder] = useState('Asc');
 
     const orderItemColumns: ColumnDefinition[] = [
-        { key: 'id', label: 'Id' },
-        { key: 'orderId', label: 'Order Id' },
         { key: 'lineNumber', label: 'Line Number' },
         { key: 'articleName', label: 'Article Name' },
         { key: 'unitPrice', label: 'Unit Price', isPrice: true },
