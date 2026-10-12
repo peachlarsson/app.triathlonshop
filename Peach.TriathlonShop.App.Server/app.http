@@ -1,0 +1,20 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+
+
+@baseUrl = http://localhost:5089/api
+
+
+###
+
+
+POST {{baseUrl}}/developer/articles/random/10
+Content-Type: application/json
+{}
+
+
+###
+
+
+POST {{baseUrl}}/developer/orders/random/50
+Content-Type: application/json
+{}

@@ -10,20 +10,31 @@ public class TriathlonShopDbContext(DbContextOptions<TriathlonShopDbContext> opt
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<OrderRow> OrderRows => Set<OrderRow>();
 
+    private const string DefaultSchema = "dbo";
+    private const string DefaultTimestampSql = "SYSDATETIMEOFFSET()";
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<Article>()
-            .ToTable(nameof(Article), schema: "dbo");
+            .ToTable(nameof(Article), DefaultSchema)
+            .Property(e => e.CreatedAt)
+            .HasDefaultValueSql(DefaultTimestampSql);
 
         modelBuilder.Entity<Customer>()
-            .ToTable(nameof(Customer), schema: "dbo");
+            .ToTable(nameof(Customer), DefaultSchema)
+            .Property(e => e.CreatedAt)
+            .HasDefaultValueSql(DefaultTimestampSql);
 
         modelBuilder.Entity<Order>()
-            .ToTable("SalesOrder", schema: "dbo");
+            .ToTable("SalesOrder", DefaultSchema)
+            .Property(e => e.CreatedAt)
+            .HasDefaultValueSql(DefaultTimestampSql);
 
         modelBuilder.Entity<OrderRow>()
-            .ToTable("SalesOrderRow", schema: "dbo");
+            .ToTable("SalesOrderRow", DefaultSchema)
+            .Property(e => e.CreatedAt)
+            .HasDefaultValueSql(DefaultTimestampSql);
     }
 }
