@@ -1,8 +1,11 @@
-﻿namespace Peach.TriathlonShop.App.Server.Controllers.Models;
+﻿using Peach.TriathlonShop.Database.Models.Enums;
+
+namespace Peach.TriathlonShop.App.Server.Controllers.Models;
 
 public class OrderDto
 {
     public required long Id { get; set; }
+    public required OrderStatus Status { get; set; }
     public required string Number { get; set; }
     public List<OrderRowDto> Items { get; set; } = [];
     public List<NotificationHistoryDto> NotificationHistory { get; set; } = [];

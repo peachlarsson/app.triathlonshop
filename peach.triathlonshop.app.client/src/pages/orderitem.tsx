@@ -51,6 +51,7 @@ interface InvoiceHistoryItem {
 interface Order {
     id: number;
     number: string;
+    status: string;
     items?: OrderRow[];
     notificationHistory?: NotificationHistoryItem[];
     transportHistory?: TransportHistoryItem[];
@@ -67,6 +68,7 @@ function App() {
 
     const { id } = useParams();
     const [order, setOrder] = useState<Order | null>(null);
+    const isConfirmed = order?.status === 'Confirmed';
     const [sortBy, setSortBy] = useState('Id');
     const [sortOrder, setSortOrder] = useState('Asc');
 
@@ -102,11 +104,12 @@ function App() {
                 <Typography>Order number: {order.number}</Typography>
                 <Typography>Customer: {order.customerName}</Typography>
                 <Typography>Total price: SEK {order.totalPrice}</Typography>
-                {order.isConfirmed && (
+                <Typography>Status: {order.status}</Typography>
+                {isConfirmed && (
                     <Typography sx={{ mt: 2 }}>[ CONFIRMED ]</Typography>
                 )}
 
-                {!order.isConfirmed && (
+                {!isConfirmed && (
                     <Button sx={{ mt: 2, float: 'right' }}
                         variant="contained"
                         onClick={async () => {
@@ -119,18 +122,14 @@ function App() {
                             });
 
                             if (response.ok) {
-                                setOrder({ ...order, isConfirmed: true });
+                                const refreshedOrder = await fetch(`/api/orders/${id}?sortBy=${sortBy}&sortOrder=${sortOrder}`);
+                                const refreshedOrderData = await refreshedOrder.json();
+                                setOrder(refreshedOrderData);
                             }
                         }}
                     >
                         Confirm Order
                     </Button>
-                )}
-
-                {order.isConfirmed && (
-                    <Typography sx={{ mt: 2, float: 'right' }}>
-                        Order is confirmed
-                    </Typography>
                 )}
 
                 <Stack spacing={3} sx={{ mt: 3 }}>

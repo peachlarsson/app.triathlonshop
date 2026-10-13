@@ -29,6 +29,7 @@ namespace Peach.TriathlonShop.App.Server.Controllers
                 {
                     Id = q.Id,
                     Number = q.Number,
+                    Status = q.Status,
                     Items = q.OrderRows.Select(row => new OrderRowDto
                     {
                         OrderId = q.Id,
@@ -144,6 +145,7 @@ namespace Peach.TriathlonShop.App.Server.Controllers
                 {
                     Id = q.Id,
                     Number = q.Number,
+                    Status = q.Status,
                     TotalPrice = q.TotalPrice,
                     Items = q.OrderRows.Select(row => new OrderRowDto
                     {
@@ -263,6 +265,7 @@ namespace Peach.TriathlonShop.App.Server.Controllers
             {
                 Id = order.Id,
                 Number = order.Number,
+                Status = order.Status,
                 TotalPrice = order.TotalPrice,
                 CustomerId = order.CustomerId,
                 CustomerName = customer.Name ?? "MissingName",
