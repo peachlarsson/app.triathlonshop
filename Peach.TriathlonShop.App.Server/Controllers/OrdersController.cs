@@ -284,6 +284,9 @@ namespace Peach.TriathlonShop.App.Server.Controllers
             if (order.Status != OrderStatus.Created)
                 return BadRequest("Only orders with status 'Created' can be confirmed.");
 
+            order.Status = OrderStatus.Confirmed;
+            await context.SaveChangesAsync();
+
             // Publish service bus event triathlonshop.order.confirm
             var sender = serviceBusClient.CreateSender("triathlonshop.order.confirm");
             var message = new ServiceBusMessage(BinaryData.FromObjectAsJson(new OrderConfirmEventMessageModel
