@@ -5,6 +5,7 @@ namespace Peach.TriathlonShop.Database.Models;
 public class TransportOrder : BaseEntity
 {
     public required long OrderId { get; set; }
+    [System.ComponentModel.DataAnnotations.Schema.Column("TransportStatus")]
     public required TransportStatus Status { get; set; }
     public string? ConsignmentNumber { get; set; }
     public string? TrackingUrl { get; set; }

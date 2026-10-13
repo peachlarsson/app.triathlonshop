@@ -12,6 +12,7 @@ public class TriathlonShopDbContext(DbContextOptions<TriathlonShopDbContext> opt
     public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<TransportOrder> TransportOrders => Set<TransportOrder>();
     public DbSet<Invoice> Invoices => Set<Invoice>();
+    public DbSet<OrderEvent> OrderEvents => Set<OrderEvent>();
 
     private const string DefaultSchema = "dbo";
     private const string DefaultTimestampSql = "SYSDATETIMEOFFSET()";
@@ -20,39 +21,80 @@ public class TriathlonShopDbContext(DbContextOptions<TriathlonShopDbContext> opt
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Article>()
-            .ToTable(nameof(Article), DefaultSchema)
-            .Property(e => e.CreatedAt)
-            .HasDefaultValueSql(DefaultTimestampSql);
+        modelBuilder.Entity<Article>(entity =>
+        {
+            entity.ToTable(nameof(Article), DefaultSchema);
 
-        modelBuilder.Entity<Customer>()
-            .ToTable(nameof(Customer), DefaultSchema)
-            .Property(e => e.CreatedAt)
-            .HasDefaultValueSql(DefaultTimestampSql);
+            entity.Property(e => e.CreatedAt)
+                  .HasDefaultValueSql(DefaultTimestampSql);
+        });
 
-        modelBuilder.Entity<Order>()
-            .ToTable("SalesOrder", DefaultSchema)
-            .Property(e => e.CreatedAt)
-            .HasDefaultValueSql(DefaultTimestampSql);
+        modelBuilder.Entity<Customer>(entity =>
+        {
+            entity.ToTable(nameof(Customer), DefaultSchema);
 
-        modelBuilder.Entity<OrderRow>()
-            .ToTable("SalesOrderRow", DefaultSchema)
-            .Property(e => e.CreatedAt)
-            .HasDefaultValueSql(DefaultTimestampSql);
+            entity.Property(e => e.CreatedAt)
+                  .HasDefaultValueSql(DefaultTimestampSql);
+        });
 
-        modelBuilder.Entity<Notification>()
-            .ToTable(nameof(Notification), DefaultSchema)
-            .Property(e => e.CreatedAt)
-            .HasDefaultValueSql(DefaultTimestampSql);
+        modelBuilder.Entity<Order>(entity =>
+        {
+            entity.ToTable("SalesOrder", DefaultSchema);
 
-        modelBuilder.Entity<TransportOrder>()
-            .ToTable(nameof(TransportOrder), DefaultSchema)
-            .Property(e => e.CreatedAt)
-            .HasDefaultValueSql(DefaultTimestampSql);
+            entity.Property(e => e.Status)
+                  .HasConversion<string>();
 
-        modelBuilder.Entity<Invoice>()
-            .ToTable(nameof(Invoice), DefaultSchema)
-            .Property(e => e.CreatedAt)
-            .HasDefaultValueSql(DefaultTimestampSql);
+            entity.Property(e => e.CreatedAt)
+                  .HasDefaultValueSql(DefaultTimestampSql);
+        });
+
+        modelBuilder.Entity<OrderRow>(entity =>
+        {
+            entity.ToTable(nameof(OrderRow), DefaultSchema);
+
+            entity.Property(e => e.CreatedAt)
+                  .HasDefaultValueSql(DefaultTimestampSql);
+        });
+
+        modelBuilder.Entity<Notification>(entity =>
+        {
+            entity.ToTable("CustomerNotification", DefaultSchema);
+
+            entity.Property(e => e.CreatedAt)
+                  .HasDefaultValueSql(DefaultTimestampSql);
+        });
+
+        modelBuilder.Entity<TransportOrder>(entity =>
+        {
+            entity.ToTable(nameof(TransportOrder), DefaultSchema);
+
+            entity.Property(e => e.Status)
+                  .HasConversion<string>();
+
+            entity.Property(e => e.CreatedAt)
+                  .HasDefaultValueSql(DefaultTimestampSql);
+        });
+
+        modelBuilder.Entity<Invoice>(entity =>
+        {
+            entity.ToTable(nameof(Invoice), DefaultSchema);
+
+            entity.Property(e => e.Status)
+                  .HasConversion<string>();
+
+            entity.Property(e => e.CreatedAt)
+                  .HasDefaultValueSql(DefaultTimestampSql);
+        });
+
+        modelBuilder.Entity<OrderEvent>(entity =>
+        {
+            entity.ToTable(nameof(OrderEvent), DefaultSchema);
+
+            entity.Property(e => e.Status)
+                  .HasConversion<string>();
+
+            entity.Property(e => e.CreatedAt)
+                  .HasDefaultValueSql(DefaultTimestampSql);
+        });
     }
 }

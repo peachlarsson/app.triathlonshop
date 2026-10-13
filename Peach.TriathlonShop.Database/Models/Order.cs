@@ -4,6 +4,7 @@ namespace Peach.TriathlonShop.Database.Models;
 
 public class Order : BaseEntity
 {
+    [System.ComponentModel.DataAnnotations.Schema.Column("OrderStatus")]
     public required OrderStatus Status { get; set; }
     public required long CustomerId { get; set; }
 
