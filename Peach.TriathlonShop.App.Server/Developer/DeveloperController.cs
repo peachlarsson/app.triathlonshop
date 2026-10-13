@@ -4,6 +4,7 @@ using Peach.TriathlonShop.App.Server.Developer.Extensions;
 using Peach.TriathlonShop.App.Server.Developer.Models;
 using Peach.TriathlonShop.Database;
 using Peach.TriathlonShop.Database.Models;
+using Peach.TriathlonShop.Database.Models.Enums;
 
 namespace Peach.TriathlonShop.App.Server.Developer;
 
@@ -23,6 +24,7 @@ public class DeveloperController(TriathlonShopDbContext context) : ControllerBas
             {
                 CustomerId = customers[Random.Shared.Next(customers.Count)].Id,
                 Number = $"ORD-{Guid.NewGuid()}",
+                Status = OrderStatus.Created,
                 TotalPrice = 0,
             };
         

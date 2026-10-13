@@ -7,6 +7,7 @@ using Peach.TriathlonShop.App.Server.Models;
 using Peach.TriathlonShop.App.Server.Utilities;
 using Peach.TriathlonShop.Database;
 using Peach.TriathlonShop.Database.Models;
+using Peach.TriathlonShop.Database.Models.Enums;
 
 namespace Peach.TriathlonShop.App.Server.Controllers
 {
@@ -196,6 +197,7 @@ namespace Peach.TriathlonShop.App.Server.Controllers
             {
                 Id = 0,
                 Number = "ORD-" + Guid.NewGuid(),
+                Status = OrderStatus.Created,
                 TotalPrice = orderRows.Sum(row => row.Article.UnitPrice * row.Row.Quantity),
                 CustomerId = request.CustomerId,
                 Customer = customer,
