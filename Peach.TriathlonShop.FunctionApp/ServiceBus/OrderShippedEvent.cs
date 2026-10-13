@@ -9,6 +9,7 @@ using Peach.TriathlonShop.FunctionApp.Models;
 using Peach.TriathlonShop.FunctionApp.Queues;
 using Peach.TriathlonShop.FunctionApp.Queues.Models;
 using Peach.TriathlonShop.FunctionApp.ServiceBus.Models;
+using Peach.TriathlonShop.ServiceBus.Client.Models;
 
 namespace Peach.TriathlonShop.FunctionApp.ServiceBus
 {
@@ -43,14 +44,6 @@ namespace Peach.TriathlonShop.FunctionApp.ServiceBus
 
 namespace Peach.TriathlonShop.FunctionApp.ServiceBus.Models
 {
-    public class OrderShippedEventMessageModel
-    {
-        public const string EventType = "triathlonshop.order.shipped";
-
-        public required long OrderId { get; set; }
-        public required DateTimeOffset EventCreated { get; set; }
-    }
-
     public class OrderShippedOutput
     {
         [QueueOutput(SendNotification.QueueName)]
