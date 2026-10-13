@@ -102,6 +102,36 @@ function App() {
                 <Typography>Order number: {order.number}</Typography>
                 <Typography>Customer: {order.customerName}</Typography>
                 <Typography>Total price: SEK {order.totalPrice}</Typography>
+                {order.isConfirmed && (
+                    <Typography sx={{ mt: 2 }}>[ CONFIRMED ]</Typography>
+                )}
+
+                {!order.isConfirmed && (
+                    <Button sx={{ mt: 2, float: 'right' }}
+                        variant="contained"
+                        onClick={async () => {
+                            if (!id) {
+                                return;
+                            }
+
+                            const response = await fetch(`/api/orders/confirm/${id}`, {
+                                method: 'POST'
+                            });
+
+                            if (response.ok) {
+                                setOrder({ ...order, isConfirmed: true });
+                            }
+                        }}
+                    >
+                        Confirm Order
+                    </Button>
+                )}
+
+                {order.isConfirmed && (
+                    <Typography sx={{ mt: 2, float: 'right' }}>
+                        Order is confirmed
+                    </Typography>
+                )}
 
                 <Stack spacing={3} sx={{ mt: 3 }}>
                     <Box sx={{ p: 2 }}>
@@ -160,24 +190,6 @@ function App() {
                         )}
                     />
                 </Stack>
-
-                {!order.isConfirmed && (
-                    <Button sx={{ mt: 2, float: 'right' }}
-
-                        variant="contained"
-                        onClick={() => {
-                            // Call the API /orders/{id}/confirm
-                        }}
-                    >
-                        Confirm Order
-                    </Button>
-                )}
-
-                {order.isConfirmed && (
-                    <Typography sx={{ mt: 2, float: 'right' }}>
-                        Order is confirmed
-                    </Typography>
-                )}
             </Box>
         </Stack>
     );
