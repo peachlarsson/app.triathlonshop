@@ -44,6 +44,43 @@ namespace Peach.TriathlonShop.App.Server.Controllers
                         CreatedAt = row.CreatedAt,
                         UpdatedAt = row.UpdatedAt,
                     }).ToList(),
+                    NotificationHistory = context.Notifications
+                        .Where(notification => notification.OrderId == q.Id)
+                        .OrderByDescending(notification => notification.CreatedAt)
+                        .Select(notification => new NotificationHistoryDto
+                        {
+                            Id = notification.Id,
+                            OrderStatus = notification.OrderStatus.ToString(),
+                            Destination = notification.Destination,
+                            CreatedAt = notification.CreatedAt,
+                            UpdatedAt = notification.UpdatedAt,
+                        }).ToList(),
+                    TransportHistory = context.TransportOrders
+                        .Where(transport => transport.OrderId == q.Id)
+                        .OrderByDescending(transport => transport.CreatedAt)
+                        .Select(transport => new TransportHistoryDto
+                        {
+                            Id = transport.Id,
+                            Status = transport.Status.ToString(),
+                            Carrier = transport.Carrier,
+                            ConsignmentNumber = transport.ConsignmentNumber,
+                            TrackingUrl = transport.TrackingUrl,
+                            Destination = transport.Destination,
+                            ShippedAt = transport.ShippedAt,
+                            EstimatedDeliveryDate = transport.EstimatedDeliveryDate,
+                            CreatedAt = transport.CreatedAt,
+                            UpdatedAt = transport.UpdatedAt,
+                        }).ToList(),
+                    InvoiceHistory = context.Invoices
+                        .Where(invoice => invoice.OrderId == q.Id)
+                        .OrderByDescending(invoice => invoice.CreatedAt)
+                        .Select(invoice => new InvoiceHistoryDto
+                        {
+                            Id = invoice.Id,
+                            Status = invoice.Status.ToString(),
+                            CreatedAt = invoice.CreatedAt,
+                            UpdatedAt = invoice.UpdatedAt,
+                        }).ToList(),
                     TotalPrice = q.TotalPrice,
                     CustomerId = q.CustomerId,
                     CustomerName = q.Customer != null && q.Customer.Name != null ? q.Customer.Name : "MissingName",
