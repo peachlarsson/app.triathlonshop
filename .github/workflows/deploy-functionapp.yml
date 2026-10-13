@@ -5,10 +5,10 @@ on:
     branches:
       - main
     paths:
-      - 'Peach.TriathlonShop.FunctionApp/**'
-      - 'Peach.TriathlonShop.Database/**'
-      - 'Peach.TriathlonShop.ServiceBus.Client/**'
-      - '.github/workflows/publish-functionapp.yml'
+      - .github/workflows/deploy-functionapp.yml
+      - Peach.TriathlonShop.FunctionApp/**
+      - Peach.TriathlonShop.Database/**
+      - Peach.TriathlonShop.ServiceBus.Client/**
   workflow_dispatch:
 
 env:
