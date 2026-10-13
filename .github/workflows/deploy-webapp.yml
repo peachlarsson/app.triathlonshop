@@ -3,6 +3,12 @@ name: Build and deploy to Azure Web App
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - .github/workflows/deploy-webapp.yml
+      - Peach.TriathlonShop.App.Server/**
+      - peach.triathlonshop.app.client/**
+      - Peach.TriathlonShop.Database/** 
+      - Peach.TriathlonShop.ServiceBus.Client/**
   workflow_dispatch:
 
 jobs:
