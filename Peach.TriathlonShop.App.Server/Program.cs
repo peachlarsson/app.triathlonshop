@@ -1,3 +1,4 @@
+using Azure.Messaging.ServiceBus;
 using Microsoft.EntityFrameworkCore;
 using Peach.TriathlonShop.Database;
 
@@ -10,6 +11,14 @@ if (string.IsNullOrEmpty(dbConnString))
     throw new InvalidOperationException("Database connection string is not configured.");
 
 builder.Services.AddDbContext<TriathlonShopDbContext>(opt => opt.UseSqlServer(dbConnString));
+
+/// Service Bus
+var serviceBusConnString = builder.Configuration.GetSection("ServiceBusConnectionString").Value;
+
+if (string.IsNullOrEmpty(serviceBusConnString))
+    throw new InvalidOperationException("Service Bus connection string is not configured.");
+
+builder.Services.AddSingleton(_ => new ServiceBusClient(serviceBusConnString));
 
 builder.Services.AddControllers();
 

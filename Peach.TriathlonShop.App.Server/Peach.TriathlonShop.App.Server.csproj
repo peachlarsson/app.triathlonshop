@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.21.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy">
       <Version>10.*-*</Version>
@@ -22,6 +23,7 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
     <ProjectReference Include="..\Peach.TriathlonShop.Database\Peach.TriathlonShop.Database.csproj" />
+    <ProjectReference Include="..\Peach.TriathlonShop.ServiceBus.Client\Peach.TriathlonShop.ServiceBus.Client.csproj" />
   </ItemGroup>
 
 </Project>

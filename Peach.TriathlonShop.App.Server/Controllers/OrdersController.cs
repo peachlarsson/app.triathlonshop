@@ -1,3 +1,4 @@
+using Azure.Messaging.ServiceBus;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Peach.TriathlonShop.App.Server.Controllers.Enums.Common;
@@ -8,12 +9,13 @@ using Peach.TriathlonShop.App.Server.Utilities;
 using Peach.TriathlonShop.Database;
 using Peach.TriathlonShop.Database.Models;
 using Peach.TriathlonShop.Database.Models.Enums;
+using Peach.TriathlonShop.ServiceBus.Client.Models;
 
 namespace Peach.TriathlonShop.App.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class OrdersController(TriathlonShopDbContext context) : ControllerBase
+    public class OrdersController(TriathlonShopDbContext context, ServiceBusClient serviceBusClient) : ControllerBase
     {
         [HttpGet("{id}")]
         public async Task<ActionResult<OrderDto>> GetById(
@@ -232,6 +234,30 @@ namespace Peach.TriathlonShop.App.Server.Controllers
             };
 
             return CreatedAtAction(nameof(Get), new { id = order.Id }, createdOrder);
+        }
+
+        [HttpPost("confirm/{orderId}")]
+        public async Task<ActionResult> OrderConfirm(long orderId)
+        {
+            var order = await context.Orders.FindAsync(orderId);
+
+            if (order is null)
+                return NotFound("Order does not exist.");
+
+            if (order.Status != OrderStatus.Created)
+                return BadRequest("Only orders with status 'Created' can be confirmed.");
+
+            // Publish service bus event triathlonshop.order.confirm
+            var sender = serviceBusClient.CreateSender("triathlonshop.order.confirm");
+            var message = new ServiceBusMessage(BinaryData.FromObjectAsJson(new OrderConfirmEventMessageModel
+            {
+                OrderId = order.Id,
+                EventCreated = DateTimeOffset.UtcNow,
+            }));
+
+            await sender.SendMessageAsync(message);
+
+            return Ok();
         }
     }
 }
