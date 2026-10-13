@@ -16,7 +16,7 @@ namespace Peach.TriathlonShop.FunctionApp.ServiceBus
     public class OrderShippedEvent(ILogger<OrderShippedEvent> logger, TriathlonShopDbContext context)
     {
         [Function(nameof(OrderShippedEvent))]
-        public async Task<OrderShippedOutput> Run([ServiceBusTrigger("triathlonshop.order.shipped", "triathlonshop", Connection = "ServiceBusConnectionString")] ServiceBusReceivedMessage message)
+        public async Task<OrderShippedOutput> Run([ServiceBusTrigger("triathlonshop.order.shipped", "triathlonshop-functionapp", Connection = "ServiceBusConnectionString")] ServiceBusReceivedMessage message)
         {
             var @event = message.Body.ToObjectFromJson<OrderShippedEventMessageModel>();
 
@@ -48,7 +48,7 @@ namespace Peach.TriathlonShop.FunctionApp.ServiceBus.Models
     {
         [QueueOutput(SendNotification.QueueName)]
         public required SendNotificationModel SendNotificationQueueMessage { get; set; }
-        
+
         [QueueOutput(CreateInvoice.QueueName)]
         public required CreateInvoiceModel CreateInvoiceQueueMessage { get; set; }
     }

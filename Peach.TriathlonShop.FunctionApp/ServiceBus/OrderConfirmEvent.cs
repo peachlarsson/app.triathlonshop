@@ -13,7 +13,7 @@ namespace Peach.TriathlonShop.FunctionApp.ServiceBus
     public class OrderConfirmEvent()
     {
         [Function(nameof(OrderConfirmEvent))]
-        public async Task<OrderConfirmEventOutput> Run([ServiceBusTrigger("triathlonshop.order.confirm", "triathlonshop", Connection = "ServiceBusConnectionString")] ServiceBusReceivedMessage message)
+        public async Task<OrderConfirmEventOutput> Run([ServiceBusTrigger("triathlonshop.order.confirm", "triathlonshop-functionapp", Connection = "ServiceBusConnectionString")] ServiceBusReceivedMessage message)
         {
             var @event = message.Body.ToObjectFromJson<OrderConfirmEventMessageModel>();
 
