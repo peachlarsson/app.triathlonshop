@@ -19,7 +19,8 @@ namespace Peach.TriathlonShop.App.Server.Controllers
             SortDirection sortOrder = SortDirection.Asc,
             int pageNumber = 1,
             int pageSize = 100,
-            string? articleName = null)
+            string? articleName = null,
+            long? orderId = null)
         {
             var query = context.OrderRows
                 .Select(q => new OrderRowDto
@@ -39,6 +40,11 @@ namespace Peach.TriathlonShop.App.Server.Controllers
                     UpdatedAt = q.UpdatedAt,
                 })
                 .AsQueryable();
+
+            if (orderId.HasValue)
+            {
+                query = query.Where(q => q.OrderId == orderId.Value);
+            }
 
             if (!string.IsNullOrWhiteSpace(articleName))
             {
