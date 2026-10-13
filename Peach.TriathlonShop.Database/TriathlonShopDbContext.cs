@@ -50,7 +50,7 @@ public class TriathlonShopDbContext(DbContextOptions<TriathlonShopDbContext> opt
 
         modelBuilder.Entity<OrderRow>(entity =>
         {
-            entity.ToTable(nameof(OrderRow), DefaultSchema);
+            entity.ToTable("SalesOrderRow", DefaultSchema);
 
             entity.Property(e => e.CreatedAt)
                   .HasDefaultValueSql(DefaultTimestampSql);
