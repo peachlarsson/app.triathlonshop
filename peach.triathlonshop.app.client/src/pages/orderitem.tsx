@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { DataTable, type ColumnDefinition } from '../components/DataTable';
 import { TimelineSection } from '../components/TimelineSection';
+import AddOrderItemCard from '../components/AddOrderRowCard';
 
 interface OrderRow {
     id: number;
@@ -69,8 +70,6 @@ function App() {
     const { id } = useParams();
     const [order, setOrder] = useState<Order | null>(null);
     const isConfirmed = order?.status === 'Confirmed';
-    const [sortBy, setSortBy] = useState('Id');
-    const [sortOrder, setSortOrder] = useState('Asc');
 
     const orderItemColumns: ColumnDefinition[] = [
         { key: 'lineNumber', label: 'Line Number' },
@@ -83,12 +82,33 @@ function App() {
     ];
 
     useEffect(() => {
-        if (!id) return;
 
-        fetch(`/api/orders/${id}?sortBy=${sortBy}&sortOrder=${sortOrder}`)
-            .then(r => r.json())
-            .then(setOrder);
-    }, [id, sortBy, sortOrder]);
+        let ignore = false;
+
+        const loadOrder = async () => {
+
+            if (!id)
+            {
+                return;
+            }
+
+            const response = await fetch(`/api/orders/${id}`);
+            const responseData = await response.json();
+
+            if (!ignore)
+            {
+                setOrder(responseData);
+            }
+        };
+
+        void loadOrder();
+
+        return () =>
+        {
+            ignore = true;
+        };
+
+    }, [id]);
 
     if (!order) {
         return <Typography>Loading...</Typography>;
@@ -105,12 +125,14 @@ function App() {
                 <Typography>Customer: {order.customerName}</Typography>
                 <Typography>Total price: SEK {order.totalPrice}</Typography>
                 <Typography>Status: {order.status}</Typography>
+
                 {isConfirmed && (
                     <Typography sx={{ mt: 2 }}>[ CONFIRMED ]</Typography>
                 )}
 
                 {!isConfirmed && (
-                    <Button sx={{ mt: 2, float: 'right' }}
+                    <Button
+                        sx={{ mt: 2, float: 'right' }}
                         variant="contained"
                         onClick={async () => {
                             if (!id) {
@@ -122,7 +144,7 @@ function App() {
                             });
 
                             if (response.ok) {
-                                const refreshedOrder = await fetch(`/api/orders/${id}?sortBy=${sortBy}&sortOrder=${sortOrder}`);
+                                const refreshedOrder = await fetch(`/api/orders/${id}`);
                                 const refreshedOrderData = await refreshedOrder.json();
                                 setOrder(refreshedOrderData);
                             }
@@ -141,15 +163,24 @@ function App() {
                                 data={order.items ?? []}
                                 isLoading={!order}
                                 tableId="orderItemTableLabel"
-                                sortBy={sortBy}
-                                sortOrder={sortOrder}
-                                onSortChange={(sortBy, sortOrder) => {
-                                    setSortBy(sortBy);
-                                    setSortOrder(sortOrder);
-                                }}
                             />
                         </Stack>
                     </Box>
+
+                    {!isConfirmed && id && (
+                        <AddOrderItemCard
+                            orderId={Number(id)}
+                            onOrderItemCreated={async () => {
+                                if (!id) {
+                                    return;
+                                }
+
+                                const response = await fetch(`/api/orders/${id}`);
+                                const responseData = await response.json();
+                                setOrder(responseData);
+                            }}
+                        />
+                    )}
 
                     <TimelineSection
                         title="Invoice"

@@ -96,6 +96,44 @@ namespace Peach.TriathlonShop.App.Server.Controllers
 
             return Ok(paginatedResult);
         }
+
+        [HttpPost("create/{orderId}")]
+        public async Task<IActionResult> CreateOrderRow(long orderId, OrderRowCreateDto orderRowCreateDto)
+        {
+            var order = await context.Orders
+                .Include(o => o.OrderRows)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
+
+            if (order == null)
+            {
+                return NotFound($"Order with ID {orderId} not found.");
+            }
+
+            foreach (var item in orderRowCreateDto.Articles)
+            {
+                var article = await context.Articles.FindAsync(item.Id);
+
+                if (article == null)
+                {
+                    return NotFound($"Article with ID {item.Id} not found.");
+                }
+
+                var orderRow = new Database.Models.OrderRow
+                {
+                    OrderId = orderId,
+                    LineNumber = order.OrderRows.Count + 1,
+                    ArticleId = item.Id,
+                    Quantity = item.Quantity,
+                    RowPrice = article.UnitPrice * item.Quantity
+                };
+
+                context.OrderRows.Add(orderRow);
+            }
+
+            order.TotalPrice = order.OrderRows.Sum(or => or.RowPrice);
+            await context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(Get), new { orderId }, orderRowCreateDto);
+        }
     }
 }
-
