@@ -9,7 +9,7 @@ public class NegotiateHttp()
 {
     [Function(nameof(NegotiateHttp))]
     public IActionResult Run(
-        [HttpTrigger(AuthorizationLevel.Function, "get", Route = "negotiate/{hubName}")] HttpRequest req,
+        [HttpTrigger(AuthorizationLevel.Function, "get", Route = "negotiation/{hubName}")] HttpRequest req,
         string hubName,
         [SignalRConnectionInfoInput(HubName = "{hubName}")] SignalRConnectionInfo testHubConnectionInfo)
     {
