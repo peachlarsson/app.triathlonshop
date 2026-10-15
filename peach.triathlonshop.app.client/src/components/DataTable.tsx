@@ -73,7 +73,13 @@ function getRowId(row: object): string | number | undefined
 }
 
 function getRowKey(row: object, rowIndex: number): React.Key {
-    return getRowId(row) ?? rowIndex;
+    const rowId = getRowId(row);
+
+    if (rowId !== undefined) {
+        return `${String(rowId)}-${rowIndex}`;
+    }
+
+    return rowIndex;
 }
 
 export function DataTable(
