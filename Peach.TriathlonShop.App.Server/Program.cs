@@ -1,6 +1,7 @@
 using Azure.Messaging.ServiceBus;
 using Microsoft.EntityFrameworkCore;
 using Peach.TriathlonShop.Database;
+using Peach.TriathlonShop.FunctionApp.Client.ServiceCollection;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,9 @@ if (string.IsNullOrEmpty(dbConnString))
     throw new InvalidOperationException("Database connection string is not configured.");
 
 builder.Services.AddDbContext<TriathlonShopDbContext>(opt => opt.UseSqlServer(dbConnString));
+
+/// TriathlonShop Function App Client
+builder.Services.AddTriathlonShopClient(builder.Configuration);
 
 /// Service Bus
 var serviceBusConnString = builder.Configuration.GetSection("ServiceBusConnectionString").Value;
