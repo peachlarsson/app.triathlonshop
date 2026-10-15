@@ -9,13 +9,14 @@ using Peach.TriathlonShop.App.Server.Utilities;
 using Peach.TriathlonShop.Database;
 using Peach.TriathlonShop.Database.Models;
 using Peach.TriathlonShop.Database.Models.Enums;
+using Peach.TriathlonShop.FunctionApp.Client;
 using Peach.TriathlonShop.ServiceBus.Client.Models;
 
 namespace Peach.TriathlonShop.App.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class OrdersController(TriathlonShopDbContext context, ServiceBusClient serviceBusClient) : ControllerBase
+    public class OrdersController(TriathlonShopDbContext context, ServiceBusClient serviceBusClient, ITriathlonShopClient triathlonShopClient) : ControllerBase
     {
         [HttpGet("{id}")]
         public async Task<ActionResult<OrderDto>> GetById(
@@ -301,6 +302,14 @@ namespace Peach.TriathlonShop.App.Server.Controllers
             await sender.SendMessageAsync(message);
 
             return Ok();
+        }
+
+        [HttpGet("negotiation")]
+        public async Task<ActionResult> GetNegotiationAsync()
+        {
+            var response = await triathlonShopClient.GetNegotiationAsync(hubName: "Orders");
+
+            return StatusCode(response.StatusCode);
         }
     }
 }
