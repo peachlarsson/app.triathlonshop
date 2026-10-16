@@ -13,12 +13,10 @@
   <ItemGroup>
 	<PackageReference Include="Azure.Identity" Version="1.21.0" />
 	<PackageReference Include="Azure.Messaging.ServiceBus" Version="7.21.0" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
-    <PackageReference Include="Microsoft.AspNetCore.SpaProxy">
-    <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="8.6.0" />
+	<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
+	<PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="10.*-*" />
+	<PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="8.6.0" />
 	<PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="8.6.0" />
-      <Version>10.*-*</Version>
-    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
