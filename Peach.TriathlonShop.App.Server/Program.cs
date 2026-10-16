@@ -1,10 +1,23 @@
+using Azure.Core;
 using Azure.Messaging.ServiceBus;
 using Microsoft.EntityFrameworkCore;
+using Peach.TriathlonShop.App.Server.Extensions;
+using Peach.TriathlonShop.App.Server.ServiceCollections;
 using Peach.TriathlonShop.Database;
-using Peach.TriathlonShop.FunctionApp.Client.ServiceCollection;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+TokenCredential credential;
+
+#if DEBUG
+    credential = builder.Configuration.CreateClientSecretCredential();
+#else
+    credential = new Azure.Identity.DefaultAzureCredential();
+#endif
+
+/// Register Azure App Configuration
+builder.AddCustomAzureAppConfiguration(credential, ["triathlonshop-web"]);
 
 /// Database
 var dbConnString = builder.Configuration.GetSection("DatabaseConnectionString").Value;
@@ -44,6 +57,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAzureAppConfiguration();
 
 app.UseAuthorization();
 
