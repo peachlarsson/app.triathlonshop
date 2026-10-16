@@ -1,4 +1,3 @@
-using Azure.Messaging.ServiceBus;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Peach.TriathlonShop.App.Server.Controllers.Enums.Common;
@@ -10,13 +9,12 @@ using Peach.TriathlonShop.Database;
 using Peach.TriathlonShop.Database.Models;
 using Peach.TriathlonShop.Database.Models.Enums;
 using Peach.TriathlonShop.FunctionApp.Client;
-using Peach.TriathlonShop.ServiceBus.Client.Models;
 
 namespace Peach.TriathlonShop.App.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class OrdersController(TriathlonShopDbContext context, ServiceBusClient serviceBusClient, ITriathlonShopClient triathlonShopClient) : ControllerBase
+    public class OrdersController(TriathlonShopDbContext context, ITriathlonShopClient triathlonShopClient) : ControllerBase
     {
         [HttpGet("{id}")]
         public async Task<ActionResult<OrderDto>> GetById(
@@ -290,16 +288,6 @@ namespace Peach.TriathlonShop.App.Server.Controllers
 
             order.Status = OrderStatus.Confirmed;
             await context.SaveChangesAsync();
-
-            // Publish service bus event triathlonshop.order.confirm
-            var sender = serviceBusClient.CreateSender("triathlonshop.order.confirm");
-            var message = new ServiceBusMessage(BinaryData.FromObjectAsJson(new OrderConfirmEventMessageModel
-            {
-                OrderId = order.Id,
-                EventCreated = DateTimeOffset.UtcNow,
-            }));
-
-            await sender.SendMessageAsync(message);
 
             return Ok();
         }
