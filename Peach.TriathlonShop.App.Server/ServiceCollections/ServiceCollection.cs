@@ -23,13 +23,13 @@ public static class ServiceCollection
 
             if (string.IsNullOrWhiteSpace(options.FunctionApp.BaseUrl)
                 || string.IsNullOrWhiteSpace(options.FunctionApp.KeyName)
-                || string.IsNullOrWhiteSpace(options.FunctionApp.KeyValue))
+                || string.IsNullOrWhiteSpace(options.FunctionApp.MasterKeyValue))
                 throw new InvalidOperationException("Missing configuration values: TriathlonShop/FunctionApp.");
 
             services.AddHttpClient<ITriathlonShopClient, TriathlonShopClient>(client =>
             {
                 client.BaseAddress = new Uri(options.FunctionApp.BaseUrl);
-                client.DefaultRequestHeaders.Add(options.FunctionApp.KeyName, options.FunctionApp.KeyValue);
+                client.DefaultRequestHeaders.Add(options.FunctionApp.KeyName, options.FunctionApp.MasterKeyValue);
             });
         }
         catch (Exception ex)
