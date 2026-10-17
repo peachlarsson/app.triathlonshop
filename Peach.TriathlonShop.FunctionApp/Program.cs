@@ -27,7 +27,7 @@ builder.Services.AddDatabaseConfiguration(builder.Configuration);
 /// Service Bus
 builder.Services.AddAzureClients(azure =>
 {
-    var serviceBusUri = builder.Configuration.GetSection("ServiceBus").GetSection("FullyQualifiedNamespace").Value;
+    var serviceBusUri = builder.Configuration.GetSection("Peach").GetSection("ServiceBusFullyQualifiedNamespace").Value;
 
     if (string.IsNullOrEmpty(serviceBusUri))
         throw new InvalidOperationException("Service Bus connection is not configured.");
