@@ -7,8 +7,8 @@ on:
       - .github/workflows/deploy-webapp.yml
       - Peach.TriathlonShop.App.Server/**
       - peach.triathlonshop.app.client/**
-      - Peach.TriathlonShop.Database/** 
-      - Peach.TriathlonShop.ServiceBus.Client/**
+      - Peach.TriathlonShop.Database/**
+      - Peach.TriathlonShop.FunctionApp.Client/**
   workflow_dispatch:
 
 jobs:
