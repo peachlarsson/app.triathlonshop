@@ -98,11 +98,11 @@ public static class ConfigurationExtensions
     {
         var options = AppConfigExtensions.GetPeachOptions(configuration);
 
+        if (string.IsNullOrEmpty(options.ServiceBusFullyQualifiedNamespace))
+            throw new InvalidOperationException("Service Bus connection is not configured.");
+
         services.AddAzureClients(azure =>
         {
-            if (string.IsNullOrEmpty(options.ServiceBusFullyQualifiedNamespace))
-                throw new InvalidOperationException("Service Bus connection is not configured.");
-
             azure.AddServiceBusClientWithNamespace(options.ServiceBusFullyQualifiedNamespace);
             azure.UseCredential(configuration.CreateClientSecretCredential());
         });
@@ -113,6 +113,9 @@ public static class ConfigurationExtensions
     public static IServiceCollection AddSignalRConnection(this IServiceCollection services, IConfiguration configuration)
     {
         var options = AppConfigExtensions.GetPeachOptions(configuration);
+
+        if (string.IsNullOrEmpty(options.SignalRConnectionString))
+            throw new InvalidOperationException("SignalR connection is not configured.");
 
         services.AddSingleton<IServiceManager>(_ =>
             (IServiceManager)new ServiceManagerBuilder()
