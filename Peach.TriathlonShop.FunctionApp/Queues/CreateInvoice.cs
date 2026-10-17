@@ -1,20 +1,35 @@
 using Azure.Storage.Queues.Models;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.SignalR.Management;
 using Microsoft.Extensions.Logging;
 using Peach.TriathlonShop.Database;
 using Peach.TriathlonShop.Database.Models;
+using Peach.TriathlonShop.FunctionApp.Extensions;
 using Peach.TriathlonShop.FunctionApp.Models;
 using System.Text.Json;
 
 namespace Peach.TriathlonShop.FunctionApp.Queues
 {
-    public class CreateInvoice(ILogger<CreateInvoice> logger, TriathlonShopDbContext context)
+    public class CreateInvoice(ILogger<CreateInvoice> logger, TriathlonShopDbContext context, IServiceManager signalRServiceManager)
     {
         public const string QueueName = "create-invoice";
 
         [Function(nameof(CreateInvoice))]
         public async Task Run([QueueTrigger(QueueName, Connection = "")] QueueMessage message)
         {
+            await using (var hub = await signalRServiceManager.CreateHubContextAsync(SignalRHubName.OrdersHub))
+            {
+                await hub.Clients.All.SendCoreAsync(
+                    "Orders",
+                    [
+                        new
+                        {
+                            Message = "Processing invoice creation...",
+                            Timestamp = DateTimeOffset.UtcNow
+                        }
+                    ]);
+            }
+
             var model = JsonSerializer.Deserialize<CreateInvoiceModel>(message.Body.ToString());
 
             if (model == null)
