@@ -6,6 +6,11 @@ namespace Peach.TriathlonShop.FunctionApp.Client;
 
 public class TriathlonShopClient(HttpClient httpClient, IConfiguration configuration) : ITriathlonShopClient
 {
+    private readonly JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions
+    {
+        PropertyNameCaseInsensitive = true,
+    };
+
     public async Task<Response<SignalRConnectionInfo>> GetNegotiationAsync(string hubName)
     {
         var request = new HttpRequestMessage
@@ -32,7 +37,7 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
         {
             IsSuccess = true,
             StatusCode = (int)response.StatusCode,
-            Content = JsonSerializer.Deserialize<SignalRConnectionInfo>(responseContent)
+            Content = JsonSerializer.Deserialize<SignalRConnectionInfo>(responseContent, jsonSerializerOptions)
         };
     }
 
