@@ -47,6 +47,10 @@ export default defineConfig({
     },
     server: {
         proxy: {
+            '^/api/homepage': {
+                target,
+                secure: false
+            },
             '^/api/articles': {
                 target,
                 secure: false
