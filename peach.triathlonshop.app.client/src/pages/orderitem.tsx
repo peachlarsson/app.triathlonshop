@@ -283,6 +283,7 @@ function App() {
                                         {item.consignmentNumber && <Typography variant="body2">Consignment: {item.consignmentNumber}</Typography>}
                                         {item.destination && <Typography variant="body2">Destination: {item.destination}</Typography>}
                                         {item.trackingUrl && <Typography variant="body2">Tracking: {item.trackingUrl}</Typography>}
+                                        {item.estimatedDeliveryDate && <Typography variant="body2">Estimated Delivery: {item.estimatedDeliveryDate}</Typography>}
                                     </>
                                 )}
                             />
