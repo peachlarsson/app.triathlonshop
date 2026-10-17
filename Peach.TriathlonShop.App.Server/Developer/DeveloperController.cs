@@ -6,95 +6,114 @@ using Peach.TriathlonShop.Database;
 using Peach.TriathlonShop.Database.Models;
 using Peach.TriathlonShop.Database.Models.Enums;
 
-namespace Peach.TriathlonShop.App.Server.Developer;
-
-[ApiController]
-[Route("api/[controller]")]
-public class DeveloperController(TriathlonShopDbContext context) : ControllerBase
+namespace Peach.TriathlonShop.App.Server.Developer
 {
-    [HttpPost("orders/random/{items}")]
-    public async Task<IActionResult> CreateOrder(int items)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class DeveloperController(TriathlonShopDbContext context) : ControllerBase
     {
-        var articles = await context.Articles.ToListAsync();
-        var customers = await context.Customers.ToListAsync();
-
-        for (int i = 0; i < items; i++)
+        [HttpPost("orders/random/")]
+        public async Task<IActionResult> CreateOrder(CreateRandomOrdersModel model)
         {
-            var order = new Order
-            {
-                CustomerId = customers[Random.Shared.Next(customers.Count)].Id,
-                Number = $"ORD-{Guid.NewGuid()}",
-                Status = OrderStatus.Created,
-                TotalPrice = 0,
-            };
-        
-            if (context.Orders.Any(o => o.Number == order.Number))
-            {
-                i--;
-                continue;
-            }
-            
-            context.Orders.Add(order);
-            await context.SaveChangesAsync();
+            var articles = await context.Articles.ToListAsync();
+            var customers = await context.Customers.ToListAsync();
 
-            int articleCount = Random.Shared.Next(1, 5);
-
-            for (int j = 0; j < articleCount; j++)
+            for (int i = 0; i < model.OrderRows; i++)
             {
-                int articleId = Random.Shared.Next(articles.Count);
-                int quantity = Random.Shared.Next(1, 10);
-
-                var orderRow = new OrderRow
+                var order = new Order
                 {
-                    ArticleId = articles[articleId].Id,
-                    LineNumber = j + 1,
-                    Quantity = quantity,
-                    RowPrice = articles[articleId].UnitPrice * quantity,
-                    OrderId = order.Id,
+                    CustomerId = customers[Random.Shared.Next(customers.Count)].Id,
+                    Number = $"ORD-{Guid.NewGuid()}",
+                    Status = OrderStatus.Created,
+                    TotalPrice = 0,
                 };
 
-                if (context.OrderRows.Any(or => or.ArticleId == orderRow.ArticleId && or.Quantity == orderRow.Quantity && or.RowPrice == orderRow.RowPrice))
+                if (context.Orders.Any(o => o.Number == order.Number))
                 {
-                    j--;
+                    i--;
                     continue;
                 }
 
-                context.OrderRows.Add(orderRow);
+                context.Orders.Add(order);
+                await context.SaveChangesAsync();
+
+                int articleCount = Random.Shared.Next(model.ArticlesCountIntervalStart ?? 1, model.ArticlesCountIntervalEnd ?? 5);
+
+                for (int j = 0; j < articleCount; j++)
+                {
+                    int articleId = Random.Shared.Next(articles.Count);
+                    int quantity = Random.Shared.Next(model.QuantityIntervalStart ?? 1, model.QuantityIntervalEnd ?? 10);
+
+                    var orderRow = new OrderRow
+                    {
+                        ArticleId = articles[articleId].Id,
+                        LineNumber = j + 1,
+                        Quantity = quantity,
+                        RowPrice = articles[articleId].UnitPrice * quantity,
+                        OrderId = order.Id,
+                    };
+
+                    if (context.OrderRows.Any(or => or.ArticleId == orderRow.ArticleId && or.Quantity == orderRow.Quantity && or.RowPrice == orderRow.RowPrice))
+                    {
+                        j--;
+                        continue;
+                    }
+
+                    context.OrderRows.Add(orderRow);
+                    await context.SaveChangesAsync();
+                }
+
+                order.TotalPrice = context.OrderRows.Where(or => or.OrderId == order.Id).Sum(or => or.RowPrice);
                 await context.SaveChangesAsync();
             }
 
-            order.TotalPrice = context.OrderRows.Where(or => or.OrderId == order.Id).Sum(or => or.RowPrice);
-            await context.SaveChangesAsync();
+            return Ok();
         }
 
-        return Ok();
-    }
-
-    [HttpPost("articles/random/{items}")]
-    public async Task<IActionResult> CreateArticle(int items)
-    {
-        List<Article> articles = [];
-
-        for (int i = 0; i < items; i++)
+        [HttpPost("articles/random/{items}")]
+        public async Task<IActionResult> CreateArticle(int items)
         {
-            var article = new Article
-            {
-                Number = $"ART-{Guid.NewGuid()}",
-                Name = ExtensionsCollection.GetRandomArticle(),
-                UnitPrice = Random.Shared.Next(1, 100)
-            };
+            List<Article> articles = [];
 
-            if (context.Articles.Any(a => a.Name == article.Name))
+            for (int i = 0; i < items; i++)
             {
-                i--;
-                continue;
+                var article = new Article
+                {
+                    Number = $"ART-{Guid.NewGuid()}",
+                    Name = ExtensionsCollection.GetRandomArticle(),
+                    UnitPrice = Random.Shared.Next(1, 100)
+                };
+
+                if (context.Articles.Any(a => a.Name == article.Name))
+                {
+                    i--;
+                    continue;
+                }
+
+                articles.Add(article);
             }
 
-            articles.Add(article);
+            context.Articles.AddRange(articles);
+            await context.SaveChangesAsync();
+            return Ok();
         }
+    }
+}
 
-        context.Articles.AddRange(articles);
-        await context.SaveChangesAsync();
-        return Ok();
+namespace Peach.TriathlonShop.App.Server.Developer.Models
+{
+    public class ArticleModel
+    {
+        public required string Name { get; set; }
+        public required decimal UnitPrice { get; set; }
+    }
+
+    public class CreateRandomOrdersModel
+    {
+        public int? OrderRows { get; set; }
+        public int? ArticlesCountIntervalStart { get; set; }
+        public int? ArticlesCountIntervalEnd { get; set; }
+        public int? QuantityIntervalStart { get; set; }
+        public int? QuantityIntervalEnd { get; set; }
     }
 }
