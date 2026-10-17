@@ -1,7 +1,7 @@
 import { Box, Button, Stack, Typography } from '@mui/material';
-import { HubConnectionBuilder } from '@microsoft/signalr';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { createSignalRConnection } from '../hooks/useSignalRConnection';
 import { DataTable, type ColumnDefinition } from '../components/DataTable';
 import { TimelineSection } from '../components/TimelineSection';
 import AddOrderItemCard from '../components/AddOrderRowCard';
@@ -64,11 +64,6 @@ interface Order {
     customerName: string;
     createdAt: string;
     updatedAt?: string | null;
-}
-
-interface SignalRNegotiateResponse {
-    url: string;
-    accessToken: string;
 }
 
 interface SignalRTestMessagePayload {
@@ -134,22 +129,11 @@ function App() {
 
     useEffect(() => {
         let isDisposed = false;
+        let connection: Awaited<ReturnType<typeof createSignalRConnection>> | null = null;
 
         const connectSignalR = async () => {
             try {
-                const negotiateResponse = await fetch('/api/orders/negotiation');
-
-                if (!negotiateResponse.ok) {
-                    throw new Error('Failed to negotiate SignalR connection.');
-                }
-
-                const { url, accessToken } = await negotiateResponse.json() as SignalRNegotiateResponse;
-
-                const connection = new HubConnectionBuilder()
-                    .withUrl(url, {
-                        accessTokenFactory: () => accessToken
-                    })
-                    .build();
+                connection = await createSignalRConnection('/api/orders/negotiation');
 
                 connection.on(`order${id}`, async (msg: SignalRTestMessagePayload) => {
                     const message = typeof msg?.Message === 'string'
@@ -184,24 +168,17 @@ function App() {
 
                 if (isDisposed) {
                     await connection.stop();
-                    return;
                 }
-
-                window.addEventListener('beforeunload', () => {
-                    void connection.stop();
-                }, { once: true });
-
-                return connection;
             } catch (error) {
                 console.error('SignalR connection error', error);
             }
         };
 
-        const activeConnectionPromise = connectSignalR();
+        void connectSignalR();
 
         return () => {
             isDisposed = true;
-            void activeConnectionPromise.then((connection) => connection?.stop());
+            void connection?.stop();
         };
     }, [id]);
 
