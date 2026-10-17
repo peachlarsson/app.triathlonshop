@@ -8,14 +8,14 @@ public class AppConfigExtensions
     public static PeachOptions GetPeachOptions(IConfiguration configuration)
     {
         var options = new PeachOptions();
-        configuration.Bind(PeachOptions.SectionName, options);
+        configuration.GetSection("Peach").Bind(options);
         return options;
     }
 
     public static TriathlonShopOptions GetTriathlonShopOptions(IConfiguration configuration)
     {
         var options = new TriathlonShopOptions();
-        configuration.Bind(options);
+        configuration.GetSection("TriathlonShop").Bind(options);
         return options;
     }
 }

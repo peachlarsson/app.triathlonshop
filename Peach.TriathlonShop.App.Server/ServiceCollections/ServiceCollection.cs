@@ -38,18 +38,18 @@ public static class ServiceCollection
             if (options == null)
                 throw new InvalidOperationException("Missing configurations.");
 
-            if (options.FunctionApp == null)
+            if (options.API == null)
                 throw new InvalidOperationException("Missing configuration section: TriathlonShop/FunctionApp.");
 
-            if (string.IsNullOrWhiteSpace(options.FunctionApp.BaseUrl)
-                || string.IsNullOrWhiteSpace(options.FunctionApp.KeyName)
-                || string.IsNullOrWhiteSpace(options.FunctionApp.MasterKeyValue))
+            if (string.IsNullOrWhiteSpace(options.API.BaseUrl)
+                || string.IsNullOrWhiteSpace(options.API.KeyName)
+                || string.IsNullOrWhiteSpace(options.API.MasterKeyValue))
                 throw new InvalidOperationException("Missing configuration values: TriathlonShop/FunctionApp.");
 
             services.AddHttpClient<ITriathlonShopClient, TriathlonShopClient>(client =>
             {
-                client.BaseAddress = new Uri(options.FunctionApp.BaseUrl);
-                client.DefaultRequestHeaders.Add(options.FunctionApp.KeyName, options.FunctionApp.MasterKeyValue);
+                client.BaseAddress = new Uri(options.API.BaseUrl);
+                client.DefaultRequestHeaders.Add(options.API.KeyName, options.API.MasterKeyValue);
             });
         }
         catch (Exception ex)

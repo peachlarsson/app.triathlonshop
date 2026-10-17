@@ -2,5 +2,5 @@
 
 public class TriathlonShopOptions
 {
-    public FunctionAppOptions? FunctionApp { get; set; }
+    public API? API { get; set; }
 }

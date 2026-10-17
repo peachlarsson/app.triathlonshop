@@ -1,6 +1,6 @@
 ﻿namespace Peach.TriathlonShop.App.Server.Extensions.Options;
 
-public class FunctionAppOptions
+public class API
 {
     public string? BaseUrl { get; set; }
     public string? KeyName { get; set; }
