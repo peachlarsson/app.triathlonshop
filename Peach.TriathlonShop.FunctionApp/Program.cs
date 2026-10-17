@@ -21,6 +21,10 @@ credential = builder.Configuration.CreateClientSecretCredential();
     credential = new Azure.Identity.DefaultAzureCredential();
 #endif
 
+/// Register Azure App Configuration
+builder.AddCustomAzureAppConfiguration(credential, ["triathlonshop-web"]);
+
+/// OpenTelemetry
 if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING")))
 {
     builder.Services.AddOpenTelemetry()

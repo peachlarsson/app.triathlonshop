@@ -1,6 +1,6 @@
 ﻿using Azure.Core;
 using Azure.Identity;
-using Microsoft.AspNetCore.Builder;
+using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 
@@ -8,7 +8,7 @@ namespace Peach.TriathlonShop.FunctionApp.Extensions;
 
 public static class ConfigurationExtensions
 {
-    public static WebApplicationBuilder AddCustomAzureAppConfiguration(this WebApplicationBuilder builder, TokenCredential credential, string[] labels)
+    public static FunctionsApplicationBuilder AddCustomAzureAppConfiguration(this FunctionsApplicationBuilder builder, TokenCredential credential, string[] labels)
     {
         builder.Configuration.AddAzureAppConfiguration(options =>
         {
@@ -26,7 +26,7 @@ public static class ConfigurationExtensions
             {
                 foreach (var label in labels)
                 {
-                    refreshOptions.Register("*", label, true);
+                    refreshOptions.Register("*", label, refreshAll: true);
                 }
             });
 
