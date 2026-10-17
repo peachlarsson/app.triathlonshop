@@ -48,7 +48,7 @@ public static class ServiceCollection
 
             services.AddHttpClient<ITriathlonShopClient, TriathlonShopClient>(client =>
             {
-                client.BaseAddress = new Uri(options.API.BaseUrl);
+                client.BaseAddress = new Uri($"{options.API.BaseUrl}/api/");
                 client.DefaultRequestHeaders.Add(options.API.KeyName, options.API.MasterKeyValue);
             });
         }
