@@ -5,18 +5,10 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-TokenCredential credential;
-
-#if DEBUG
-    credential = builder.Configuration.CreateClientSecretCredential();
-#else
-    credential = new Azure.Identity.DefaultAzureCredential();
-#endif
-
 builder.Services.AddApplicationInsightsTelemetry();
 
 /// Register Azure App Configuration
-builder.AddCustomAzureAppConfiguration(credential, ["triathlonshop-web"]);
+builder.AddCustomClientSecretAzureAppConfiguration();
 
 /// Database
 builder.Services.AddDatabaseConfiguration(builder.Configuration);

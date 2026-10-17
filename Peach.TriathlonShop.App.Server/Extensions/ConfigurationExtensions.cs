@@ -35,6 +35,38 @@ public static class ConfigurationExtensions
         return builder;
     }
 
+    public static WebApplicationBuilder AddCustomClientSecretAzureAppConfiguration(this WebApplicationBuilder builder)
+    {
+        builder.Configuration.AddAzureAppConfiguration(options =>
+        {
+            var appConfigEndpoint = builder.Configuration["AzureAppConfigEndpoint"]
+                ?? throw new InvalidOperationException("Azure App Configuration endpoint is not configured.");
+
+            TokenCredential credential = CreateClientSecretCredential(builder.Configuration);
+            var labels = new[] { "triathlonshop-web" };
+
+            options.Connect(new Uri(appConfigEndpoint), credential);
+
+            foreach (var label in labels)
+            {
+                options.Select(KeyFilter.Any, label);
+            }
+
+            options.ConfigureRefresh(refreshOptions =>
+            {
+                foreach (var label in labels)
+                {
+                    refreshOptions.Register("*", label, true);
+                }
+            });
+
+            options.ConfigureKeyVault(kv => kv.SetCredential(CreateClientSecretCredential(builder.Configuration)));
+        });
+
+        builder.Services.AddAzureAppConfiguration();
+        return builder;
+    }
+
 #if DEBUG
     public static TokenCredential CreateClientSecretCredential(this IConfiguration configuration)
     {
