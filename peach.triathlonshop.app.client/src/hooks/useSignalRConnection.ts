@@ -10,8 +10,7 @@ export async function createSignalRConnection(controllerEndpoint: string): Promi
     const negotiateResponse = await fetch(`${controllerEndpoint}`);
 
     if (!negotiateResponse.ok) {
-        console.log("Negotiation failed");
-        return null;
+        throw new Error("Negotiation failed.");
     }
 
     const { url, accessToken } = await negotiateResponse.json() as SignalRNegotiateResponse;

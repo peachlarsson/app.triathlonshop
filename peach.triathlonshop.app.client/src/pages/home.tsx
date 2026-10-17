@@ -117,6 +117,10 @@ function HomePage() {
                 signalRConnection = await createSignalRConnection('/api/homepage/negotiation/HomePage');
 
                 signalRConnection.on('homePage', (msg: SignalRHomePageMessage) => {
+                    if (!msg.Message) {
+                        return;
+                    }
+
                     void refreshStatisticFromSignalRMessage(msg.Message);
                 });
 
