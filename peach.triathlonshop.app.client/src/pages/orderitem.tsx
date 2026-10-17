@@ -72,13 +72,15 @@ interface SignalRNegotiateResponse {
 }
 
 interface SignalRTestMessagePayload {
-    Message?: unknown;
-    [key: string]: unknown;
+    Message?: string;
+    Update?: boolean;
+    Timestamp?: string;
 }
 
 interface SignalRMessageTimelineItem {
     id: number;
     message: string;
+    update: boolean;
     receivedAt: string;
 }
 
@@ -150,23 +152,31 @@ function App() {
                     .build();
 
                 connection.on(`order${id}`, async (msg: SignalRTestMessagePayload) => {
-                    const timestamp = new Date().toISOString();
                     const message = typeof msg?.Message === 'string'
                         ? msg.Message
                         : JSON.stringify(msg);
+
+                    const receivedAt = typeof msg?.Timestamp === 'string'
+                        ? msg.Timestamp
+                        : new Date().toISOString();
+
+                    const update = msg?.Update === true;
 
                     setSignalRMessages((current) => [
                         {
                             id: Date.now() + current.length,
                             message,
-                            receivedAt: timestamp
+                            update,
+                            receivedAt
                         },
                         ...current
                     ]);
 
-                    const responseData = await fetchOrder();
-                    if (responseData) {
-                        setOrder(responseData);
+                    if (update) {
+                        const responseData = await fetchOrder();
+                        if (responseData) {
+                            setOrder(responseData);
+                        }
                     }
                 });
 
