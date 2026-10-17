@@ -14,7 +14,7 @@ namespace Peach.TriathlonShop.FunctionApp.ServiceBus
     public class OrderConfirmEvent(SignalRNotifier signalRNotifier)
     {
         [Function(nameof(OrderConfirmEvent))]
-        public async Task<OrderConfirmEventOutput> Run([ServiceBusTrigger("triathlonshop.order.confirm", "triathlonshop-functionapp", Connection = "ServiceBusConnectionString")] ServiceBusReceivedMessage message)
+        public async Task<OrderConfirmEventOutput> Run([ServiceBusTrigger("triathlonshop.order.confirm", "triathlonshop-functionapp")] ServiceBusReceivedMessage message)
         {
             var @event = message.Body.ToObjectFromJson<OrderConfirmEventMessageModel>();
 
