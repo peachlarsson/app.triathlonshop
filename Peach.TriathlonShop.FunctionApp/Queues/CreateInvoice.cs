@@ -17,20 +17,20 @@ namespace Peach.TriathlonShop.FunctionApp.Queues
         [Function(nameof(CreateInvoice))]
         public async Task Run([QueueTrigger(QueueName, Connection = "")] QueueMessage message)
         {
+            var model = JsonSerializer.Deserialize<CreateInvoiceModel>(message.Body.ToString());
+
             await using (var hub = await signalRServiceManager.CreateHubContextAsync(SignalRHubName.OrdersHub))
             {
                 await hub.Clients.All.SendCoreAsync(
-                    "Orders",
+                    $"order{model?.OrderId}",
                     [
                         new
                         {
-                            Message = "Processing invoice creation...",
+                            Message = "Start processing invoice creation.",
                             Timestamp = DateTimeOffset.UtcNow
                         }
                     ]);
             }
-
-            var model = JsonSerializer.Deserialize<CreateInvoiceModel>(message.Body.ToString());
 
             if (model == null)
                 throw new InvalidOperationException("Failed to deserialize message.");
@@ -49,6 +49,19 @@ namespace Peach.TriathlonShop.FunctionApp.Queues
             });
 
             await context.SaveChangesAsync();
+
+            await using (var hub = await signalRServiceManager.CreateHubContextAsync(SignalRHubName.OrdersHub))
+            {
+                await hub.Clients.All.SendCoreAsync(
+                    $"order{model.OrderId}",
+                    [
+                        new
+                        {
+                            Message = "Finished processing invoice creation.",
+                            Timestamp = DateTimeOffset.UtcNow
+                        }
+                    ]);
+            }
         }
     }
 }

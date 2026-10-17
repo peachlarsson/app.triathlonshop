@@ -26,13 +26,13 @@ public class OrderConfirm(TriathlonShopDbContext context, ServiceBusClient servi
         await using (var hub = await signalRServiceManager.CreateHubContextAsync(SignalRHubName.OrdersHub))
         {
             await hub.Clients.All.SendCoreAsync(
-                $"Orders",
+                $"order{id}",
                 [
                     new
-                        {
-                            Message = $"Publishing event {OrderConfirmEventMessageModel.EventType}....",
-                            Timestamp = DateTimeOffset.UtcNow
-                        }
+                    {
+                        Message = $"Publishing event {OrderConfirmEventMessageModel.EventType}....",
+                        Timestamp = DateTimeOffset.UtcNow
+                    }
                 ]);
         }
 
@@ -49,13 +49,13 @@ public class OrderConfirm(TriathlonShopDbContext context, ServiceBusClient servi
         await using (var hub = await signalRServiceManager.CreateHubContextAsync(SignalRHubName.OrdersHub))
         {
             await hub.Clients.All.SendCoreAsync(
-                $"Orders",
+                $"order{id}",
                 [
                     new
-                        {
-                            Message = $"Published event {OrderConfirmEventMessageModel.EventType}.",
-                            Timestamp = DateTimeOffset.UtcNow
-                        }
+                    {
+                        Message = $"Published event {OrderConfirmEventMessageModel.EventType}.",
+                        Timestamp = DateTimeOffset.UtcNow
+                    }
                 ]);
         }
 
