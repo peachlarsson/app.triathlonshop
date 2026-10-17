@@ -1,28 +1,17 @@
-using Azure.Core;
 using Azure.Monitor.OpenTelemetry.Exporter;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Azure.Functions.Worker.OpenTelemetry;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Peach.TriathlonShop.Database;
 using Peach.TriathlonShop.FunctionApp.Extensions;
 
 var builder = FunctionsApplication.CreateBuilder(args);
 
 builder.ConfigureFunctionsWebApplication();
 
-TokenCredential credential = new Azure.Identity.DefaultAzureCredential();
-
-#if DEBUG
-credential = builder.Configuration.CreateClientSecretCredential();
-#else
-    credential = new Azure.Identity.DefaultAzureCredential();
-#endif
-
 /// Register Azure App Configuration
-builder.AddCustomAzureAppConfiguration(credential, ["triathlonshop-web"]);
+builder.AddCustomClientSecretAzureAppConfiguration();
 
 /// OpenTelemetry
 if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING")))
@@ -33,12 +22,7 @@ if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("APPLICATIONINSIGHT
 }
 
 /// Database
-var dbConnString = builder.Configuration.GetSection("DatabaseConnectionString").Value;
-
-if (string.IsNullOrEmpty(dbConnString))
-    throw new InvalidOperationException("Database connection string is not configured.");
-
-builder.Services.AddDbContext<TriathlonShopDbContext>(opt => opt.UseSqlServer(dbConnString));
+builder.Services.AddDatabaseConfiguration(builder.Configuration);
 
 /// Service Bus
 builder.Services.AddAzureClients(azure =>
@@ -49,7 +33,7 @@ builder.Services.AddAzureClients(azure =>
         throw new InvalidOperationException("Service Bus connection is not configured.");
 
     azure.AddServiceBusClientWithNamespace(serviceBusUri);
-    azure.UseCredential(credential);
+    azure.UseCredential(builder.Configuration.CreateClientSecretCredential());
 });
 
 

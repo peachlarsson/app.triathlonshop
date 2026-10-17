@@ -13,7 +13,7 @@ builder.AddCustomClientSecretAzureAppConfiguration();
 /// Database
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
 
-/// TriathlonShop Function App Client
+/// TriathlonShop API Client
 builder.Services.AddTriathlonShopClient(builder.Configuration);
 
 builder.Services.AddControllers()
