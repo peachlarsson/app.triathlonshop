@@ -9,6 +9,7 @@ using Peach.TriathlonShop.Database;
 using Peach.TriathlonShop.Database.Models;
 using Peach.TriathlonShop.Database.Models.Enums;
 using Peach.TriathlonShop.FunctionApp.Client;
+using System.Net;
 
 namespace Peach.TriathlonShop.App.Server.Controllers
 {
@@ -278,27 +279,36 @@ namespace Peach.TriathlonShop.App.Server.Controllers
         [HttpPost("confirm/{orderId}")]
         public async Task<ActionResult> OrderConfirm(long orderId)
         {
-            var order = await context.Orders.FindAsync(orderId);
+            var response = await triathlonShopClient.SetOrderConfirm(orderId);
 
-            if (order is null)
-                return NotFound("Order does not exist.");
+            if (response == null)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, "Failed to confirm order. Response is null.");
+            }
 
-            if (order.Status != OrderStatus.Created)
-                return BadRequest("Only orders with status 'Created' can be confirmed.");
-
-            order.Status = OrderStatus.Confirmed;
-            await context.SaveChangesAsync();
+            if (!response.IsSuccess)
+            {
+                return StatusCode(response.StatusCode, $"Failed to confirm order. StatusCode: {response.StatusCode}, ErrorMessage: {response.ErrorMessage}");
+            }
 
             return Ok();
         }
 
         [HttpGet("negotiation")]
-        public async Task<ActionResult> GetNegotiationAsync()
+        public async Task<SignalRConnectionInfo> GetNegotiationAsync()
         {
             var response = await triathlonShopClient.GetNegotiationAsync(hubName: "Orders");
 
-            return StatusCode(response.StatusCode);
+            if (!response.IsSuccess || response.Content is null)
+            {
+                throw new Exception($"Failed to get SignalR negotiation info. StatusCode: {response.StatusCode}, ErrorMessage: {response.ErrorMessage}");
+            }
+
+            return new SignalRConnectionInfo
+            {
+                Url = response.Content.Url,
+                AccessToken = response.Content.AccessToken,
+            };
         }
     }
 }
-
