@@ -279,11 +279,11 @@ function App() {
                                 getTimestamp={(item) => item.createdAt}
                                 renderDetails={(item) => (
                                     <>
-                                        {item.carrier && <Typography variant="body2">Carrier: {item.carrier}</Typography>}
-                                        {item.consignmentNumber && <Typography variant="body2">Consignment: {item.consignmentNumber}</Typography>}
-                                        {item.destination && <Typography variant="body2">Destination: {item.destination}</Typography>}
-                                        {item.trackingUrl && <Typography variant="body2">Tracking: {item.trackingUrl}</Typography>}
-                                        {item.estimatedDeliveryDate && <Typography variant="body2">Estimated Delivery: {item.estimatedDeliveryDate}</Typography>}
+                                        <Typography variant="body2">Carrier: {item.carrier}</Typography>
+                                        <Typography variant="body2">Consignment number: {item.consignmentNumber}</Typography>
+                                        <Typography variant="body2">Destination: {item.destination}</Typography>
+                                        <Typography variant="body2">Tracking URL: {item.trackingUrl}</Typography>
+                                        <Typography variant="body2">Estimated Delivery: {item.estimatedDeliveryDate}</Typography>
                                     </>
                                 )}
                             />
