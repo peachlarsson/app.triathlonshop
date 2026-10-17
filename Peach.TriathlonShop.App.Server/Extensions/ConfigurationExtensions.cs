@@ -67,7 +67,6 @@ public static class ConfigurationExtensions
         return builder;
     }
 
-#if DEBUG
     public static TokenCredential CreateClientSecretCredential(this IConfiguration configuration)
     {
         var tenantId = configuration["AzureAd:TenantId"]
@@ -81,5 +80,4 @@ public static class ConfigurationExtensions
 
         return new ClientSecretCredential(tenantId, clientId, clientSecret);
     }
-#endif
 }
