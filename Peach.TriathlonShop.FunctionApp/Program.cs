@@ -6,6 +6,7 @@ using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Peach.TriathlonShop.FunctionApp.Extensions;
+using Peach.TriathlonShop.FunctionApp.Services;
 
 var builder = FunctionsApplication.CreateBuilder(args);
 
@@ -36,5 +37,7 @@ builder.Services.AddSingleton<IServiceManager>(_ =>
     (IServiceManager)new ServiceManagerBuilder()
         .WithOptions(o => o.ConnectionString = signalRConnectionString)
         .BuildServiceManager());
+
+builder.Services.AddSingleton<SignalRNotifier>();
 
 builder.Build().Run();
