@@ -25,16 +25,6 @@ if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("APPLICATIONINSIGHT
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
 
 /// Service Bus
-builder.Services.AddAzureClients(azure =>
-{
-    var serviceBusUri = builder.Configuration.GetSection("Peach").GetSection("ServiceBusFullyQualifiedNamespace").Value;
-
-    if (string.IsNullOrEmpty(serviceBusUri))
-        throw new InvalidOperationException("Service Bus connection is not configured.");
-
-    azure.AddServiceBusClientWithNamespace(serviceBusUri);
-    azure.UseCredential(builder.Configuration.CreateClientSecretCredential());
-});
-
+builder.Services.AddServiceBusClientWithNamespace(builder.Configuration);
 
 builder.Build().Run();

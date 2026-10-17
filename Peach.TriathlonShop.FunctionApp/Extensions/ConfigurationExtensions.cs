@@ -2,6 +2,7 @@
 using Azure.Identity;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.DependencyInjection;
@@ -87,6 +88,22 @@ public static class ConfigurationExtensions
         {
             Console.WriteLine(ex.ToString());
         }
+
+        return services;
+    }
+
+    public static IServiceCollection AddServiceBusClientWithNamespace(this IServiceCollection services, IConfiguration configuration)
+    {
+        var options = AppConfigExtensions.GetPeachOptions(configuration);
+
+        services.AddAzureClients(azure =>
+        {
+            if (string.IsNullOrEmpty(options.ServiceBusFullyQualifiedNamespace))
+                throw new InvalidOperationException("Service Bus connection is not configured.");
+
+            azure.AddServiceBusClientWithNamespace(options.ServiceBusFullyQualifiedNamespace);
+            azure.UseCredential(configuration.CreateClientSecretCredential());
+        });
 
         return services;
     }
