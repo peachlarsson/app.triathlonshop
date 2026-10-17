@@ -5,7 +5,7 @@ namespace Peach.TriathlonShop.FunctionApp.Services;
 
 public class SignalRNotifier(IServiceManager signalRServiceManager)
 {
-    public async Task SendOrderMessageAsync(long orderId, string message)
+    public async Task SendOrderMessageAsync(long orderId, string message, bool isUpdate = false)
     {
         await using var hub = await signalRServiceManager.CreateHubContextAsync(SignalRHubName.OrdersHub);
 
@@ -15,6 +15,7 @@ public class SignalRNotifier(IServiceManager signalRServiceManager)
                 new
                 {
                     Message = message,
+                    Update = isUpdate,
                     Timestamp = DateTimeOffset.UtcNow
                 }
             ]);

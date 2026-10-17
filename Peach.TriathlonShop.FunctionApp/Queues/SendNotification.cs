@@ -72,7 +72,7 @@ namespace Peach.TriathlonShop.FunctionApp.Queues
                     break;
             }
 
-            await signalRNotifier.SendOrderMessageAsync(notification.OrderId, $"Notification: Finished sending notification to customer.");
+            await signalRNotifier.SendOrderMessageAsync(notification.OrderId, $"Notification: Finished sending notification to customer.", isUpdate: true);
         }
     }
 }

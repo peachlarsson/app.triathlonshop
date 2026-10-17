@@ -40,7 +40,7 @@ namespace Peach.TriathlonShop.FunctionApp.Queues
 
             await context.SaveChangesAsync();
 
-            await signalRNotifier.SendOrderMessageAsync(model.OrderId, $"Invoice: Finished creating invoice.");
+            await signalRNotifier.SendOrderMessageAsync(model.OrderId, $"Invoice: Finished creating invoice.", isUpdate: true);
         }
     }
 }

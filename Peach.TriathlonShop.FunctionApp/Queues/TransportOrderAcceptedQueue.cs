@@ -37,7 +37,7 @@ namespace Peach.TriathlonShop.FunctionApp.Queues
 
             await context.SaveChangesAsync();
 
-            await signalRNotifier.SendOrderMessageAsync(transportOrder.OrderId, $"Transport accepted: Finished updating transport order.");
+            await signalRNotifier.SendOrderMessageAsync(transportOrder.OrderId, $"Transport accepted: Finished updating transport order.", isUpdate: true);
         }
     }
 }

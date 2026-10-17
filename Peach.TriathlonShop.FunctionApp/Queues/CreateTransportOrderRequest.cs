@@ -38,6 +38,6 @@ public class CreateTransportOrderRequest(ILogger<CreateTransportOrderRequest> lo
 
         await context.SaveChangesAsync();
 
-        await signalRNotifier.SendOrderMessageAsync(orderId, $"Transport request: Finished requesting transport.");
+        await signalRNotifier.SendOrderMessageAsync(orderId, $"Transport request: Finished requesting transport.", isUpdate: true);
     }
 }

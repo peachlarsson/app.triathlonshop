@@ -39,6 +39,8 @@ public class OrderConfirm(TriathlonShopDbContext context, ServiceBusClient servi
         order.Status = OrderStatus.Confirmed;
         await context.SaveChangesAsync();
 
+        await signalRNotifier.SendOrderMessageAsync(id, $"Order update: Status changed to {OrderStatus.Confirmed.ToString()}.", isUpdate: true);
+
         return new OkResult();
     }
 }
