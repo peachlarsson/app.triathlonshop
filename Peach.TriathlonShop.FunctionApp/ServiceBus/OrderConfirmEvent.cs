@@ -2,6 +2,7 @@ using Azure.Messaging.ServiceBus;
 using Microsoft.Azure.Functions.Worker;
 using Peach.TriathlonShop.Database.Models;
 using Peach.TriathlonShop.Database.Models.Enums;
+using Peach.TriathlonShop.FunctionApp.Extensions;
 using Peach.TriathlonShop.FunctionApp.Models;
 using Peach.TriathlonShop.FunctionApp.Queues;
 using Peach.TriathlonShop.FunctionApp.Queues.Models;
@@ -22,6 +23,17 @@ namespace Peach.TriathlonShop.FunctionApp.ServiceBus
 
             return new OrderConfirmEventOutput
             {
+                SignalRMessage = new SignalRMessageAction(SignalRHubName.OrdersHub)
+                {
+                    Arguments =
+                    [
+                        new
+                        {
+                            Message = "Order confirmed..",
+                            Timestamp = DateTimeOffset.UtcNow,
+                        }
+                    ]
+                },
                 SendNotificationQueueMessage = new SendNotificationModel
                 {
                     OrderId = @event.OrderId,
@@ -42,6 +54,9 @@ namespace Peach.TriathlonShop.FunctionApp.ServiceBus.Models
 {
     public class OrderConfirmEventOutput
     {
+        [SignalROutput(HubName = SignalRHubName.OrdersHub)]
+        public SignalRMessageAction? SignalRMessage { get; set; }
+
         [QueueOutput(SendNotification.QueueName)]
         public required SendNotificationModel SendNotificationQueueMessage { get; set; }
 
