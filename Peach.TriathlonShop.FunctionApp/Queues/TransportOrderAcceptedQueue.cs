@@ -36,6 +36,7 @@ namespace Peach.TriathlonShop.FunctionApp.Queues
                 OrderId = transportOrder.OrderId,
                 Status = TransportStatus.Accepted,
                 ConsignmentNumber = transportInfo.ConsignmentNumber,
+                Destination = transportOrder.Destination,
                 EstimatedDeliveryDate = transportInfo.EstimatedDeliveryDate,
                 TrackingUrl = transportInfo.TrackingUrl,
             });
