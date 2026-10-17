@@ -5,9 +5,9 @@ using Peach.TriathlonShop.FunctionApp.Extensions;
 
 namespace Peach.TriathlonShop.FunctionApp.Http;
 
-public class NegotiateHttp()
+public class GetNegotiationHttp()
 {
-    [Function(nameof(NegotiateHttp))]
+    [Function(nameof(GetNegotiationHttp))]
     public IActionResult Run(
         [HttpTrigger(AuthorizationLevel.Function, "get", Route = "negotiation/{hubName}")] HttpRequest req,
         string hubName,
