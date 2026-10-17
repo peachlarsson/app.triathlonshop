@@ -43,7 +43,7 @@ public static class ConfigurationExtensions
                 ?? throw new InvalidOperationException("Azure App Configuration endpoint is not configured.");
 
             TokenCredential credential = CreateClientSecretCredential(builder.Configuration);
-            var labels = new[] { "triathlonshop-web" };
+            var labels = new[] { "common", "triathlonshop-web" };
 
             options.Connect(new Uri(appConfigEndpoint), credential);
 
