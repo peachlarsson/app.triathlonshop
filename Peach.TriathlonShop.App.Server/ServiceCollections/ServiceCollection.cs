@@ -1,11 +1,31 @@
-﻿using Microsoft.Extensions.Configuration.AzureAppConfiguration;
+﻿using Microsoft.EntityFrameworkCore;
 using Peach.TriathlonShop.App.Server.Extensions;
+using Peach.TriathlonShop.Database;
 using Peach.TriathlonShop.FunctionApp.Client;
 
 namespace Peach.TriathlonShop.App.Server.ServiceCollections;
 
 public static class ServiceCollection
 {
+    public static IServiceCollection AddDatabaseConfiguration(this IServiceCollection services, IConfiguration configuration)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(configuration);
+
+        var options = AppConfigExtensions.GetPeachOptions(configuration);
+
+        try
+        {
+            services.AddDbContext<TriathlonShopDbContext>(opt => opt.UseSqlServer(options.DatabaseConnectionString));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+
+        return services;
+    }
+
     public static IServiceCollection AddTriathlonShopClient(this IServiceCollection services, IConfiguration configuration)
     {
         try

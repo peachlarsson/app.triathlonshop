@@ -1,8 +1,6 @@
 using Azure.Core;
-using Microsoft.EntityFrameworkCore;
 using Peach.TriathlonShop.App.Server.Extensions;
 using Peach.TriathlonShop.App.Server.ServiceCollections;
-using Peach.TriathlonShop.Database;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,12 +17,7 @@ TokenCredential credential;
 builder.AddCustomAzureAppConfiguration(credential, ["triathlonshop-web"]);
 
 /// Database
-var dbConnString = builder.Configuration.GetSection("DatabaseConnectionString").Value;
-
-if (string.IsNullOrEmpty(dbConnString))
-    throw new InvalidOperationException("Database connection string is not configured.");
-
-builder.Services.AddDbContext<TriathlonShopDbContext>(opt => opt.UseSqlServer(dbConnString));
+builder.Services.AddDatabaseConfiguration(builder.Configuration);
 
 /// TriathlonShop Function App Client
 builder.Services.AddTriathlonShopClient(builder.Configuration);
