@@ -15,7 +15,7 @@ namespace Peach.TriathlonShop.FunctionApp.Queues
         public const string QueueName = "send-notification";
 
         [Function(nameof(SendNotification))]
-        public async Task Run([QueueTrigger(QueueName, Connection = "")] QueueMessage message)
+        public async Task Run([QueueTrigger(QueueName)] QueueMessage message)
         {
             var notification = message.Body.ToObjectFromJson<SendNotificationModel>();
 

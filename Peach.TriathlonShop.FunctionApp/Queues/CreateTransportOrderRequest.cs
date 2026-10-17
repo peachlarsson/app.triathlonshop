@@ -12,7 +12,7 @@ public class CreateTransportOrderRequest(ILogger<CreateTransportOrderRequest> lo
     public const string QueueName = "create-transport-order-request";
 
     [Function(nameof(CreateTransportOrderRequest))]
-    public async Task Run([QueueTrigger(QueueName, Connection = "")] QueueMessage message)
+    public async Task Run([QueueTrigger(QueueName)] QueueMessage message)
     {
         var orderId = long.Parse(message.MessageText);
 

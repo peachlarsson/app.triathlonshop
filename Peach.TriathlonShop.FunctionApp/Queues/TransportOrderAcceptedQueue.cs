@@ -14,7 +14,7 @@ namespace Peach.TriathlonShop.FunctionApp.Queues
         public const string QueueName = "transport-order-accepted";
 
         [Function(nameof(TransportOrderAcceptedQueue))]
-        public async Task Run([QueueTrigger(QueueName, Connection = "")] QueueMessage message)
+        public async Task Run([QueueTrigger(QueueName)] QueueMessage message)
         {
             var transportInfo = message.Body.ToObjectFromJson<TransportOrderAcceptedEvent>();
 

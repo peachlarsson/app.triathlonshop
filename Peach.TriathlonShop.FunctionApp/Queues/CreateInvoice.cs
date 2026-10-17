@@ -16,7 +16,7 @@ namespace Peach.TriathlonShop.FunctionApp.Queues
         public const string QueueName = "create-invoice";
 
         [Function(nameof(CreateInvoice))]
-        public async Task Run([QueueTrigger(QueueName, Connection = "")] QueueMessage message)
+        public async Task Run([QueueTrigger(QueueName)] QueueMessage message)
         {
             var model = JsonSerializer.Deserialize<CreateInvoiceModel>(message.Body.ToString());
 
