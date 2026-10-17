@@ -1,4 +1,4 @@
-﻿namespace Peach.TriathlonShop.FunctionApp.Client.AppConfig;
+﻿namespace Peach.TriathlonShop.App.Server.Extensions.Options;
 
 public class TriathlonShopOptions
 {

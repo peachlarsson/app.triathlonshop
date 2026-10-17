@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration.AzureAppConfiguration;
+using Peach.TriathlonShop.App.Server.Extensions;
 using Peach.TriathlonShop.FunctionApp.Client;
-using Peach.TriathlonShop.FunctionApp.Client.AppConfig;
 
 namespace Peach.TriathlonShop.App.Server.ServiceCollections;
 

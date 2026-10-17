@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Peach.TriathlonShop.App.Server.Extensions.Options;
 
-namespace Peach.TriathlonShop.FunctionApp.Client.AppConfig;
+namespace Peach.TriathlonShop.App.Server.Extensions;
 
 public class AppConfigExtensions
 {
