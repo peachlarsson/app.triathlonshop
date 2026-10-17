@@ -30,14 +30,6 @@ builder.Services.AddDatabaseConfiguration(builder.Configuration);
 builder.Services.AddServiceBusClientWithNamespace(builder.Configuration);
 
 /// SignalR
-var signalRConnectionString = builder.Configuration["AzureSignalRConnectionString"]
-    ?? throw new InvalidOperationException("AzureSignalRConnectionString is missing.");
-
-builder.Services.AddSingleton<IServiceManager>(_ =>
-    (IServiceManager)new ServiceManagerBuilder()
-        .WithOptions(o => o.ConnectionString = signalRConnectionString)
-        .BuildServiceManager());
-
-builder.Services.AddSingleton<SignalRNotifier>();
+builder.Services.AddSignalRConnection(builder.Configuration);
 
 builder.Build().Run();

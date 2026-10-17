@@ -1,12 +1,14 @@
 ﻿using Azure.Core;
 using Azure.Identity;
 using Microsoft.Azure.Functions.Worker.Builder;
+using Microsoft.Azure.SignalR.Management;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.DependencyInjection;
 using Peach.TriathlonShop.Database;
+using Peach.TriathlonShop.FunctionApp.Services;
 
 namespace Peach.TriathlonShop.FunctionApp.Extensions;
 
@@ -104,6 +106,20 @@ public static class ConfigurationExtensions
             azure.AddServiceBusClientWithNamespace(options.ServiceBusFullyQualifiedNamespace);
             azure.UseCredential(configuration.CreateClientSecretCredential());
         });
+
+        return services;
+    }
+
+    public static IServiceCollection AddSignalRConnection(this IServiceCollection services, IConfiguration configuration)
+    {
+        var options = AppConfigExtensions.GetPeachOptions(configuration);
+
+        services.AddSingleton<IServiceManager>(_ =>
+            (IServiceManager)new ServiceManagerBuilder()
+                .WithOptions(o => o.ConnectionString = options.SignalRConnectionString)
+                .BuildServiceManager());
+
+        services.AddSingleton<SignalRNotifier>();
 
         return services;
     }

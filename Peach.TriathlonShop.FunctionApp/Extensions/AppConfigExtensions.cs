@@ -3,7 +3,7 @@ using Peach.TriathlonShop.FunctionApp.Extensions.Options;
 
 namespace Peach.TriathlonShop.FunctionApp.Extensions;
 
-public class AppConfigExtensions
+public static class AppConfigExtensions
 {
     public static PeachOptions GetPeachOptions(IConfiguration configuration)
     {
