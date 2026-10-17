@@ -1,5 +1,4 @@
 import { Alert, Box, Paper, Stack, Typography } from '@mui/material';
-import { HubConnectionBuilder } from '@microsoft/signalr';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createSignalRConnection } from '../hooks/useSignalRConnection';
@@ -75,23 +74,19 @@ function HomePage() {
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
 
-    const refreshStatisticFromSignalRMessage = async (msg: string) => {
-        if (!msg) {
+    const refreshStatisticFromSignalRMessage = async (message: string) => {
+        if (!message) {
             return;
         }
 
-        const statKey = countEndpointByMessage[msg];
-        const endpoint = endpointByMessage[msg];
-
-        console.log(`refreshing statistics: ${msg}`);
+        const statKey = countEndpointByMessage[message];
+        const endpoint = endpointByMessage[message];
 
         if (!statKey || !endpoint) {
             return;
         }
 
         const totalCount = await fetchTotalCount(endpoint);
-
-        console.log(`fetched total count for ${msg}: ${totalCount}`);
 
         setStats((current) => {
             if (!current) {
@@ -107,35 +102,32 @@ function HomePage() {
 
     useEffect(() => {
         let isDisposed = false;
-        let signalRconnection: Awaited<ReturnType<typeof createSignalRConnection>> | null = null;
+        let signalRConnection: Awaited<ReturnType<typeof createSignalRConnection>> | null = null;
 
         const connect = async () => {
             try {
                 const initialStats = await fetchStatistics();
 
-                console.log("Fetch initial success");
-
-                if (!isDisposed) {
-                    setStats(initialStats);
-                    setIsLoading(false);
+                if (isDisposed) {
+                    return;
                 }
 
-                console.log("Connecting to SignalR...");
+                setStats(initialStats);
 
-                signalRconnection = await createSignalRConnection('homepage');
+                signalRConnection = await createSignalRConnection('/api/homepage/negotiation/HomePage');
 
-                console.log("SignalR connection established");
-
-                signalRconnection.on('homepage', (msg: SignalRHomePageMessage) => {
+                signalRConnection.on('homePage', (msg: SignalRHomePageMessage) => {
                     void refreshStatisticFromSignalRMessage(msg.Message);
                 });
 
-                await signalRconnection.start();
+                await signalRConnection.start();
+            } catch (error) {
+                console.error('Home page load failed', error);
 
-                if (isDisposed) {
-                    await signalRconnection.stop();
+                if (!isDisposed) {
+                    setIsError(true);
                 }
-            } catch {
+            } finally {
                 if (!isDisposed) {
                     setIsLoading(false);
                 }
@@ -146,7 +138,7 @@ function HomePage() {
 
         return () => {
             isDisposed = true;
-            void signalRconnection?.stop();
+            void signalRConnection?.stop();
         };
     }, []);
 

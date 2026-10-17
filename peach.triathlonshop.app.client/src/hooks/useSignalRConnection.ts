@@ -5,19 +5,18 @@ export interface SignalRNegotiateResponse {
     accessToken: string;
 }
 
-export async function createSignalRConnection(negotiationEndpoint: string): Promise<HubConnection> {
-    console.log(`Negotiating SignalR connection with endpoint: ${negotiationEndpoint}`);
+export async function createSignalRConnection(controllerEndpoint: string): Promise<HubConnection> {
 
-    const negotiateResponse = await fetch(`/api/homepage/negotiation/${negotiationEndpoint}`);
+    const negotiateResponse = await fetch(`${controllerEndpoint}`);
 
     if (!negotiateResponse.ok) {
         console.log("Negotiation failed");
-
-        throw new Error(`Failed to negotiate SignalR connection: ${negotiationEndpoint}`);
+        return null;
     }
 
     const { url, accessToken } = await negotiateResponse.json() as SignalRNegotiateResponse;
-    console.log(`Negotiation successful. URL: ${url}`);
+
+    console.log("Negotiation successful.");
 
     return new HubConnectionBuilder()
         .withUrl(url, { accessTokenFactory: () => accessToken })
