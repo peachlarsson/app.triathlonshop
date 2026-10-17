@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Peach.TriathlonShop.FunctionApp.Client.AppConfig;
 using Peach.TriathlonShop.FunctionApp.Client.Models;
 using System.Text.Json;
 
@@ -9,18 +8,10 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
 {
     public async Task<Response<SignalRConnectionInfo>> GetNegotiationAsync(string hubName)
     {
-        var appConfig = AppConfigExtensions.GetTriathlonShopOptions(configuration);
-
-        if (appConfig.FunctionApp == null)
-            throw new InvalidOperationException("Missing configuration section: FunctionApp");
-
-        if (string.IsNullOrWhiteSpace(appConfig.FunctionApp.EndpointGetNegotiation))
-            throw new InvalidOperationException("Value is null or empty for configuration key: FunctionApp:EndpointGetNegotiation");
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri($"{appConfig.FunctionApp.EndpointGetNegotiation.Replace("{hubName}", hubName)}")
+            RequestUri = new Uri($"negotiation/{hubName}", UriKind.Relative)
         };
 
         var response = await httpClient.SendAsync(request);
@@ -42,6 +33,27 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
             IsSuccess = true,
             StatusCode = (int)response.StatusCode,
             Content = JsonSerializer.Deserialize<SignalRConnectionInfo>(responseContent)
+        };
+    }
+
+    public async Task<Response<string>> SetOrderConfirm(long orderId)
+    {
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Post,
+            RequestUri = new Uri($"order/{orderId}/confirm", UriKind.Relative)
+        };
+
+        var response = await httpClient.SendAsync(request);
+
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        return new Response<string>
+        {
+            IsSuccess = response.IsSuccessStatusCode,
+            StatusCode = (int)response.StatusCode,
+            Content = responseContent,
+            ErrorMessage = response.IsSuccessStatusCode ? null : responseContent,
         };
     }
 }
