@@ -6,11 +6,12 @@ using Peach.TriathlonShop.Database;
 using Peach.TriathlonShop.Database.Models;
 using Peach.TriathlonShop.FunctionApp.Extensions;
 using Peach.TriathlonShop.FunctionApp.Models;
+using Peach.TriathlonShop.FunctionApp.Services;
 using System.Text.Json;
 
 namespace Peach.TriathlonShop.FunctionApp.Queues
 {
-    public class CreateInvoice(ILogger<CreateInvoice> logger, TriathlonShopDbContext context, IServiceManager signalRServiceManager)
+    public class CreateInvoice(ILogger<CreateInvoice> logger, TriathlonShopDbContext context, SignalRNotifier signalRNotifier)
     {
         public const string QueueName = "create-invoice";
 
@@ -19,21 +20,10 @@ namespace Peach.TriathlonShop.FunctionApp.Queues
         {
             var model = JsonSerializer.Deserialize<CreateInvoiceModel>(message.Body.ToString());
 
-            await using (var hub = await signalRServiceManager.CreateHubContextAsync(SignalRHubName.OrdersHub))
-            {
-                await hub.Clients.All.SendCoreAsync(
-                    $"order{model?.OrderId}",
-                    [
-                        new
-                        {
-                            Message = "Start processing invoice creation.",
-                            Timestamp = DateTimeOffset.UtcNow
-                        }
-                    ]);
-            }
-
             if (model == null)
                 throw new InvalidOperationException("Failed to deserialize message.");
+
+            await signalRNotifier.SendOrderMessageAsync(model.OrderId, $"Invoice: Starting creating invoice.");
 
             var order = await context.Orders.FindAsync(model.OrderId);
 
@@ -50,18 +40,7 @@ namespace Peach.TriathlonShop.FunctionApp.Queues
 
             await context.SaveChangesAsync();
 
-            await using (var hub = await signalRServiceManager.CreateHubContextAsync(SignalRHubName.OrdersHub))
-            {
-                await hub.Clients.All.SendCoreAsync(
-                    $"order{model.OrderId}",
-                    [
-                        new
-                        {
-                            Message = "Finished processing invoice creation.",
-                            Timestamp = DateTimeOffset.UtcNow
-                        }
-                    ]);
-            }
+            await signalRNotifier.SendOrderMessageAsync(model.OrderId, $"Invoice: Finished creating invoice.");
         }
     }
 }

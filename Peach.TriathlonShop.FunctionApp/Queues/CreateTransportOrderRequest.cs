@@ -3,10 +3,11 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Peach.TriathlonShop.Database;
 using Peach.TriathlonShop.Database.Models;
+using Peach.TriathlonShop.FunctionApp.Services;
 
 namespace Peach.TriathlonShop.FunctionApp.Queues;
 
-public class CreateTransportOrderRequest(ILogger<CreateTransportOrderRequest> logger, TriathlonShopDbContext context)
+public class CreateTransportOrderRequest(ILogger<CreateTransportOrderRequest> logger, TriathlonShopDbContext context, SignalRNotifier signalRNotifier)
 {
     public const string QueueName = "create-transport-order-request";
 
@@ -15,6 +16,8 @@ public class CreateTransportOrderRequest(ILogger<CreateTransportOrderRequest> lo
     {
         var orderId = long.Parse(message.MessageText);
 
+        await signalRNotifier.SendOrderMessageAsync(orderId, $"Transport request: Starting requesting transport.");
+
         var order = await context.Orders.FindAsync(orderId);
 
         if (order == null)
@@ -22,15 +25,19 @@ public class CreateTransportOrderRequest(ILogger<CreateTransportOrderRequest> lo
 
         // To implement: Send transport request with consigment number
 
-        context.TransportOrders.Add(new TransportOrder
+        var transportOrder = new TransportOrder
         {
             OrderId = orderId,
             Destination = "Some Destination",
             Status = Database.Models.Enums.TransportStatus.Requested,
             ConsignmentNumber = $"TR-{Guid.NewGuid()}",
             Carrier = "Some Carrier",
-        });
+        };
+
+        context.TransportOrders.Add(transportOrder);
 
         await context.SaveChangesAsync();
+
+        await signalRNotifier.SendOrderMessageAsync(orderId, $"Transport request: Finished requesting transport.");
     }
 }

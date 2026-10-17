@@ -6,10 +6,11 @@ using Peach.TriathlonShop.Database;
 using Peach.TriathlonShop.Database.Models;
 using Peach.TriathlonShop.Database.Models.Enums;
 using Peach.TriathlonShop.FunctionApp.Queues.Models;
+using Peach.TriathlonShop.FunctionApp.Services;
 
 namespace Peach.TriathlonShop.FunctionApp.Queues
 {
-    public class SendNotification(ILogger<SendNotification> logger, TriathlonShopDbContext context)
+    public class SendNotification(ILogger<SendNotification> logger, TriathlonShopDbContext context, SignalRNotifier signalRNotifier)
     {
         public const string QueueName = "send-notification";
 
@@ -20,6 +21,8 @@ namespace Peach.TriathlonShop.FunctionApp.Queues
 
             if (notification == null)
                 throw new InvalidOperationException("Notification message is null or invalid.");
+
+            await signalRNotifier.SendOrderMessageAsync(notification.OrderId, $"Notification: Starting sending notification to customer.");
 
             var order = await context.Orders
                 .Include(o => o.Customer)
@@ -68,6 +71,8 @@ namespace Peach.TriathlonShop.FunctionApp.Queues
                     logger.LogWarning("Unhandled order status {Status} for Order ID {OrderId}.", notification.Status, notification.OrderId);
                     break;
             }
+
+            await signalRNotifier.SendOrderMessageAsync(notification.OrderId, $"Notification: Finished sending notification to customer.");
         }
     }
 }

@@ -5,10 +5,11 @@ using Microsoft.Extensions.Logging;
 using Peach.TriathlonShop.Database;
 using Peach.TriathlonShop.Database.Models.Enums;
 using Peach.TriathlonShop.FunctionApp.Http.Models;
+using Peach.TriathlonShop.FunctionApp.Services;
 
 namespace Peach.TriathlonShop.FunctionApp.Queues
 {
-    public class TransportOrderAcceptedQueue(ILogger<TransportOrderAcceptedQueue> logger, TriathlonShopDbContext context)
+    public class TransportOrderAcceptedQueue(ILogger<TransportOrderAcceptedQueue> logger, TriathlonShopDbContext context, SignalRNotifier signalRNotifier)
     {
         public const string QueueName = "transport-order-accepted";
 
@@ -27,12 +28,16 @@ namespace Peach.TriathlonShop.FunctionApp.Queues
             if (transportOrder == null)
                 throw new InvalidOperationException($"Transport order with consignment number {transportInfo.ConsignmentNumber} not found.");
 
+            await signalRNotifier.SendOrderMessageAsync(transportOrder.OrderId, $"Transport accepted: Received transport order.");
+
             transportOrder.Status = TransportStatus.Accepted;
             transportOrder.EstimatedDeliveryDate = transportInfo.EstimatedDeliveryDate;
             transportOrder.ConsignmentNumber = transportInfo.ConsignmentNumber;
             transportOrder.TrackingUrl = transportInfo.TrackingUrl;
 
             await context.SaveChangesAsync();
+
+            await signalRNotifier.SendOrderMessageAsync(transportOrder.OrderId, $"Transport accepted: Finished updating transport order.");
         }
     }
 }
