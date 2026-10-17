@@ -82,6 +82,9 @@ function App() {
                         orderRowActions.setSortBy(sortBy);
                         orderRowActions.setSortOrder(sortOrder);
                     }}
+                    isClickable={true}
+                    rowIdKey="orderId"
+                    navigateUrl="/orders"
                 />
 
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>

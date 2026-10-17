@@ -26,12 +26,14 @@ export interface DataTableProps
 {
     columns: ColumnDefinition[];
     data: object[];
-    isClickable?: boolean;
     isLoading?: boolean;
     tableId?: string;
     sortBy?: string;
     sortOrder?: string;
     onSortChange?: (sortBy: string, sortOrder: string) => void;
+    isClickable?: boolean;
+    navigateUrl?: string;
+    rowIdKey?: string;
 }
 
 function LoadingState()
@@ -60,10 +62,10 @@ function toSortKey(columnKey: string)
     return columnKey.charAt(0).toUpperCase() + columnKey.slice(1);
 }
 
-function getRowId(row: object): string | number | undefined
+function getRowId(row: object, rowIdKey?: string): string | number | undefined
 {
     const record = row as Record<string, unknown>;
-    const id = record.id ?? record.Id;
+    const id = rowIdKey ? record[rowIdKey] : record.id ?? record.Id;
 
     if (typeof id === 'string' || typeof id === 'number') {
         return id;
@@ -72,8 +74,8 @@ function getRowId(row: object): string | number | undefined
     return undefined;
 }
 
-function getRowKey(row: object, rowIndex: number): React.Key {
-    const rowId = getRowId(row);
+function getRowKey(row: object, rowIndex: number, rowIdKey?: string): React.Key {
+    const rowId = getRowId(row, rowIdKey);
 
     if (rowId !== undefined) {
         return `${String(rowId)}-${rowIndex}`;
@@ -91,7 +93,9 @@ export function DataTable(
         tableId = 'dataTable',
         sortBy,
         sortOrder,
-        onSortChange
+        onSortChange,
+        navigateUrl,
+        rowIdKey
     }: DataTableProps) {
 
     const navigate = useNavigate();
@@ -139,31 +143,30 @@ export function DataTable(
                                 <LoadingState />
                             </TableCell>
                         </TableRow>
-                    ) : data.length > 0 ?
-                        (
-                            data.map((row, rowIndex) => 
-                            {
-                                const rowId = getRowId(row);
-                                const canClick = isClickable && rowId !== undefined;
+                    )
+                    : data.length > 0 ?
+                    (
+                        data.map((row, rowIndex) => {
+                            const rowId = getRowId(row, rowIdKey);
+                            const canClick = isClickable && rowId !== undefined && navigateUrl !== undefined;
+                            const rowUrl = canClick ? `${navigateUrl}/${rowId}` : undefined;
 
-                                return (
-                                    <TableRow
-                                        key={getRowKey(row, rowIndex)}
-                                        hover={canClick}
-                                        onClick={canClick ? () => navigate(`/orders/${rowId}`) : undefined}
-                                        sx={canClick ? { cursor: 'pointer' } : undefined}
-                                    >
-                                        {columns.map((column) => (
-                                            <TableCell key={String(column.key)} sx={{ whiteSpace: 'nowrap' }}>
-                                                {getCellValue(column, row)}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                );
-                            })
-                        )
-                        : null
-                    }
+                            return (
+                                <TableRow
+                                    key={getRowKey(row, rowIndex, rowIdKey)}
+                                    hover={canClick}
+                                    onClick={canClick ? () => navigate(rowUrl!) : undefined}
+                                    sx={canClick ? { cursor: 'pointer' } : undefined}
+                                >
+                                    {columns.map((column) => (
+                                        <TableCell key={String(column.key)} sx={{ whiteSpace: 'nowrap' }}>
+                                            {getCellValue(column, row)}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            );
+                        })
+                    ) : null}
                 </TableBody>
             </Table>
         </TableContainer>

@@ -68,7 +68,6 @@ function App() {
                 <DataTable
                     columns={columns}
                     data={displayData}
-                    isClickable={true}
                     isLoading={state.isLoading}
                     tableId="ordersTableLabel"
                     sortBy={state.sortBy}
@@ -77,6 +76,9 @@ function App() {
                         actions.setSortBy(sortBy);
                         actions.setSortOrder(sortOrder);
                     }}
+                    isClickable={true}
+                    rowIdKey="id"
+                    navigateUrl="/orders"
                 />
 
                 <AddOrderCard onOrderCreated={actions.refresh} />
