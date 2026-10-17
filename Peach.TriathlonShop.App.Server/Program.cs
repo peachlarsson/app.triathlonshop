@@ -13,6 +13,8 @@ TokenCredential credential;
     credential = new Azure.Identity.DefaultAzureCredential();
 #endif
 
+builder.Services.AddApplicationInsightsTelemetry();
+
 /// Register Azure App Configuration
 builder.AddCustomAzureAppConfiguration(credential, ["triathlonshop-web"]);
 
