@@ -3,6 +3,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Peach.TriathlonShop.Database;
+using Peach.TriathlonShop.Database.Models;
 using Peach.TriathlonShop.Database.Models.Enums;
 using Peach.TriathlonShop.FunctionApp.Http.Models;
 using Peach.TriathlonShop.FunctionApp.Services;
@@ -30,10 +31,14 @@ namespace Peach.TriathlonShop.FunctionApp.Queues
 
             await signalRNotifier.SendOrderMessageAsync(transportOrder.OrderId, $"Transport accepted: Received transport order.");
 
-            transportOrder.Status = TransportStatus.Accepted;
-            transportOrder.EstimatedDeliveryDate = transportInfo.EstimatedDeliveryDate;
-            transportOrder.ConsignmentNumber = transportInfo.ConsignmentNumber;
-            transportOrder.TrackingUrl = transportInfo.TrackingUrl;
+            context.Add(new TransportOrder
+            {
+                OrderId = transportOrder.OrderId,
+                Status = TransportStatus.Accepted,
+                ConsignmentNumber = transportInfo.ConsignmentNumber,
+                EstimatedDeliveryDate = transportInfo.EstimatedDeliveryDate,
+                TrackingUrl = transportInfo.TrackingUrl,
+            });
 
             await context.SaveChangesAsync();
 
