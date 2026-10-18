@@ -36,7 +36,7 @@ if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("APPLICATIONINSIGHT
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
 
 /// Service Bus
-builder.Services.AddServiceBusClientWithNamespace(builder.Configuration);
+builder.Services.AddServiceBusClientWithNamespace(builder.Configuration, credential);
 
 /// SignalR
 builder.Services.AddSignalRConnection(builder.Configuration);
