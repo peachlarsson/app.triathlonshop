@@ -94,7 +94,7 @@ public static class ConfigurationExtensions
         return services;
     }
 
-    public static IServiceCollection AddServiceBusClientWithNamespace(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddServiceBusClientWithNamespace(this IServiceCollection services, IConfiguration configuration, TokenCredential credential)
     {
         var options = AppConfigExtensions.GetPeachOptions(configuration);
 
@@ -104,7 +104,7 @@ public static class ConfigurationExtensions
         services.AddAzureClients(azure =>
         {
             azure.AddServiceBusClientWithNamespace(options.ServiceBusFullyQualifiedNamespace);
-            azure.UseCredential(configuration.CreateClientSecretCredential());
+            azure.UseCredential(credential);
         });
 
         return services;
