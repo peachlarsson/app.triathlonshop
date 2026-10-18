@@ -115,6 +115,17 @@ public static class ConfigurationExtensions
     {
         var options = AppConfigExtensions.GetPeachOptions(configuration);
 
+#if DEBUG
+        if (string.IsNullOrEmpty(options.SignalRConnectionString))
+            throw new InvalidOperationException("SignalR connection is not configured.");
+
+        services.AddSingleton<IServiceManager>(_ =>
+            (IServiceManager)new ServiceManagerBuilder()
+                .WithOptions(o => o.ConnectionString = options.SignalRConnectionString)
+                .BuildServiceManager());
+
+        services.AddSingleton<SignalRNotifier>();
+#else
         if (string.IsNullOrEmpty(options.AzureSignalRConnectionStringServiceUri) || string.IsNullOrEmpty(options.AzureSignalRConnectionStringCredential))
             throw new InvalidOperationException("SignalR connection service URI or credential is not configured.");
 
@@ -131,6 +142,7 @@ public static class ConfigurationExtensions
                 .BuildServiceManager());
 
         services.AddSingleton<SignalRNotifier>();
+#endif
 
         return services;
     }
