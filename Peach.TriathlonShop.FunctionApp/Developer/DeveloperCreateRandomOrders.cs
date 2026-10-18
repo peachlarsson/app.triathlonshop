@@ -1,20 +1,39 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
-using Peach.TriathlonShop.App.Server.Developer.Extensions;
-using Peach.TriathlonShop.App.Server.Developer.Models;
 using Peach.TriathlonShop.Database;
 using Peach.TriathlonShop.Database.Models;
 using Peach.TriathlonShop.Database.Models.Enums;
+using Peach.TriathlonShop.FunctionApp.Http.Developer.Extensions;
+using Peach.TriathlonShop.FunctionApp.Http.Developer.Models;
+using Peach.TriathlonShop.FunctionApp.Services;
+using Peach.TriathlonShop.FunctionApp.Services.Models;
+using System.Text.Json;
 
-namespace Peach.TriathlonShop.App.Server.Developer
+namespace Peach.TriathlonShop.FunctionApp.Developer
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class DeveloperController(TriathlonShopDbContext context) : ControllerBase
+    public class DeveloperCreateRandomOrders(TriathlonShopDbContext context, SignalRNotifier signalRNotifier)
     {
-        [HttpPost("orders/random/")]
-        public async Task<IActionResult> CreateOrder(CreateRandomOrdersModel model)
+        private readonly JsonSerializerOptions jsonSerializerOptions = new()
         {
+            PropertyNameCaseInsensitive = true
+        };
+
+        [Function(nameof(DeveloperCreateRandomOrders))]
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post", Route = "developer/orders/random")] HttpRequest req)
+        {
+            using var reader = new StreamReader(req.Body);
+            var requestBody = await reader.ReadToEndAsync();
+
+            var model = JsonSerializer.Deserialize<CreateRandomOrdersModel>(requestBody, jsonSerializerOptions);
+
+            if (model == null)
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+
+            if (!model.IsValidRequestBody())
+                return new BadRequestResult();
+
             var articles = await context.Articles.ToListAsync();
             var customers = await context.Customers.ToListAsync();
 
@@ -36,6 +55,8 @@ namespace Peach.TriathlonShop.App.Server.Developer
 
                 context.Orders.Add(order);
                 await context.SaveChangesAsync();
+
+                await signalRNotifier.SendHomePageUpdateMessageAsync(SignalRHomePageUpdateType.Orders, true);
 
                 int articleCount = Random.Shared.Next(model.ArticlesCountIntervalStart ?? 1, model.ArticlesCountIntervalEnd ?? 5);
 
@@ -61,53 +82,21 @@ namespace Peach.TriathlonShop.App.Server.Developer
 
                     context.OrderRows.Add(orderRow);
                     await context.SaveChangesAsync();
+
+                    await signalRNotifier.SendHomePageUpdateMessageAsync(SignalRHomePageUpdateType.OrderRows, true);
                 }
 
                 order.TotalPrice = context.OrderRows.Where(or => or.OrderId == order.Id).Sum(or => or.RowPrice);
                 await context.SaveChangesAsync();
             }
 
-            return Ok();
-        }
-
-        [HttpPost("articles/random/{items}")]
-        public async Task<IActionResult> CreateArticle(int items)
-        {
-            List<Article> articles = [];
-
-            for (int i = 0; i < items; i++)
-            {
-                var article = new Article
-                {
-                    Number = $"ART-{Guid.NewGuid()}",
-                    Name = ExtensionsCollection.GetRandomArticle(),
-                    UnitPrice = Random.Shared.Next(1, 100)
-                };
-
-                if (context.Articles.Any(a => a.Name == article.Name))
-                {
-                    i--;
-                    continue;
-                }
-
-                articles.Add(article);
-            }
-
-            context.Articles.AddRange(articles);
-            await context.SaveChangesAsync();
-            return Ok();
+            return new OkResult();
         }
     }
 }
 
-namespace Peach.TriathlonShop.App.Server.Developer.Models
+namespace Peach.TriathlonShop.FunctionApp.Http.Developer.Models
 {
-    public class ArticleModel
-    {
-        public required string Name { get; set; }
-        public required decimal UnitPrice { get; set; }
-    }
-
     public class CreateRandomOrdersModel
     {
         public int? OrderRows { get; set; }
@@ -115,5 +104,16 @@ namespace Peach.TriathlonShop.App.Server.Developer.Models
         public int? ArticlesCountIntervalEnd { get; set; }
         public int? QuantityIntervalStart { get; set; }
         public int? QuantityIntervalEnd { get; set; }
+    }
+}
+
+namespace Peach.TriathlonShop.FunctionApp.Http.Developer.Extensions
+{
+    public static class CreateRandomOrdersExtensions
+    {
+        public static bool IsValidRequestBody(this CreateRandomOrdersModel model)
+        {
+            return model != null && model.OrderRows != null && model.OrderRows > 0;
+        }
     }
 }

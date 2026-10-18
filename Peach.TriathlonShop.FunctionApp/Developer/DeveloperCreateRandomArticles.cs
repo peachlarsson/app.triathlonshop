@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace Peach.TriathlonShop.FunctionApp.Developer
 {
-    public class CreateRandomArticles(TriathlonShopDbContext context)
+    public class DeveloperCreateRandomArticles(TriathlonShopDbContext context)
     {
         private readonly JsonSerializerOptions jsonSerializerOptions = new()
         {
             PropertyNameCaseInsensitive = true
         };
 
-        [Function(nameof(CreateRandomArticles))]
+        [Function(nameof(DeveloperCreateRandomArticles))]
         public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post", Route = "developer/articles/random")] HttpRequest req)
         {
             using var reader = new StreamReader(req.Body);
