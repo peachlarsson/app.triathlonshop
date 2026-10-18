@@ -1,3 +1,4 @@
+using Azure.Core;
 using Azure.Monitor.OpenTelemetry.Exporter;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Azure.Functions.Worker.OpenTelemetry;
@@ -9,6 +10,14 @@ using Peach.TriathlonShop.FunctionApp.Extensions;
 using Peach.TriathlonShop.FunctionApp.Services;
 
 var builder = FunctionsApplication.CreateBuilder(args);
+
+TokenCredential credential;
+
+#if DEBUG
+credential = ConfigurationExtensions.CreateClientSecretCredential(builder.Configuration);
+#else
+credential = new Azure.Identity.ManagedIdentityCredential(Azure.Identity.ManagedIdentityId.SystemAssigned);
+#endif
 
 builder.ConfigureFunctionsWebApplication();
 
