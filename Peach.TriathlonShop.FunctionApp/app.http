@@ -1,20 +1,77 @@
 # For more info on HTTP files go to https://aka.ms/vs/httpfile
 
 
-@baseUrl = http://localhost:5089/api
+@baseUrl = http://localhost:7285/api
 
 
-###
+#################
+### Developer ###
+#################
 
+### Random orders
 
-POST {{baseUrl}}/transport-order/accepted/{consignmentNumber}
+POST {{baseUrl}}/developer/orders/random
 Content-Type: application/json
-{}
+{
+  "OrderRows": 20,
+  "ArticlesCountIntervalStart": 1,
+  "ArticlesCountIntervalEnd": 15,
+  "QuantityIntervalStart": 1,
+  "QuantityIntervalEnd": 15
+}
 
 
-###
+### Create random articles
 
-
-POST {{baseUrl}}/developer/orders/random/50
+POST {{baseUrl}}/developer/articles/random
 Content-Type: application/json
-{}
+{
+  "ArticlesCount": 20,
+  "UnitPriceIntervalStart": 1,
+  "UnitPriceIntervalEnd": 200
+}
+
+
+### SignalR test
+
+POST {{baseUrl}}/developer/signalr/{hubName}/{eventName}
+Content-Type: application/json
+{
+  "Message": "hello world",
+  "Update": true,
+  "Timestamp": "2026-10-17T12:34:33Z"
+}
+
+
+#################
+### Transport ###
+#################
+
+
+### Transport order accepted
+
+POST {{baseUrl}}/transport-order/accepted/TR-93d1ac37-85fc-4278-8fc1-806ed0b4ed29
+Content-Type: application/json
+{
+  "ConsignmentNumber": "TR-93d1ac37-85fc-4278-8fc1-806ed0b4ed29",
+  "Destination": "Chokladfabriken 1, 12345 Nordpolen",
+  "TrackingUrl": "someUrl",
+  "EstimatedDeliveryDate": "2027-06-01T12:00:00Z",
+  "Timestamp": "2026-10-17T12:34:33Z"
+}
+
+
+### Set order confirm
+
+POST {{baseUrl}}/order/21/confirm
+Content-Type: application/json
+{
+}
+
+
+### SignalR negotiation
+
+GET {{baseUrl}}/negotiation/homepage
+Content-Type: application/json
+{
+}

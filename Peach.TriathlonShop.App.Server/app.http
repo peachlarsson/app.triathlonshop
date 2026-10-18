@@ -4,17 +4,13 @@
 @baseUrl = http://localhost:5089/api
 
 
-###
+##############
+### Orders ###
+##############
 
+### Set order confirm
 
-POST {{baseUrl}}/developer/articles/random/10
+POST {{baseUrl}}/orders/confirm/1
 Content-Type: application/json
 {}
 
-
-###
-
-
-POST {{baseUrl}}/developer/orders/random/50
-Content-Type: application/json
-{}
