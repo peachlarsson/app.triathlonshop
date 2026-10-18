@@ -39,6 +39,6 @@ builder.Services.AddDatabaseConfiguration(builder.Configuration);
 builder.Services.AddServiceBusClientWithNamespace(builder.Configuration, credential);
 
 /// SignalR
-builder.Services.AddSignalRConnection(builder.Configuration);
+builder.Services.AddSignalRConnection(builder.Configuration, credential);
 
 builder.Build().Run();

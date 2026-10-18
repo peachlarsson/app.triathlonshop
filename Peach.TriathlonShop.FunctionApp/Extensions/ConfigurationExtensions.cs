@@ -1,6 +1,7 @@
 ﻿using Azure.Core;
 using Azure.Identity;
 using Microsoft.Azure.Functions.Worker.Builder;
+using Microsoft.Azure.SignalR;
 using Microsoft.Azure.SignalR.Management;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Azure;
@@ -110,16 +111,23 @@ public static class ConfigurationExtensions
         return services;
     }
 
-    public static IServiceCollection AddSignalRConnection(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddSignalRConnection(this IServiceCollection services, IConfiguration configuration, TokenCredential credential)
     {
         var options = AppConfigExtensions.GetPeachOptions(configuration);
 
-        if (string.IsNullOrEmpty(options.SignalRConnectionString))
-            throw new InvalidOperationException("SignalR connection is not configured.");
+        if (string.IsNullOrEmpty(options.SignalRConnectionStringServiceUri) || string.IsNullOrEmpty(options.SignalRConnectionStringCredential))
+            throw new InvalidOperationException("SignalR connection service URI or credential is not configured.");
 
         services.AddSingleton<IServiceManager>(_ =>
             (IServiceManager)new ServiceManagerBuilder()
-                .WithOptions(o => o.ConnectionString = options.SignalRConnectionString)
+                .WithOptions(o =>
+                {
+                    o.ServiceEndpoints =
+                    [
+                        new ServiceEndpoint(new Uri(options.SignalRConnectionStringServiceUri),
+                        credential)
+                    ];
+                })
                 .BuildServiceManager());
 
         services.AddSingleton<SignalRNotifier>();
