@@ -10,12 +10,10 @@ export async function createSignalRConnection(controllerEndpoint: string): Promi
     const negotiateResponse = await fetch(`${controllerEndpoint}`);
 
     if (!negotiateResponse.ok) {
-        throw new Error("Negotiation failed.");
+        throw new Error(`Failed to negotiate SignalR connection with ${controllerEndpoint}. Error: ${negotiateResponse.status} ${negotiateResponse.statusText}`);
     }
 
     const { url, accessToken } = await negotiateResponse.json() as SignalRNegotiateResponse;
-
-    console.log("Negotiation successful.");
 
     return new HubConnectionBuilder()
         .withUrl(url, { accessTokenFactory: () => accessToken })

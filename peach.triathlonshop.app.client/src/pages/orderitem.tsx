@@ -91,8 +91,6 @@ function App() {
             return null;
         }
 
-        console.log(`Fetching order: /api/orders/${id}`);
-
         const response = await fetch(`/api/orders/${id}`);
         const responseData = await response.json();
         return responseData as Order;
@@ -135,6 +133,11 @@ function App() {
             try {
                 connection = await createSignalRConnection('/api/orders/negotiation');
 
+                if (isDisposed) {
+                    await connection.stop();
+                    return;
+                }
+
                 connection.on(`order${id}`, async (msg: SignalRTestMessagePayload) => {
                     const message = typeof msg?.Message === 'string'
                         ? msg.Message
@@ -169,8 +172,8 @@ function App() {
                 if (isDisposed) {
                     await connection.stop();
                 }
-            } catch (error) {
-                console.error('SignalR connection error', error);
+            } catch {
+                // Do nothing. Page works without SignalR connection.
             }
         };
 

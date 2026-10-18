@@ -83,8 +83,7 @@ function AddOrderCard({ onOrderCreated }: AddOrderCardProps) {
 
                 if (loadedCustomers.length > 0)
                     setCustomerId(loadedCustomers[0].id.toString());
-            } catch (error) {
-                console.error('Failed to load order create options:', error);
+            } catch {
                 setFormMessage('Failed to load customers and articles.');
             }
         };

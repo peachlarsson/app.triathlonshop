@@ -125,9 +125,7 @@ function HomePage() {
                 });
 
                 await signalRConnection.start();
-            } catch (error) {
-                console.error('Home page load failed', error);
-
+            } catch {
                 if (!isDisposed) {
                     setIsError(true);
                 }

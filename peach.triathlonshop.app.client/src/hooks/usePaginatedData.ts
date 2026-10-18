@@ -82,11 +82,9 @@ export function usePaginatedData<T>(
                     batchCacheRef.current.set(pageNumber, result.data);
                     setTotalCount(result.totalCount);
                     setTotalPrice(result.totalPrice);
-                } else {
-                    console.error('Failed to fetch data:', response.status, response.statusText);
                 }
-            } catch (error) {
-                console.error('Network error while fetching paginated data:', error);
+            } catch {
+                // Handle error silently
             }
         },
         [endpointPagination]
@@ -144,11 +142,10 @@ export function usePaginatedData<T>(
                     batchCacheRef.current.set(pageNumber, result.data);
                     setTotalCount(result.totalCount);
                     setTotalPrice(result.totalPrice);
-                } else {
-                    console.error('Failed to fetch data:', searchResponse.status, searchResponse.statusText);
                 }
-            } catch (error) {
-                console.error('Network error while fetching search data:', error);
+
+            } catch {
+                // Handle error silently
             }
         },
         [endpointSearchBar, searchQueryParam, sortClientResults]

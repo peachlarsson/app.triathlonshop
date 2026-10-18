@@ -64,8 +64,7 @@ function AddOrderItemCard({ orderId, onOrderItemCreated }: AddOrderItemCardProps
 
                 setArticles(loadedArticles);
                 setRows([getDefaultArticleRow(loadedArticles)]);
-            } catch (error) {
-                console.error('Failed to load articles:', error);
+            } catch {
                 setFormMessage('Failed to load articles.');
             }
         };
