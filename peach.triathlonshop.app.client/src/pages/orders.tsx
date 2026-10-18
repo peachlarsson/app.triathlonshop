@@ -8,6 +8,7 @@ import AddOrderCard from '../components/AddOrderCard';
 interface Order {
     id: number;
     number: string;
+    status: string;
     totalPrice: number;
     orderRowsCount: number;
     customerId: number;
@@ -34,6 +35,7 @@ function App() {
     const columns: ColumnDefinition[] = [
         { key: 'id', label: 'Id' },
         { key: 'number', label: 'Number' },
+        { key: 'status', label: 'Status' },
         { key: 'totalPrice', label: 'Total Price', isPrice: true },
         { key: 'orderRowsCount', label: 'Order Rows Count' },
         { key: 'customerId', label: 'Customer Id' },
