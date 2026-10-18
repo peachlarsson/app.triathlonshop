@@ -138,7 +138,8 @@ namespace Peach.TriathlonShop.App.Server.Controllers
             SortDirection sortOrder = SortDirection.Asc,
             int pageNumber = 1,
             int pageSize = 100,
-            string? customerName = null)
+            string? customerName = null,
+            string? articleName = null)
         {
             var query = context.Orders
                 .Select(q => new OrderDto
@@ -172,6 +173,11 @@ namespace Peach.TriathlonShop.App.Server.Controllers
             if (!string.IsNullOrWhiteSpace(customerName))
             {
                 query = query.Where(q => q.CustomerName.ToLower().Contains(customerName.ToLower()));
+            }
+
+            if (!string.IsNullOrWhiteSpace(articleName))
+            {
+                query = query.Where(q => q.Items.Any(item => item.ArticleName.ToLower().Contains(articleName.ToLower())));
             }
 
             query = sortBy switch
