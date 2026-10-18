@@ -150,7 +150,7 @@ function HomePage() {
         <Stack spacing={3}>
             <Box>
                 <Typography variant="h4" gutterBottom>
-                    peach.triathlonshop.com: Hello world!
+                    triathlonshop.peach.com: Hello world!
                 </Typography>
             </Box>
 
