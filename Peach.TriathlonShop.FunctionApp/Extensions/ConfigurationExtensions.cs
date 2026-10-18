@@ -115,7 +115,7 @@ public static class ConfigurationExtensions
     {
         var options = AppConfigExtensions.GetPeachOptions(configuration);
 
-        if (string.IsNullOrEmpty(options.SignalRConnectionStringServiceUri) || string.IsNullOrEmpty(options.SignalRConnectionStringCredential))
+        if (string.IsNullOrEmpty(options.AzureSignalRConnectionStringServiceUri) || string.IsNullOrEmpty(options.AzureSignalRConnectionStringCredential))
             throw new InvalidOperationException("SignalR connection service URI or credential is not configured.");
 
         services.AddSingleton<IServiceManager>(_ =>
@@ -124,7 +124,7 @@ public static class ConfigurationExtensions
                 {
                     o.ServiceEndpoints =
                     [
-                        new ServiceEndpoint(new Uri(options.SignalRConnectionStringServiceUri),
+                        new ServiceEndpoint(new Uri(options.AzureSignalRConnectionStringServiceUri),
                         credential)
                     ];
                 })
