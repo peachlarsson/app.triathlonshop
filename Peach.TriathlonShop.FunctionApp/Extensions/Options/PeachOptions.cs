@@ -7,4 +7,6 @@ public class PeachOptions
     public string? DatabaseConnectionStringEntra { get; set; }
     public string? ServiceBusFullyQualifiedNamespace { get; set; }
     public string? SignalRConnectionString { get; set; }
+    public string? SignalRConnectionStringServiceUri { get; set; }
+    public string? SignalRConnectionStringCredential { get; set; }
 }
