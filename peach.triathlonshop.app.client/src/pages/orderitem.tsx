@@ -84,7 +84,10 @@ function App() {
     const { id } = useParams();
     const [order, setOrder] = useState<Order | null>(null);
     const [signalRMessages, setSignalRMessages] = useState<SignalRMessageTimelineItem[]>([]);
-    const isConfirmed = order?.status === 'Confirmed';
+
+    const showAddOrderItemCard = order?.status === 'Created';
+    const showConfirmButton = order?.status === 'Created';
+    const showShipButton = order?.status === 'Confirmed' && order?.transportHistory?.[0]?.status === 'Accepted';
 
     const fetchOrder = async (): Promise<Order | null> => {
         if (!id) {
@@ -201,11 +204,7 @@ function App() {
                 <Typography>Total price: SEK {order.totalPrice}</Typography>
                 <Typography>Status: {order.status}</Typography>
 
-                {isConfirmed && (
-                    <Typography sx={{ mt: 2 }}>[ CONFIRMED ]</Typography>
-                )}
-
-                {!isConfirmed && (
+                {showConfirmButton && (
                     <Button
                         sx={{ mt: 2, float: 'right' }}
                         variant="contained"
@@ -230,6 +229,31 @@ function App() {
                     </Button>
                 )}
 
+                {showShipButton && (
+                    <Button
+                        sx={{ mt: 2, float: 'right' }}
+                        variant="contained"
+                        onClick={async () => {
+                            if (!id) {
+                                return;
+                            }
+
+                            const response = await fetch(`/api/orders/ship/${id}`, {
+                                method: 'POST'
+                            });
+
+                            if (response.ok) {
+                                const refreshedOrderData = await fetchOrder();
+                                if (refreshedOrderData) {
+                                    setOrder(refreshedOrderData);
+                                }
+                            }
+                        }}
+                    >
+                        Ship order
+                    </Button>
+                )}
+
                 <Stack spacing={3} sx={{ mt: 3 }}>
                     <Box sx={{ p: 2 }}>
                         <Stack spacing={2}>
@@ -243,7 +267,7 @@ function App() {
                         </Stack>
                     </Box>
 
-                    {!isConfirmed && id && (
+                    {showAddOrderItemCard && id && (
                         <AddOrderItemCard
                             orderId={Number(id)}
                             onOrderItemCreated={async () => {
