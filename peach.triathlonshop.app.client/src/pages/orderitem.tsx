@@ -90,7 +90,9 @@ function App() {
     const showShipButton = order?.status === 'Confirmed' && order?.transportHistory?.[0]?.status === 'Accepted';
 
     const fetchOrder = async (): Promise<Order | null> => {
-        if (!id) {
+
+        if (!id)
+        {
             return null;
         }
 
@@ -129,9 +131,11 @@ function App() {
         let ignore = false;
 
         const loadOrder = async () => {
+
             const responseData = await fetchOrder();
 
-            if (!ignore && responseData) {
+            if (!ignore && responseData)
+            {
                 setOrder(responseData);
             }
         };
@@ -177,12 +181,7 @@ function App() {
                         ...current
                     ]);
 
-                    if (update) {
-                        const responseData = await fetchOrder();
-                        if (responseData) {
-                            setOrder(responseData);
-                        }
-                    }
+                    await refreshOrderState(update);
                 });
 
                 await connection.start();
