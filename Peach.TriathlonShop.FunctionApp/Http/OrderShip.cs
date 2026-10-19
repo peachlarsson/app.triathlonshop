@@ -16,7 +16,7 @@ namespace Peach.TriathlonShop.FunctionApp.Http
     public class OrderShip(TriathlonShopDbContext context, SignalRNotifier signalRNotifier, ServiceBusClient serviceBusClient)
     {
         [Function(nameof(OrderShip))]
-        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post", Route = "order/ship/{orderId}")] HttpRequest req, long orderId)
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post", Route = "order/{orderId}/ship")] HttpRequest req, long orderId)
         {
             await signalRNotifier.SendOrderMessageAsync(orderId, "Order shipped: Started set status to Shipped");
 
