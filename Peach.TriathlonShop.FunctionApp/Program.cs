@@ -22,7 +22,7 @@ credential = new Azure.Identity.ManagedIdentityCredential(Azure.Identity.Managed
 builder.ConfigureFunctionsWebApplication();
 
 /// Register Azure App Configuration
-builder.AddCustomAzureAppConfiguration(credential: credential, labels: ["triathlonshop-func", "common"]);
+builder.AddCustomAzureAppConfiguration(credential: credential, labels: ["common", "triathlonshop", "triathlonshop-func"]);
 
 /// OpenTelemetry
 if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING")))
