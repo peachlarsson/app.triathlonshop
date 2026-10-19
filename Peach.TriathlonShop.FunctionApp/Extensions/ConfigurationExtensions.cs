@@ -44,38 +44,6 @@ public static class ConfigurationExtensions
         return builder;
     }
 
-    public static FunctionsApplicationBuilder AddCustomClientSecretAzureAppConfiguration(this FunctionsApplicationBuilder builder)
-    {
-        builder.Configuration.AddAzureAppConfiguration(options =>
-        {
-            var appConfigEndpoint = builder.Configuration["AzureAppConfigEndpoint"]
-                ?? throw new InvalidOperationException("Azure App Configuration endpoint is not configured.");
-
-            TokenCredential credential = CreateClientSecretCredential(builder.Configuration);
-            var labels = new[] { "common" };
-
-            options.Connect(new Uri(appConfigEndpoint), credential);
-
-            foreach (var label in labels)
-            {
-                options.Select(KeyFilter.Any, label);
-            }
-
-            options.ConfigureRefresh(refreshOptions =>
-            {
-                foreach (var label in labels)
-                {
-                    refreshOptions.Register("*", label, true);
-                }
-            });
-
-            options.ConfigureKeyVault(kv => kv.SetCredential(CreateClientSecretCredential(builder.Configuration)));
-        });
-
-        builder.Services.AddAzureAppConfiguration();
-        return builder;
-    }
-
     public static IServiceCollection AddDatabaseConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(services);
