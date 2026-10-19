@@ -99,6 +99,21 @@ function App() {
         return responseData as Order;
     };
 
+    const refreshOrderState = async (fetch: boolean) => {
+
+        if (!fetch)
+        {
+            return;
+        }
+
+        const refreshedOrderData = await fetchOrder();
+
+        if (refreshedOrderData)
+        {
+            setOrder(refreshedOrderData);
+        }
+    };
+
     const orderItemColumns: ColumnDefinition[] = [
         { key: 'lineNumber', label: 'Line Number' },
         { key: 'articleName', label: 'Article Name' },
@@ -217,12 +232,7 @@ function App() {
                                 method: 'POST'
                             });
 
-                            if (response.ok) {
-                                const refreshedOrderData = await fetchOrder();
-                                if (refreshedOrderData) {
-                                    setOrder(refreshedOrderData);
-                                }
-                            }
+                            await refreshOrderState(response.ok);
                         }}
                     >
                         Confirm Order
@@ -242,12 +252,7 @@ function App() {
                                 method: 'POST'
                             });
 
-                            if (response.ok) {
-                                const refreshedOrderData = await fetchOrder();
-                                if (refreshedOrderData) {
-                                    setOrder(refreshedOrderData);
-                                }
-                            }
+                            await refreshOrderState(response.ok);
                         }}
                     >
                         Ship order
@@ -271,10 +276,7 @@ function App() {
                         <AddOrderItemCard
                             orderId={Number(id)}
                             onOrderItemCreated={async () => {
-                                const responseData = await fetchOrder();
-                                if (responseData) {
-                                    setOrder(responseData);
-                                }
+                                await refreshOrderState(true);
                             }}
                         />
                     )}
