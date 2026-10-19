@@ -297,7 +297,22 @@ namespace Peach.TriathlonShop.App.Server.Controllers
                 return StatusCode(response.StatusCode, $"Failed to confirm order. StatusCode: {response.StatusCode}, ErrorMessage: {response.ErrorMessage}");
             }
 
+        [HttpPost("ship/{orderId}")]
+        public async Task<ActionResult> OrderShip(long orderId)
+        {
+            var response = await triathlonShopClient.SetOrderShipped(orderId);
+
+            if (response == null)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, "Failed to ship order. Response is null.");
+            }
+
+            if (response.IsSuccess)
+            {
             return Ok();
+        }
+
+            return StatusCode(response.StatusCode, $"Failed to ship order. StatusCode: {response.StatusCode}, ErrorMessage: {response.ErrorMessage}");
         }
 
         [HttpGet("negotiation")]
