@@ -2,13 +2,22 @@ using Azure.Core;
 using Peach.TriathlonShop.App.Server.Extensions;
 using Peach.TriathlonShop.App.Server.ServiceCollections;
 using System.Text.Json.Serialization;
+using ConfigurationExtensions = Peach.TriathlonShop.App.Server.Extensions.ConfigurationExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
+
+TokenCredential credential;
+
+#if DEBUG
+credential = ConfigurationExtensions.CreateClientSecretCredential(builder.Configuration);
+#else
+credential = new Azure.Identity.ManagedIdentityCredential(Azure.Identity.ManagedIdentityId.SystemAssigned);
+#endif
 
 builder.Services.AddApplicationInsightsTelemetry();
 
 /// Register Azure App Configuration
-builder.AddCustomClientSecretAzureAppConfiguration();
+builder.AddCustomAzureAppConfiguration(credential, ["common", "triathlonshop", "triathlonshop-web"]);
 
 /// Database
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
