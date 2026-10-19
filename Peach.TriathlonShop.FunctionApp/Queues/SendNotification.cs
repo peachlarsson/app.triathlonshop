@@ -52,6 +52,8 @@ namespace Peach.TriathlonShop.FunctionApp.Queues
 
                     await context.SaveChangesAsync();
 
+                    await signalRNotifier.SendOrderMessageAsync(notification.OrderId, $"Notification: Finished sending order confirmation to customer.", isUpdate: true);
+
                     break;
                 case OrderStatus.Shipped:
 
@@ -66,13 +68,15 @@ namespace Peach.TriathlonShop.FunctionApp.Queues
 
                     await context.SaveChangesAsync();
 
+                    await signalRNotifier.SendOrderMessageAsync(notification.OrderId, $"Notification: Finished sending order shipped notification to customer.", isUpdate: true);
+
                     break;
                 default:
                     logger.LogWarning("Unhandled order status {Status} for Order ID {OrderId}.", notification.Status, notification.OrderId);
                     break;
             }
 
-            await signalRNotifier.SendOrderMessageAsync(notification.OrderId, $"Notification: Finished sending notification to customer.", isUpdate: true);
+            await signalRNotifier.SendOrderMessageAsync(notification.OrderId, $"Notification: Finished sending notification to customer.");
         }
     }
 }
