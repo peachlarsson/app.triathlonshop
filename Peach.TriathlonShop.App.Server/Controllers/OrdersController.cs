@@ -292,8 +292,11 @@ namespace Peach.TriathlonShop.App.Server.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, "Failed to confirm order. Response is null.");
             }
 
-            if (!response.IsSuccess)
+            if (response.IsSuccess)
             {
+                return Ok();
+            }
+
                 return StatusCode(response.StatusCode, $"Failed to confirm order. StatusCode: {response.StatusCode}, ErrorMessage: {response.ErrorMessage}");
             }
 
