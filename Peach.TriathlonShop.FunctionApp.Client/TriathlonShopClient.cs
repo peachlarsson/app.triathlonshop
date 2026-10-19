@@ -61,6 +61,27 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
             ErrorMessage = response.IsSuccessStatusCode ? null : responseContent,
         };
     }
+
+    public async Task<Response<string>> SetOrderShipped(long orderId)
+    {
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Post,
+            RequestUri = new Uri($"order/{orderId}/ship", UriKind.Relative)
+        };
+
+        var response = await httpClient.SendAsync(request);
+
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        return new Response<string>
+        {
+            IsSuccess = response.IsSuccessStatusCode,
+            StatusCode = (int)response.StatusCode,
+            Content = responseContent,
+            ErrorMessage = response.IsSuccessStatusCode ? null : responseContent,
+        };
+    }
 }
 
 public class SignalRConnectionInfo

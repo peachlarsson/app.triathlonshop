@@ -6,4 +6,5 @@ public interface ITriathlonShopClient
 {
     public Task<Response<SignalRConnectionInfo>> GetNegotiationAsync(string hubName);
     public Task<Response<string>> SetOrderConfirm(long orderId);
+    public Task<Response<string>> SetOrderShipped(long orderId);
 }
