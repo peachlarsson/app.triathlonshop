@@ -2,7 +2,10 @@ import * as cmn from './common.bicep'
 
 param env cmn.env
 param system string
-param tags cmn.tags
+param tags cmn.tags = {
+  Creator: cmn.creator
+  Environment: env
+}
 
 var appName = 'func-${system}-${env}-${cmn.companyInfo.name}'
 
@@ -68,4 +71,49 @@ module appi './appi.bicep' = {
 }
 
 // Storage account
+module stg './st.bicep' = {
+  name: 'module-st'
+  params: {
+    env: env
+    system: system
+  }
+}
 
+// App configuration
+module appconfig './appcs.bicep' = {
+  name: 'module-appconfig'
+  params: {
+    env: env
+    system: system
+    tags: tags
+  }
+}
+
+// SignalR
+module signalR './sigr.bicep' = {
+  name: 'module-signalr'
+  params: {
+    env: env
+    system: system
+  }
+}
+
+// SQL database
+module sqldb './sqldb.bicep' = {
+  name: 'module-sqldb'
+  params: {
+    env: env
+    system: system
+    tags: tags
+  }
+}
+
+// Service Bus
+module sbns './sbns.bicep' = {
+  name: 'module-sbns'
+  params: {
+    env: env
+    system: system
+    tags: tags
+  }
+}

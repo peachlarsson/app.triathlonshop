@@ -8,8 +8,9 @@ param tags cmn.tags = {
 }
 
 var appName = 'app-${system}-${env}-${cmn.companyInfo.name}'
+var commonRgName = 'rg-common-${env}-${cmn.companyInfo.name}'
 
-param netFrameworkVersion cmn.netFrameworkVersionType = cmn.netFrameworkVersion
+param netFrameworkVersion cmn.netFrameworkVersionType = 'v10.0'
 
 resource webApp 'Microsoft.Web/sites@2025-03-01' = {
   name: appName
@@ -58,9 +59,10 @@ resource webApp 'Microsoft.Web/sites@2025-03-01' = {
 // App service plan
 module asp './asp.bicep' = {
   name: 'module-asp-app'
+  scope: resourceGroup(commonRgName)
   params: {
     env: env
-    system: system
+    system: 'common'
     kind: 'app'
   }
 }
@@ -68,8 +70,19 @@ module asp './asp.bicep' = {
 // Application Insights
 module appi './appi.bicep' = {
   name: 'module-appi'
+  scope: resourceGroup(commonRgName)
   params: {
     env: env
-    system: system
+    system: 'common'
+  }
+}
+
+// App configuration
+module appcs './appcs.bicep' = {
+  name: 'module-appcs'
+  scope: resourceGroup(commonRgName)
+  params: {
+    env: env
+    system: 'common'
   }
 }

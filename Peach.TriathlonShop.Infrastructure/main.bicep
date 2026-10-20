@@ -10,3 +10,10 @@ module app './modules/app.bicep' = {
     netFrameworkVersion: 'v10.0'
   }
 }
+
+module func './modules/func.bicep' = {
+  params: {
+    env: env
+    system: system
+  }
+}
