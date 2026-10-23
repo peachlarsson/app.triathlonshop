@@ -14,6 +14,7 @@ module sqlElasticPool './modules/sqlelasticpool.bicep' = {
   params: {
     env: env
     system: system
+    sqlServerName: sqlServer.outputs.sqlServerName
   }
 }
 
@@ -21,6 +22,8 @@ module sqlDatabase './modules/sqldatabase.bicep' = {
   params: {
     env: env
     system: system
+    sqlServerName: sqlServer.outputs.sqlServerName
+    sqlElasticPoolId: sqlElasticPool.outputs.sqlElasticPoolId
   }
 }
 

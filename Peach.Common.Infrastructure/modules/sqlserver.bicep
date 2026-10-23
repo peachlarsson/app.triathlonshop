@@ -11,4 +11,9 @@ resource sqlServer 'Microsoft.Sql/servers@2026-08-01-preview' = {
   name: 'sql-${system}-${env}-${con.companyInfo.name}'
   location: con.location
   tags: tags
+  properties: {
+    
+  }
 }
+
+output sqlServerName string = sqlServer.name
