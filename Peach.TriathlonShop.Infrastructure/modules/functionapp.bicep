@@ -1,4 +1,4 @@
-import * as cmn from './common.bicep'
+import * as cmn from '../../Peach.Common.Infrastructure/modules/constants.bicep'
 
 param env cmn.env
 param system string
@@ -52,7 +52,7 @@ resource functionApp 'Microsoft.Web/sites@2025-03-01' = {
 }
 
 // App service plan
-module asp './asp.bicep' = {
+module asp '../../Peach.Common.Infrastructure/modules/appplan.bicep' = {
   name: 'module-asp-app'
   params: {
     env: env
@@ -62,7 +62,7 @@ module asp './asp.bicep' = {
 }
 
 // Application Insights
-module appi './appi.bicep' = {
+module appi '../../Peach.Common.Infrastructure/modules/appinsights.bicep' = {
   name: 'module-appi'
   params: {
     env: env
@@ -71,7 +71,7 @@ module appi './appi.bicep' = {
 }
 
 // Storage account
-module stg './st.bicep' = {
+module stg './storageaccount.bicep' = {
   name: 'module-st'
   params: {
     env: env
@@ -80,7 +80,7 @@ module stg './st.bicep' = {
 }
 
 // App configuration
-module appconfig './appcs.bicep' = {
+module appconfig '../../Peach.Common.Infrastructure/modules/appconfiguration.bicep' = {
   name: 'module-appconfig'
   params: {
     env: env
@@ -90,7 +90,7 @@ module appconfig './appcs.bicep' = {
 }
 
 // SignalR
-module signalR './sigr.bicep' = {
+module signalR '../../Peach.Common.Infrastructure/modules/signalr.bicep' = {
   name: 'module-signalr'
   params: {
     env: env
@@ -99,7 +99,7 @@ module signalR './sigr.bicep' = {
 }
 
 // SQL database
-module sqldb './sqldb.bicep' = {
+module sqldb '../../Peach.Common.Infrastructure/modules/sqldatabase.bicep' = {
   name: 'module-sqldb'
   params: {
     env: env
@@ -109,7 +109,7 @@ module sqldb './sqldb.bicep' = {
 }
 
 // Service Bus
-module sbns './sbns.bicep' = {
+module sbns '../../Peach.Common.Infrastructure/modules/servicebus.bicep' = {
   name: 'module-sbns'
   params: {
     env: env

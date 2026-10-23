@@ -1,4 +1,4 @@
-import * as cmn from './common.bicep'
+import * as cmn from './constants.bicep'
 
 param env cmn.env
 param system string = 'common'

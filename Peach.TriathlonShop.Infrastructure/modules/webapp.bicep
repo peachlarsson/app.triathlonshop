@@ -1,4 +1,4 @@
-import * as cmn from './common.bicep'
+import * as cmn from '../../Peach.Common.Infrastructure/modules/constants.bicep'
 
 param env cmn.env
 param system string
@@ -57,7 +57,7 @@ resource webApp 'Microsoft.Web/sites@2025-03-01' = {
 }
 
 // App service plan
-module asp './asp.bicep' = {
+module asp '../../Peach.Common.Infrastructure/modules/appplan.bicep' = {
   name: 'module-asp-app'
   scope: resourceGroup(commonRgName)
   params: {
@@ -68,7 +68,7 @@ module asp './asp.bicep' = {
 }
 
 // Application Insights
-module appi './appi.bicep' = {
+module appi '../../Peach.Common.Infrastructure/modules/appinsights.bicep' = {
   name: 'module-appi'
   scope: resourceGroup(commonRgName)
   params: {
@@ -78,7 +78,7 @@ module appi './appi.bicep' = {
 }
 
 // App configuration
-module appcs './appcs.bicep' = {
+module appcs '../../Peach.Common.Infrastructure/modules/appconfiguration.bicep' = {
   name: 'module-appcs'
   scope: resourceGroup(commonRgName)
   params: {

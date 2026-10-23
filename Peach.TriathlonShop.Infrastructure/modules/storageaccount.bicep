@@ -1,4 +1,4 @@
-import * as cmn from './common.bicep'
+import * as cmn from '../../Peach.Common.Infrastructure/modules/constants.bicep'
 
 param env cmn.env
 param system string

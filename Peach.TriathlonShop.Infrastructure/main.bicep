@@ -1,9 +1,9 @@
-import * as cmn from './modules/common.bicep'
+import * as cmn from '../Peach.Common.Infrastructure/modules/constants.bicep'
 
 param env cmn.env
 param system string
 
-module app './modules/app.bicep' = {
+module app './modules/webapp.bicep' = {
   params: {
     env: env
     system: system
@@ -11,7 +11,14 @@ module app './modules/app.bicep' = {
   }
 }
 
-module func './modules/func.bicep' = {
+module func './modules/functionapp.bicep' = {
+  params: {
+    env: env
+    system: system
+  }
+}
+
+module storageAccountFunctionApp './modules/storageaccount.bicep' = {
   params: {
     env: env
     system: system
