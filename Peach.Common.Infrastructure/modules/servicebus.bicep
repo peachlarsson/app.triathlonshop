@@ -1,14 +1,14 @@
-import * as cmn from './constants.bicep'
+import * as con from './constants.bicep'
 
-param env cmn.env
+param env con.env
 param system string
-param tags cmn.tags = {
-  Creator: cmn.creator
+param tags con.tags = {
+  Creator: con.creator
   Environment: env
 }
 
 resource sbns 'Microsoft.ServiceBus/namespaces@2026-07-01-preview' = {
-  name: 'sbns-${system}-${env}-${cmn.companyInfo.name}'
-  location: cmn.location
+  name: 'sbns-${system}-${env}-${con.companyInfo.name}'
+  location: con.location
   tags: tags
 }

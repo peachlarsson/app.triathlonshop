@@ -1,14 +1,14 @@
-import * as cmn from './constants.bicep'
+import * as con from './constants.bicep'
 
-param env cmn.env
+param env con.env
 param system string
-param tags cmn.tags = {
-  Creator: cmn.creator
+param tags con.tags = {
+  Creator: con.creator
   Environment: env
 }
 
 resource sqldb 'Microsoft.Sql/servers@2025-02-01-preview' = {
-  name: 'sqldb-${system}-${env}-${cmn.companyInfo.name}'
-  location: cmn.location
+  name: 'sqldb-${system}-${env}-${con.companyInfo.name}'
+  location: con.location
   tags: tags
 }

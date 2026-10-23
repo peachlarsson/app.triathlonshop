@@ -1,13 +1,17 @@
-import * as cmn from './constants.bicep'
+import * as con from './constants.bicep'
 
-param env cmn.env
+param env con.env
 param system string
+param tags con.tags = {
+  Creator: con.creator
+  Environment: env
+}
 
 var resourceAbbr = 'appi'
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
-  name: '${resourceAbbr}-${system}-${env}-${cmn.companyInfo.name}'
-  location: cmn.location
+  name: '${resourceAbbr}-${system}-${env}-${con.companyInfo.name}'
+  location: con.location
   kind: 'web'
   properties: {
     Application_Type: 'web'

@@ -1,7 +1,12 @@
-import * as cmn from './constants.bicep'
+import * as con from './constants.bicep'
 
-param env cmn.env
-param system string = 'common'
+param env con.env
+param system string
+param tags con.tags = {
+  Creator: con.creator
+  Environment: env
+}
+
 param kind kindType
 
 type kindType = 'app' | 'functionapp'
