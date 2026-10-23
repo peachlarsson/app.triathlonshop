@@ -40,8 +40,8 @@ var sku skuType = kind == 'app' ? {
 }
 
 resource asp 'Microsoft.Web/serverfarms@2025-03-01' = {
-  name: 'asp-${system}-${env}-${cmn.companyInfo.name}'
-  location: cmn.location
+  name: 'asp-${system}-${env}-${con.companyInfo.name}'
+  location: con.location
   kind: kind
   sku: sku
   properties: {

@@ -12,12 +12,8 @@ var resourceAbbr = 'appi'
 resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: '${resourceAbbr}-${system}-${env}-${con.companyInfo.name}'
   location: con.location
+  tags: tags
   kind: 'web'
-  properties: {
-    Application_Type: 'web'
-    RetentionInDays: 90
-  }
 }
 
 output appInsightsConnectionString string = appInsights.properties.ConnectionString
-
