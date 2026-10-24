@@ -21,6 +21,15 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: process.env.VITE_API_PROXY_TARGET ?? 'http://localhost:5142',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
   test: {
     silent: 'passed-only',
     unstubEnvs: true,

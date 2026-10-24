@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import {
   type SortingState,
+  type Updater,
   type VisibilityState,
   flexRender,
   getCoreRowModel,
@@ -29,15 +30,28 @@ import { usersColumns as columns } from './users-columns'
 
 type DataTableProps = {
   data: User[]
+  totalCount: number
+  isLoading: boolean
+  error?: string
+  sorting: SortingState
+  onSortingChange: (updater: Updater<SortingState>) => void
   search: Record<string, unknown>
   navigate: NavigateFn
 }
 
-export function UsersTable({ data, search, navigate }: DataTableProps) {
+export function UsersTable({
+  data,
+  totalCount,
+  isLoading,
+  error,
+  sorting,
+  onSortingChange,
+  search,
+  navigate,
+}: DataTableProps) {
   // Local UI-only states
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const [sorting, setSorting] = useState<SortingState>([])
 
   // Local state management for table (uncomment to use local-only state, not synced with URL)
   // const [columnFilters, onColumnFiltersChange] = useState<ColumnFiltersState>([])
@@ -55,10 +69,7 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
     navigate,
     pagination: { defaultPage: 1, defaultPageSize: 10 },
     globalFilter: { enabled: false },
-    columnFilters: [
-      { columnId: 'fullName', searchKey: 'name', type: 'string' },
-      { columnId: 'role', searchKey: 'role', type: 'array' },
-    ],
+    columnFilters: [{ columnId: 'fullName', searchKey: 'name', type: 'string' }],
   })
 
   // eslint-disable-next-line react-hooks/incompatible-library
@@ -76,7 +87,11 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
     onPaginationChange,
     onColumnFiltersChange,
     onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
+    onSortingChange,
+    manualFiltering: true,
+    manualPagination: true,
+    manualSorting: true,
+    rowCount: totalCount,
     onColumnVisibilityChange: setColumnVisibility,
     getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
@@ -101,13 +116,6 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
         table={table}
         searchPlaceholder='Filter customers by name...'
         searchKey='fullName'
-        filters={[
-          {
-            columnId: 'role',
-            title: 'Role',
-            options: roles.map((role) => ({ ...role })),
-          },
-        ]}
       />
       <div className='overflow-hidden rounded-md border'>
         <Table>
@@ -167,8 +175,12 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
                 <TableCell
                   colSpan={columns.length}
                   className='h-24 text-center'
+                  role={error ? 'alert' : undefined}
                 >
-                  No results.
+                  {error ??
+                    (isLoading
+                      ? 'Loading customers...'
+                      : 'No results.')}
                 </TableCell>
               </TableRow>
             )}

@@ -2,7 +2,6 @@ import { type ColumnDef } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
-import { LongText } from '@/components/long-text'
 import { roles } from '../data/data'
 import { type User } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
@@ -43,7 +42,7 @@ export const usersColumns: ColumnDef<User>[] = [
     ),
     cell: ({ row }) => {
       const { fullName } = row.original
-      return <LongText className='max-w-36'>{fullName}</LongText>
+      return <div className='whitespace-nowrap'>{fullName}</div>
     },
     meta: { className: 'w-36' },
   },
