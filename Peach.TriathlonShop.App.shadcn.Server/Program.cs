@@ -21,6 +21,7 @@ builder.AddCustomAzureAppConfiguration(credential, ["common", "triathlonshop", "
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
 
 /// TriathlonShop API Client
+builder.Services.AddTriathlonShopClient(builder.Configuration);
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
