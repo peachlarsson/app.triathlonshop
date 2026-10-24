@@ -201,13 +201,20 @@ export function Dashboard() {
 const topNav = [
   {
     title: 'Overview',
-    href: 'dashboard/overview',
+    href: '/',
     isActive: true,
     disabled: false,
   },
   {
     title: 'Customers',
-    href: 'dashboard/customers',
+    href: '/customers',
+    isActive: false,
+    disabled: false,
+  },
+{/*
+  {
+    title: 'Users',
+    href: 'dashboard/users',
     isActive: false,
     disabled: true,
   },
@@ -223,4 +230,5 @@ const topNav = [
     isActive: false,
     disabled: true,
   },
+*/}
 ]
