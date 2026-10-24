@@ -41,6 +41,47 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
         };
     }
 
+    public async Task<Response<PaginatedResponse<CustomerDto>>> GetCustomerAsync(GetCustomersRequest request)
+    {
+        var queryParams = new Dictionary<string, string>
+        {
+            { "customerName", request.CustomerName ?? string.Empty },
+            { "pageNumber", request.PageNumber.ToString() },
+            { "pageSize", request.PageSize.ToString() },
+            { "sortKey", request.SortKey.ToString() },
+            { "sortDirection", request.SortDirection.ToString() }
+        };
+        
+        var queryString = string.Join("&", queryParams.Select(kvp => $"{kvp.Key}={Uri.EscapeDataString(kvp.Value)}"));
+
+        var httpRequest = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri($"customers?{queryString}", UriKind.Relative)
+        };
+
+        var response = await httpClient.SendAsync(httpRequest);
+
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return new Response<PaginatedResponse<CustomerDto>>
+            {
+                IsSuccess = false,
+                StatusCode = (int)response.StatusCode,
+                ErrorMessage = responseContent,
+            };
+        }
+
+        return new Response<PaginatedResponse<CustomerDto>>
+        {
+            IsSuccess = true,
+            StatusCode = (int)response.StatusCode,
+            Content = JsonSerializer.Deserialize<PaginatedResponse<CustomerDto>>(responseContent, jsonSerializerOptions),
+        };
+    }
+
     public async Task<Response<string>> SetOrderConfirm(long orderId)
     {
         var request = new HttpRequestMessage
