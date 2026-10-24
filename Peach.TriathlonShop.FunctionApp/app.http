@@ -5,6 +5,34 @@
 
 
 #################
+### Customers ###
+#################
+
+GET {{baseUrl}}/customers
+Accept: application/json
+
+###
+
+GET {{baseUrl}}/customers?pageSize=3
+Accept: application/json
+
+###
+
+GET {{baseUrl}}/customers?pageSize=3&sortKey=Id
+Accept: application/json
+
+###
+
+GET {{baseUrl}}/customers?pageSize=&sortKey=Id&sortDirection=desc
+Accept: application/json
+
+###
+
+GET {{baseUrl}}/customers?pageSize=2&pageNumber=3&sortKey=Id&sortDirection=asc
+Accept: application/json
+
+
+#################
 ### Developer ###
 #################
 
