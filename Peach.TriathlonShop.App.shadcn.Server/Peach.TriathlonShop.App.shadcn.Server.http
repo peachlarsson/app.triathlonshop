@@ -1,0 +1,6 @@
+@Peach.TriathlonShop.App.shadcn.Server_HostAddress = http://localhost:5142
+
+GET {{Peach.TriathlonShop.App.shadcn.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
