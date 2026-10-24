@@ -39,7 +39,7 @@ export const usersColumns: ColumnDef<User>[] = [
     id: 'fullName',
     accessorFn: ({ fullName }) => fullName,
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Name' />
+      <DataTableColumnHeader column={column} title='Full Name' />
     ),
     cell: ({ row }) => {
       const { fullName } = row.original
@@ -82,7 +82,7 @@ export const usersColumns: ColumnDef<User>[] = [
       return value.includes(row.getValue(id))
     },
     enableSorting: false,
-    enableHiding: false,
+    enableHiding: true,
   },
   {
     id: 'actions',
