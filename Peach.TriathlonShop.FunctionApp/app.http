@@ -4,6 +4,16 @@
 @baseUrl = http://localhost:7285/api
 
 
+##############
+### Orders ###
+##############
+
+GET {{baseUrl}}/orders?pageSize=10&pageNumber=7
+Accept: application/json
+
+
+###
+
 #################
 ### Developer ###
 #################
