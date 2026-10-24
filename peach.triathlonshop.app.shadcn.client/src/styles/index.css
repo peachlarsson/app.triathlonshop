@@ -13,6 +13,9 @@
   html {
     @apply overflow-x-hidden;
   }
+  html.font-geist-mono {
+    font-family: 'Geist Mono', monospace;
+  }
   body {
     @apply min-h-svh w-full bg-background text-foreground has-[div[data-variant='inset']]:bg-sidebar;
   }

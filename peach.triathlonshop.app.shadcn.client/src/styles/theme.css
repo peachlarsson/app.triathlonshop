@@ -61,6 +61,7 @@
 }
 
 @theme inline {
+  --font-geist-mono: 'Geist Mono', monospace;
   --font-inter: 'Inter', 'sans-serif';
   --font-manrope: 'Manrope', 'sans-serif';
 
