@@ -56,8 +56,7 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
     pagination: { defaultPage: 1, defaultPageSize: 10 },
     globalFilter: { enabled: false },
     columnFilters: [
-      // username per-column text filter
-      { columnId: 'username', searchKey: 'username', type: 'string' },
+      { columnId: 'fullName', searchKey: 'name', type: 'string' },
       { columnId: 'role', searchKey: 'role', type: 'array' },
     ],
   })
@@ -100,8 +99,8 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
     >
       <DataTableToolbar
         table={table}
-        searchPlaceholder='Filter users...'
-        searchKey='username'
+        searchPlaceholder='Filter customers by name...'
+        searchKey='fullName'
         filters={[
           {
             columnId: 'role',

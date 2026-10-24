@@ -10,7 +10,7 @@ const customersSearchSchema = z.object({
     .array(z.enum(roles.map((r) => r.value as (typeof roles)[number]['value'])))
     .optional()
     .catch([]),
-  username: z.string().optional().catch(''),
+  name: z.string().optional().catch(''),
 })
 
 export const Route = createFileRoute('/_authenticated/customers/')({

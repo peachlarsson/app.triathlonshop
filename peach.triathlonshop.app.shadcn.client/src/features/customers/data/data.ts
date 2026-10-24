@@ -1,4 +1,4 @@
-import { Shield, UserCheck, Users, CreditCard } from 'lucide-react'
+import { UserCheck } from 'lucide-react'
 
 export const roles = [
   {
@@ -10,5 +10,5 @@ export const roles = [
     label: 'Private',
     value: 'privateCustomer',
     icon: UserCheck,
-  }
+  },
 ] as const
