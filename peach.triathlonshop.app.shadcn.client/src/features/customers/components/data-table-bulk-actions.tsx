@@ -42,25 +42,6 @@ export function DataTableBulkActions<TData>({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              variant='outline'
-              size='icon'
-              onClick={handleBulkInvite}
-              className='size-8'
-              aria-label='Invite selected users'
-              title='Invite selected users'
-            >
-              <Mail />
-              <span className='sr-only'>Invite selected users</span>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Invite selected users</p>
-          </TooltipContent>
-        </Tooltip>
-
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
               variant='destructive'
               size='icon'
               onClick={() => setShowDeleteConfirm(true)}
