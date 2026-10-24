@@ -211,7 +211,7 @@ const topNav = [
     isActive: false,
     disabled: false,
   },
-{/*
+/*
   {
     title: 'Users',
     href: 'dashboard/users',
@@ -230,5 +230,5 @@ const topNav = [
     isActive: false,
     disabled: true,
   },
-*/}
+*/
 ]
