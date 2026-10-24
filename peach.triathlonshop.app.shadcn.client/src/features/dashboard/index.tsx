@@ -46,6 +46,7 @@ export function Dashboard() {
           <div className='w-full overflow-x-auto pb-2'>
             <TabsList>
               <TabsTrigger value='overview'>Overview</TabsTrigger>
+{/*
               <TabsTrigger value='analytics'>Analytics</TabsTrigger>
               <TabsTrigger value='reports' disabled>
                 Reports
@@ -53,6 +54,7 @@ export function Dashboard() {
               <TabsTrigger value='notifications' disabled>
                 Notifications
               </TabsTrigger>
+*/}
             </TabsList>
           </div>
           <TabsContent value='overview' className='space-y-4'>
