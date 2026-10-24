@@ -8,8 +8,18 @@ included.
 ## Run locally
 
 Install dependencies with `npm install`, then start the Vite development server
-with `npm run dev`. The server uses the ASP.NET development HTTPS certificate,
-which can be created with `dotnet dev-certs https --trust`.
+with `npm run dev`. Vite serves the UI at `http://localhost:5173` and fails if
+that port is already in use, keeping it aligned with the ASP.NET SPA proxy and
+VS Code browser launch settings.
+
+When starting the ASP.NET server, the SPA proxy starts Vite automatically if it
+is not already running. Restart the ASP.NET server after changing its SPA proxy
+settings.
+
+API requests under `/api` are proxied to `https://localhost:7135` by default.
+Start the ASP.NET server with its `https` launch profile, and trust its development
+certificate with `dotnet dev-certs https --trust`. To use another backend address,
+set `VITE_API_PROXY_TARGET` before starting Vite.
 
 Run `npm run build` to type-check and create a production build.
 
