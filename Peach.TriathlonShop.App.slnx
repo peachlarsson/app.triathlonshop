@@ -4,6 +4,11 @@
     <Deploy />
   </Project>
   <Project Path="Peach.TriathlonShop.App.Server/Peach.TriathlonShop.App.Server.csproj" />
+  <Project Path="peach.triathlonshop.app.shadcn.client/peach.triathlonshop.app.shadcn.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="Peach.TriathlonShop.App.shadcn.Server/Peach.TriathlonShop.App.shadcn.Server.csproj" Id="0b624ba4-f65a-44e6-bba1-c1724489e009" />
   <Project Path="Peach.TriathlonShop.Database/Peach.TriathlonShop.Database.csproj" />
   <Project Path="Peach.TriathlonShop.FunctionApp.Client/Peach.TriathlonShop.FunctionApp.Client.csproj" Id="d675d8f6-55e0-470f-989a-15fb1de23d7f" />
   <Project Path="Peach.TriathlonShop.FunctionApp/Peach.TriathlonShop.FunctionApp.csproj" Id="3cd8e965-c874-4206-b710-2086defd322c" />
