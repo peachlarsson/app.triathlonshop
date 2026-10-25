@@ -1,0 +1,34 @@
+using Microsoft.AspNetCore.Mvc;
+using Peach.TriathlonShop.Api.Client;
+using Peach.TriathlonShop.Api.Contract.Models;
+
+namespace Peach.TriathlonShop.App.Server.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class DashboardController(ITriathlonShopClient triathlonShopClient) : ControllerBase
+{
+    [HttpGet]
+    public async Task<ActionResult<DashboardResponseModel>> GetDashboardData()
+    {
+        var response = await triathlonShopClient.GetDashboardDataAsync();
+
+        if (response == null)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        if (!response.IsSuccess)
+        {
+            return StatusCode(response.StatusCode, response.ErrorMessage);
+        }
+
+        if (response.Content == null)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        return Ok(response.Content);
+    }
+}
+
