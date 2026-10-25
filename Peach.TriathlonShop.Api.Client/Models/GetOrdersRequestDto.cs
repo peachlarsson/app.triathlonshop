@@ -1,7 +1,7 @@
-﻿using Peach.TriathlonShop.FunctionApp.Client.Enums.Common;
-using Peach.TriathlonShop.FunctionApp.Client.Enums.Order;
+﻿using Peach.TriathlonShop.Api.Client.Enums.Common;
+using Peach.TriathlonShop.Api.Client.Enums.Order;
 
-namespace Peach.TriathlonShop.FunctionApp.Client.Models;
+namespace Peach.TriathlonShop.Api.Client.Models;
 
 public class GetOrdersRequestDto
 {

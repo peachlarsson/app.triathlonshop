@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Peach.TriathlonShop.FunctionApp.Client.Models;
+using Peach.TriathlonShop.Api.Client.Models;
 using System.Text.Json;
 
-namespace Peach.TriathlonShop.FunctionApp.Client;
+namespace Peach.TriathlonShop.Api.Client;
 
 public class TriathlonShopClient(HttpClient httpClient, IConfiguration configuration) : ITriathlonShopClient
 {

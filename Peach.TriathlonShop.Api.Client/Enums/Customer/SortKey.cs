@@ -1,4 +1,4 @@
-﻿namespace Peach.TriathlonShop.FunctionApp.Client.Enums.Customer;
+﻿namespace Peach.TriathlonShop.Api.Client.Enums.Customer;
 
 public enum SortKey
 {

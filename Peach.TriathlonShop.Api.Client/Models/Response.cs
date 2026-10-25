@@ -1,4 +1,4 @@
-﻿namespace Peach.TriathlonShop.FunctionApp.Client.Models;
+﻿namespace Peach.TriathlonShop.Api.Client.Models;
 
 public class Response<T>
 {

@@ -1,11 +1,12 @@
 <Solution>
+  <Project Path="Peach.TriathlonShop.Api.Client/Peach.TriathlonShop.Api.Client.csproj" />
+  <Project Path="Peach.TriathlonShop.Api.Contract/Peach.TriathlonShop.Api.Contract.csproj" Id="0feb86cb-bb0f-4a6f-a6ba-21eb5d832357" />
   <Project Path="peach.triathlonshop.app.client/peach.triathlonshop.app.client.esproj">
     <Build />
     <Deploy />
   </Project>
   <Project Path="Peach.TriathlonShop.App.Server/Peach.TriathlonShop.App.Server.csproj" />
   <Project Path="Peach.TriathlonShop.Database/Peach.TriathlonShop.Database.csproj" />
-  <Project Path="Peach.TriathlonShop.FunctionApp.Client/Peach.TriathlonShop.FunctionApp.Client.csproj" Id="d675d8f6-55e0-470f-989a-15fb1de23d7f" />
   <Project Path="Peach.TriathlonShop.FunctionApp/Peach.TriathlonShop.FunctionApp.csproj" Id="3cd8e965-c874-4206-b710-2086defd322c" />
   <Project Path="Peach.TriathlonShop.ServiceBus.Client/Peach.TriathlonShop.ServiceBus.Client.csproj" Id="cab133a7-5685-47a4-8a95-5f08a7783a45" />
 </Solution>

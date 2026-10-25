@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Peach.TriathlonShop.FunctionApp.Client;
-using Peach.TriathlonShop.FunctionApp.Client.Enums.Common;
-using Peach.TriathlonShop.FunctionApp.Client.Enums.Customer;
-using Peach.TriathlonShop.FunctionApp.Client.Models;
+using Peach.TriathlonShop.Api.Client;
+using Peach.TriathlonShop.Api.Client.Enums.Common;
+using Peach.TriathlonShop.Api.Client.Enums.Customer;
+using Peach.TriathlonShop.Api.Client.Models;
 
 namespace Peach.TriathlonShop.App.Server.Controllers;
 

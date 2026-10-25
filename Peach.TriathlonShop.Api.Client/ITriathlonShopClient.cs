@@ -1,6 +1,6 @@
-﻿using Peach.TriathlonShop.FunctionApp.Client.Models;
+﻿using Peach.TriathlonShop.Api.Client.Models;
 
-namespace Peach.TriathlonShop.FunctionApp.Client;
+namespace Peach.TriathlonShop.Api.Client;
 
 public interface ITriathlonShopClient
 {

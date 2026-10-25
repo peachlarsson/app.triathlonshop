@@ -1,7 +1,7 @@
-﻿using Peach.TriathlonShop.FunctionApp.Client.Enums.Common;
-using Peach.TriathlonShop.FunctionApp.Client.Enums.Customer;
+﻿using Peach.TriathlonShop.Api.Client.Enums.Common;
+using Peach.TriathlonShop.Api.Client.Enums.Customer;
 
-namespace Peach.TriathlonShop.FunctionApp.Client.Models;
+namespace Peach.TriathlonShop.Api.Client.Models;
 
 public class GetCustomersRequest
 {

@@ -27,7 +27,9 @@ public class GetOrders(TriathlonShopDbContext context)
             throw new ArgumentNullException(nameof(request));
         }
 
-        var query = context.Orders.AsNoTracking();
+        var query = context.Orders
+            //.Include(o => o.Customer)
+            .AsNoTracking();
 
         if (!string.IsNullOrWhiteSpace(request.OrderNumber))
         {

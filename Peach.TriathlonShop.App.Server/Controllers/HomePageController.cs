@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Peach.TriathlonShop.FunctionApp.Client;
+using Peach.TriathlonShop.Api.Client;
 
 namespace Peach.TriathlonShop.App.Server.Controllers
 {

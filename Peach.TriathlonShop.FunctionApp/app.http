@@ -8,7 +8,7 @@
 ### Orders ###
 ##############
 
-GET {{baseUrl}}/orders?pageSize=10&pageNumber=7
+GET {{baseUrl}}/orders?pageSize=10&pageNumber=3
 Accept: application/json
 
 

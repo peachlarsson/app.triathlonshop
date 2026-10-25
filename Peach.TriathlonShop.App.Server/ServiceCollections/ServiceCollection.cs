@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Peach.TriathlonShop.Api.Client;
 using Peach.TriathlonShop.App.Server.Extensions;
 using Peach.TriathlonShop.Database;
-using Peach.TriathlonShop.FunctionApp.Client;
 
 namespace Peach.TriathlonShop.App.Server.ServiceCollections;
 
