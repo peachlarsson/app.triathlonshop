@@ -134,11 +134,37 @@ public class GetOrders(TriathlonShopDbContext context)
 
     private static bool TryMapQuery(IQueryCollection query, out GetOrdersRequestDto? request)
     {
+        long? id = null;
+
+        if (query.TryGetValue("id", out var idValue))
+        {
+            id = long.TryParse(idValue, out var result) ? result : null;
+        }
+
+        string? customerName = null;
+
+        if (query.TryGetValue("customerName", out var cn))
+        {
+            customerName = cn;
+        }
+
+        string? orderNumber = null;
+
+        if (query.TryGetValue("orderNumber", out var on))
+        {
+            orderNumber = on;
+        }
+
         var pageNumber = 1;
 
         if (query.TryGetValue("pageNumber", out var pn))
         {
             pageNumber = int.TryParse(pn, out var result) ? result : 1;
+        }
+
+        if (pageNumber < 1)
+        {
+            pageNumber = 1;
         }
 
         var pageSize = 100;
@@ -148,6 +174,11 @@ public class GetOrders(TriathlonShopDbContext context)
             pageSize = int.TryParse(ps, out var result) ? result : 100;
         }
 
+        if (pageSize < 1)
+        {
+            pageSize = 100;
+        }
+        
         SortKey sortKey = SortKey.Id;
 
         if (query.TryGetValue("sortKey", out var sk))
@@ -162,18 +193,11 @@ public class GetOrders(TriathlonShopDbContext context)
             sortDirection = Enum.TryParse<SortDirection>(sd, true, out var result) ? result : SortDirection.Asc;
         }
 
-        if (pageNumber < 1)
-        {
-            pageNumber = 1;
-        }
-
-        if (pageSize < 1)
-        {
-            pageSize = 100;
-        }
-
         request = new GetOrdersRequestDto
         {
+            Id = id,
+            CustomerName = customerName,
+            OrderNumber = orderNumber,
             PageNumber = pageNumber,
             PageSize = pageSize,
             SortKey = sortKey,
