@@ -47,7 +47,7 @@ export const sidebarData: SidebarData = {
           icon: LayoutDashboard,
         },
         {
-          title: 'Order',
+          title: 'Orders',
           url: '/orders',
           icon: Package,
         },
