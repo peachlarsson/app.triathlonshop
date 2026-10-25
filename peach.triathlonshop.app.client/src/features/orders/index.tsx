@@ -28,7 +28,9 @@ const toSortKey = (columnId?: string): SortKey => {
 export function Orders() {
   const search = route.useSearch();
   const navigate = route.useNavigate();
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: "createdAt", desc: true },
+  ]);
 
   const page = search.page ?? 1;
   const pageSize = search.pageSize ?? 10;
