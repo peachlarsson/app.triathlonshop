@@ -9,6 +9,8 @@ on:
       - peach.triathlonshop.app.client/**
       - Peach.TriathlonShop.Database/**
       - Peach.TriathlonShop.FunctionApp.Client/**
+      - Peach.TriathlonShop.Api.Client/**
+      - Peach.TriathlonShop.Api.Contract/**
   workflow_dispatch:
 
 jobs:
