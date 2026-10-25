@@ -17,6 +17,7 @@ import { OrdersTable } from "./components/orders-table";
 const route = getRouteApi("/orders/");
 
 const toSortKey = (columnId?: string): SortKey => {
+  if (columnId === "id") return SortKey.Id;
   if (columnId === "number") return SortKey.OrderNumber;
   if (columnId === "customerName") return SortKey.CustomerName;
   return SortKey.CreatedAt;
@@ -54,11 +55,12 @@ export function Orders() {
     ],
     queryFn: async (): Promise<PaginatedResponse<Order>> => {
       const params = new URLSearchParams({
+        id: String(request.id ?? ""),
         pageNumber: String(request.pageNumber ?? 1),
         pageSize: String(request.pageSize ?? 10),
         customerName: request.customerName ?? "",
-        sortBy: request.sortKey ?? SortKey.Id,
-        sortOrder: request.sortDirection ?? SortDirection.Asc,
+        sortKey: request.sortKey ?? SortKey.Id,
+        sortDirection: request.sortDirection ?? SortDirection.Asc,
       });
 
       const response = await fetch(`/api/orders?${params.toString()}`);
