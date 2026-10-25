@@ -70,7 +70,11 @@ export const ordersColumns: ColumnDef<Order>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Customer" />
     ),
-    cell: ({ row }) => <span>{row.original.customer.name}</span>,
+    cell: ({ row }) => (
+      <Link to="/customers" className="font-medium hover:underline">
+        {row.original.customer.name}
+      </Link>
+    ),
   },
   {
     accessorKey: "status",
