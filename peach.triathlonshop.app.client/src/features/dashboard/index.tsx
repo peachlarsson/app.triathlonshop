@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { HubConnectionBuilder, type HubConnection } from '@microsoft/signalr'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
@@ -31,6 +31,81 @@ interface HomePageUpdate {
 export function Dashboard() {
   const queryClient = useQueryClient()
   const [liveUpdateError, setLiveUpdateError] = useState<string>()
+  const [createOrdersError, setCreateOrdersError] = useState<string>()
+  const [isLiveConnected, setIsLiveConnected] = useState(false)
+  const createOrdersRequest = useRef<Promise<void> | null>(null)
+
+  const {
+    data: dashboardData,
+    error,
+    isPending,
+    isSuccess,
+    isFetchedAfterMount,
+  } = useQuery({
+    queryKey: ['dashboard'],
+    queryFn: async (): Promise<DashboardData> => {
+      const response = await fetch('/api/dashboard')
+      if (response.status !== 200) {
+        throw new Error(
+          `Could not load dashboard data (HTTP ${response.status}).`
+        )
+      }
+
+      return (await response.json()) as DashboardData
+    },
+  })
+
+  useEffect(() => {
+    if (!isLiveConnected || !isSuccess || !isFetchedAfterMount) return
+
+    let active = true
+
+    const createOrders = async () => {
+      const response = await fetch(
+        '/api/dashboard/developer/create-random-orders',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            OrderRows: 20,
+            ArticlesCountIntervalStart: 1,
+            ArticlesCountIntervalEnd: 10,
+            QuantityIntervalStart: 1,
+            QuantityIntervalEnd: 5,
+            UseRandomOrderStatus: true,
+            UseRandomCreatedDate: true,
+            UseRandomDelay: true,
+            DelayMsIntervalStart: 0,
+            DelayMsIntervalEnd: 2000,
+          }),
+        }
+      )
+      if (!response.ok) {
+        throw new Error(
+          `Could not create random orders (HTTP ${response.status}).`
+        )
+      }
+      void queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+    }
+
+    // Reuse the request during Strict Mode's effect replay, but not a new visit.
+    createOrdersRequest.current ??= createOrders()
+    void createOrdersRequest.current.catch(
+      (error: unknown) => {
+        if (active) {
+          setCreateOrdersError(
+            error instanceof Error
+              ? error.message
+              : 'Could not create random orders.'
+          )
+        }
+      }
+    )
+
+    return () => {
+      active = false
+    }
+  }, [queryClient, isLiveConnected, isSuccess, isFetchedAfterMount])
 
   useEffect(() => {
     const abortController = new AbortController()
@@ -44,7 +119,7 @@ export function Dashboard() {
       const response = await fetch('/api/homepage/negotiation/HomePage', {
         signal: abortController.signal,
       })
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error(
           `Could not connect to dashboard live updates (HTTP ${response.status}).`
         )
@@ -72,17 +147,20 @@ export function Dashboard() {
         })
         connection.onreconnecting(() => {
           if (!abortController.signal.aborted) {
+            setIsLiveConnected(false)
             setLiveUpdateError('Dashboard live updates are reconnecting.')
           }
         })
         connection.onreconnected(() => {
           if (!abortController.signal.aborted) {
+            setIsLiveConnected(true)
             setLiveUpdateError(undefined)
             refreshDashboard()
           }
         })
         connection.onclose(() => {
           if (!abortController.signal.aborted) {
+            setIsLiveConnected(false)
             setLiveUpdateError(
               'Dashboard live updates disconnected. Reload the page to reconnect.'
             )
@@ -91,6 +169,7 @@ export function Dashboard() {
 
         await connection.start()
         if (!abortController.signal.aborted) {
+          setIsLiveConnected(true)
           setLiveUpdateError(undefined)
           refreshDashboard()
         }
@@ -117,24 +196,6 @@ export function Dashboard() {
     }
   }, [queryClient])
 
-  const {
-    data: dashboardData,
-    error,
-    isPending,
-  } = useQuery({
-    queryKey: ['dashboard'],
-    queryFn: async (): Promise<DashboardData> => {
-      const response = await fetch('/api/dashboard')
-      if (!response.ok) {
-        throw new Error(
-          `Could not load dashboard data (HTTP ${response.status}).`
-        )
-      }
-
-      return (await response.json()) as DashboardData
-    },
-  })
-
   const formatCurrency = (value: number) =>
     new Intl.NumberFormat('sv-SE', {
       style: 'currency',
@@ -152,6 +213,11 @@ export function Dashboard() {
 
       {/* ===== Main ===== */}
       <Main>
+        {createOrdersError && (
+          <p role='alert' className='mb-4 text-sm text-destructive'>
+            {createOrdersError}
+          </p>
+        )}
         {liveUpdateError && (
           <p role='alert' className='mb-4 text-sm text-destructive'>
             {liveUpdateError}
