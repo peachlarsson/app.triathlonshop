@@ -43,8 +43,9 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
                 {
                     CustomerId = customers[Random.Shared.Next(customers.Count)].Id,
                     Number = $"ORD-{Guid.NewGuid()}",
-                    Status = OrderStatus.Created,
+                    Status = model.UseRandomOrderStatus ? CreateRandomOrdersExtensions.GetRandomOrderStatus() : OrderStatus.Created,
                     TotalPrice = 0,
+                    CreatedAt = model.UseRandomCreatedDate ? CreateRandomOrdersExtensions.GetRandomDateTimeOffset() : DateTimeOffset.UtcNow,
                 };
 
                 if (context.Orders.Any(o => o.Number == order.Number))
@@ -55,8 +56,6 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
 
                 context.Orders.Add(order);
                 await context.SaveChangesAsync();
-
-                await signalRNotifier.SendHomePageUpdateMessageAsync(SignalRHomePageUpdateType.Orders, true);
 
                 int articleCount = Random.Shared.Next(model.ArticlesCountIntervalStart ?? 1, model.ArticlesCountIntervalEnd ?? 5);
 
@@ -74,20 +73,25 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
                         OrderId = order.Id,
                     };
 
-                    if (context.OrderRows.Any(or => or.ArticleId == orderRow.ArticleId && or.Quantity == orderRow.Quantity && or.RowPrice == orderRow.RowPrice))
+                    if (context.OrderRows.Any(or => or.OrderId == order.Id && or.ArticleId == orderRow.ArticleId))
                     {
-                        j--;
                         continue;
                     }
 
                     context.OrderRows.Add(orderRow);
                     await context.SaveChangesAsync();
-
-                    await signalRNotifier.SendHomePageUpdateMessageAsync(SignalRHomePageUpdateType.OrderRows, true);
                 }
 
                 order.TotalPrice = context.OrderRows.Where(or => or.OrderId == order.Id).Sum(or => or.RowPrice);
                 await context.SaveChangesAsync();
+
+                await signalRNotifier.SendHomePageUpdateMessageAsync(SignalRHomePageUpdateType.OrderRows, true);
+
+                if (model.UseRandomDelay)
+                {
+                    int delayMs = Random.Shared.Next(model.DelayMsIntervalStart ?? 0, model.DelayMsIntervalEnd ?? 3000);
+                    await Task.Delay(delayMs);
+                }
             }
 
             return new OkResult();
@@ -104,6 +108,11 @@ namespace Peach.TriathlonShop.FunctionApp.Http.Developer.Models
         public int? ArticlesCountIntervalEnd { get; set; }
         public int? QuantityIntervalStart { get; set; }
         public int? QuantityIntervalEnd { get; set; }
+        public bool UseRandomDelay { get; set; }
+        public int? DelayMsIntervalStart { get; set; }
+        public int? DelayMsIntervalEnd { get; set; }
+        public bool UseRandomOrderStatus { get; set; }
+        public bool UseRandomCreatedDate { get; set; }
     }
 }
 
@@ -114,6 +123,24 @@ namespace Peach.TriathlonShop.FunctionApp.Http.Developer.Extensions
         public static bool IsValidRequestBody(this CreateRandomOrdersModel model)
         {
             return model != null && model.OrderRows != null && model.OrderRows > 0;
+        }
+
+        public static OrderStatus GetRandomOrderStatus()
+        {
+            var values = Enum.GetValues(typeof(OrderStatus));
+
+            return (OrderStatus)values.GetValue(Random.Shared.Next(values.Length))!;
+        }
+
+        public static DateTimeOffset GetRandomDateTimeOffset()
+        {
+            var start = new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero);
+
+            var end = DateTimeOffset.UtcNow;
+
+            var range = (end - start).Days;
+
+            return start.AddDays(Random.Shared.Next(range));
         }
     }
 }
