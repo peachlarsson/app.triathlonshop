@@ -86,6 +86,7 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
     {
         var queryParams = new Dictionary<string, string>
         {
+            { "id", request.Id?.ToString() ?? string.Empty },
             { "orderNumber", request.OrderNumber ?? string.Empty },
             { "customerName", request.CustomerName ?? string.Empty },
             { "articleName", request.ArticleName ?? string.Empty },

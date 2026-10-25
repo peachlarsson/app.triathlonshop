@@ -11,22 +11,8 @@ namespace Peach.TriathlonShop.App.Server.Controllers;
 public class OrdersController(ITriathlonShopClient triathlonShopClient) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<PaginatedResponse<OrderResponseDto>>> GetPaginated(
-        SortKey sortBy = SortKey.Id,
-        SortDirection sortOrder = SortDirection.Asc,
-        int pageNumber = 1,
-        int pageSize = 100,
-        string? customerName = null)
+    public async Task<ActionResult<PaginatedResponse<OrderResponseDto>>> GetPaginated([FromQuery] GetOrdersRequestDto request)
     {
-        var request = new GetOrdersRequestDto
-        {
-            SortKey = sortBy,
-            SortDirection = sortOrder,
-            PageNumber = pageNumber,
-            PageSize = pageSize,
-            CustomerName = customerName
-        };
-
         var response = await triathlonShopClient.GetOrdersAsync(request);
 
         if (response == null)
