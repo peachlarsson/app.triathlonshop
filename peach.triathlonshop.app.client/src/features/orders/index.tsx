@@ -33,9 +33,11 @@ export function Orders() {
   const page = search.page ?? 1;
   const pageSize = search.pageSize ?? 10;
   const customerName = search.customerName ?? "";
+  const articleName = search.articleName ?? "";
   const sort = sorting[0];
   const request: GetOrdersRequestDto = {
     customerName,
+    articleName,
     pageNumber: page,
     pageSize,
     sortKey: toSortKey(sort?.id),
@@ -52,6 +54,7 @@ export function Orders() {
       request.pageNumber,
       request.pageSize,
       request.customerName,
+      request.articleName,
       request.sortKey,
       request.sortDirection,
     ],
@@ -61,6 +64,7 @@ export function Orders() {
         pageNumber: String(request.pageNumber ?? 1),
         pageSize: String(request.pageSize ?? 10),
         customerName: request.customerName ?? "",
+        articleName: request.articleName ?? "",
         sortKey: request.sortKey ?? SortKey.Id,
         sortDirection: request.sortDirection ?? SortDirection.Asc,
       });

@@ -9,6 +9,11 @@ type DataTableToolbarProps<TData> = {
   table: Table<TData>
   searchPlaceholder?: string
   searchKey?: string
+  additionalSearch?: {
+    placeholder: string
+    value: string
+    onChange: (value: string) => void
+  }
   filters?: {
     columnId: string
     title: string
@@ -24,10 +29,13 @@ export function DataTableToolbar<TData>({
   table,
   searchPlaceholder = 'Filter...',
   searchKey,
+  additionalSearch,
   filters = [],
 }: DataTableToolbarProps<TData>) {
   const isFiltered =
-    table.getState().columnFilters.length > 0 || table.getState().globalFilter
+    table.getState().columnFilters.length > 0 ||
+    table.getState().globalFilter ||
+    additionalSearch?.value
 
   return (
     <div className='flex items-center justify-between'>
@@ -51,6 +59,14 @@ export function DataTableToolbar<TData>({
             className='h-8 w-37.5 lg:w-62.5'
           />
         )}
+        {additionalSearch && (
+          <Input
+            placeholder={additionalSearch.placeholder}
+            value={additionalSearch.value}
+            onChange={(event) => additionalSearch.onChange(event.target.value)}
+            className='h-8 w-37.5 lg:w-62.5'
+          />
+        )}
         <div className='flex gap-x-2'>
           {filters.map((filter) => {
             const column = table.getColumn(filter.columnId)
@@ -71,6 +87,7 @@ export function DataTableToolbar<TData>({
             onClick={() => {
               table.resetColumnFilters()
               table.setGlobalFilter('')
+              additionalSearch?.onChange('')
             }}
             className='h-8 px-2 lg:px-3'
           >

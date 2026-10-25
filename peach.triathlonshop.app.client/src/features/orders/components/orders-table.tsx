@@ -42,6 +42,8 @@ export function OrdersTable({
   sorting,
   onSortingChange,
 }: OrdersTableProps) {
+  const articleName =
+    typeof search.articleName === "string" ? search.articleName : "";
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const {
@@ -93,8 +95,20 @@ export function OrdersTable({
     <div className="flex flex-1 flex-col gap-4">
       <DataTableToolbar
         table={table}
-        searchPlaceholder="Filter orders by customer..."
+        searchPlaceholder="Filter orders by customer"
         searchKey="customerName"
+        additionalSearch={{
+          placeholder: "Filter orders by article",
+          value: articleName,
+          onChange: (value) =>
+            navigate({
+              search: (prev) => ({
+                ...prev,
+                page: undefined,
+                articleName: value || undefined,
+              }),
+            }),
+        }}
       />
       <div className="overflow-hidden rounded-md border">
         <Table>
