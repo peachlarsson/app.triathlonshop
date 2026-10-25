@@ -1,4 +1,6 @@
-import { useQuery } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
+import { HubConnectionBuilder, type HubConnection } from '@microsoft/signalr'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   Card,
   CardContent,
@@ -15,7 +17,105 @@ import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
 import type { DashboardData } from './data/schema'
 
+interface SignalRConnectionInfo {
+  url: string
+  accessToken: string
+}
+
+interface HomePageUpdate {
+  update?: boolean
+  Update?: boolean
+}
+
 export function Dashboard() {
+  const queryClient = useQueryClient()
+  const [liveUpdateError, setLiveUpdateError] = useState<string>()
+
+  useEffect(() => {
+    const abortController = new AbortController()
+    let connection: HubConnection | undefined
+
+    const refreshDashboard = () => {
+      void queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+    }
+
+    const negotiate = async (): Promise<SignalRConnectionInfo> => {
+      const response = await fetch('/api/homepage/negotiation/HomePage', {
+        signal: abortController.signal,
+      })
+      if (!response.ok) {
+        throw new Error(
+          `Could not connect to dashboard live updates (HTTP ${response.status}).`
+        )
+      }
+
+      return (await response.json()) as SignalRConnectionInfo
+    }
+
+    const connect = async () => {
+      try {
+        const connectionInfo = await negotiate()
+        if (abortController.signal.aborted) return
+
+        connection = new HubConnectionBuilder()
+          .withUrl(connectionInfo.url, {
+            accessTokenFactory: async () => (await negotiate()).accessToken,
+          })
+          .withAutomaticReconnect()
+          .build()
+
+        connection.on('homepage', (update: HomePageUpdate) => {
+          if (!abortController.signal.aborted && (update.update ?? update.Update)) {
+            refreshDashboard()
+          }
+        })
+        connection.onreconnecting(() => {
+          if (!abortController.signal.aborted) {
+            setLiveUpdateError('Dashboard live updates are reconnecting.')
+          }
+        })
+        connection.onreconnected(() => {
+          if (!abortController.signal.aborted) {
+            setLiveUpdateError(undefined)
+            refreshDashboard()
+          }
+        })
+        connection.onclose(() => {
+          if (!abortController.signal.aborted) {
+            setLiveUpdateError(
+              'Dashboard live updates disconnected. Reload the page to reconnect.'
+            )
+          }
+        })
+
+        await connection.start()
+        if (!abortController.signal.aborted) {
+          setLiveUpdateError(undefined)
+          refreshDashboard()
+        }
+      } catch (error) {
+        if (!abortController.signal.aborted) {
+          setLiveUpdateError(
+            error instanceof Error
+              ? error.message
+              : 'Could not connect to dashboard live updates.'
+          )
+        }
+      }
+    }
+
+    void connect()
+
+    return () => {
+      abortController.abort()
+      if (connection) {
+        void connection.stop().catch((error: unknown) => {
+          console.error('Could not stop dashboard live updates.', error)
+        })
+      }
+    }
+  }, [queryClient])
+
   const {
     data: dashboardData,
     error,
@@ -51,6 +151,11 @@ export function Dashboard() {
 
       {/* ===== Main ===== */}
       <Main>
+        {liveUpdateError && (
+          <p role='alert' className='mb-4 text-sm text-destructive'>
+            {liveUpdateError}
+          </p>
+        )}
         <Tabs
           orientation='vertical'
           defaultValue='overview'
