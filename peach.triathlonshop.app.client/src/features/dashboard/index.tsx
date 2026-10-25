@@ -13,6 +13,7 @@ import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { Analytics } from './components/analytics'
+import { AnimatedNumber } from './components/animated-number'
 import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
 import type { DashboardData } from './data/schema'
@@ -198,7 +199,12 @@ export function Dashboard() {
                     {isPending
                       ? 'Loading...'
                       : dashboardData
-                        ? formatCurrency(dashboardData.totalRevenue)
+                        ? (
+                          <AnimatedNumber
+                            value={dashboardData.totalRevenue}
+                            format={formatCurrency}
+                          />
+                        )
                         : '—'}
                   </div>
                   <p className='text-xs text-muted-foreground'>
@@ -231,7 +237,7 @@ export function Dashboard() {
                     {isPending
                       ? 'Loading...'
                       : dashboardData
-                        ? dashboardData.totalCustomers.toLocaleString()
+                        ? <AnimatedNumber value={dashboardData.totalCustomers} />
                         : '—'}
                   </div>
                   <p className='text-xs text-muted-foreground'>
@@ -261,7 +267,7 @@ export function Dashboard() {
                     {isPending
                       ? 'Loading...'
                       : dashboardData
-                        ? dashboardData.totalOrders.toLocaleString()
+                        ? <AnimatedNumber value={dashboardData.totalOrders} />
                         : '—'}
                   </div>
                   <p className='text-xs text-muted-foreground'>
@@ -292,7 +298,7 @@ export function Dashboard() {
                     {isPending
                       ? 'Loading...'
                       : dashboardData
-                        ? dashboardData.activeOrders.toLocaleString()
+                        ? <AnimatedNumber value={dashboardData.activeOrders} />
                         : '—'}
                   </div>
                   <p className='text-xs text-muted-foreground'>
