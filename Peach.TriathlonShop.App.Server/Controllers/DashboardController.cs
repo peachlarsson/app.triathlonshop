@@ -32,8 +32,8 @@ public class DashboardController(ITriathlonShopClient triathlonShopClient) : Con
         return Ok(response.Content);
     }
 
-    [HttpGet("developer/create-random-orders")]
-    public async Task<ActionResult<DashboardResponseModel>> CreateRandomOrders([FromBody] CreateRandomOrdersModel request)
+    [HttpPost("developer/create-random-orders")]
+    public async Task<ActionResult<string>> CreateRandomOrders([FromBody] CreateRandomOrdersModel request)
     {
         var response = await triathlonShopClient.CreateRandomOrdersAsync(request);
 
