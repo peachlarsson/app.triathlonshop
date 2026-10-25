@@ -5,48 +5,67 @@ import { type SortingState } from "@tanstack/react-table";
 import { Header } from "@/components/layout/header";
 import { Main } from "@/components/layout/main";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { type Order, type PaginatedResponse } from "./data/schema";
+import {
+  type GetOrdersRequestDto,
+  type Order,
+  type PaginatedResponse,
+  SortDirection,
+  SortKey,
+} from "./data/schema";
 import { OrdersTable } from "./components/orders-table";
 
 const route = getRouteApi("/orders/");
+
+const toSortKey = (columnId?: string): SortKey => {
+  if (columnId === "number") return SortKey.OrderNumber;
+  if (columnId === "customerName") return SortKey.CustomerName;
+  return SortKey.CreatedAt;
+};
 
 export function Orders() {
   const search = route.useSearch();
   const navigate = route.useNavigate();
   const [sorting, setSorting] = useState<SortingState>([]);
+
   const page = search.page ?? 1;
   const pageSize = search.pageSize ?? 10;
   const customerName = search.customerName ?? "";
   const sort = sorting[0];
-  const sortBy =
-    sort?.id === "number"
-      ? "Number"
-      : sort?.id === "totalPrice"
-        ? "TotalPrice"
-        : sort?.id === "customerName"
-          ? "CustomerName"
-          : sort?.id === "createdAt"
-            ? "CreatedAt"
-            : "Id";
-  const sortOrder = sort?.desc ? "Desc" : "Asc";
+  const request: GetOrdersRequestDto = {
+    customerName,
+    pageNumber: page,
+    pageSize,
+    sortKey: toSortKey(sort?.id),
+    sortDirection: sort?.desc ? SortDirection.Desc : SortDirection.Asc,
+  };
+
   const {
     data: orders,
     error,
     isPending,
   } = useQuery({
-    queryKey: ["orders", page, pageSize, customerName, sortBy, sortOrder],
+    queryKey: [
+      "orders",
+      request.pageNumber,
+      request.pageSize,
+      request.customerName,
+      request.sortKey,
+      request.sortDirection,
+    ],
     queryFn: async (): Promise<PaginatedResponse<Order>> => {
       const params = new URLSearchParams({
-        pageNumber: String(page),
-        pageSize: String(pageSize),
-        customerName,
-        sortBy,
-        sortOrder,
+        pageNumber: String(request.pageNumber ?? 1),
+        pageSize: String(request.pageSize ?? 10),
+        customerName: request.customerName ?? "",
+        sortBy: request.sortKey ?? SortKey.Id,
+        sortOrder: request.sortDirection ?? SortDirection.Asc,
       });
+
       const response = await fetch(`/api/orders?${params.toString()}`);
       if (!response.ok) {
         throw new Error(`Could not load orders (HTTP ${response.status}).`);
       }
+
       return (await response.json()) as PaginatedResponse<Order>;
     },
   });
