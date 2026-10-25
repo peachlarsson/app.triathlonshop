@@ -22,20 +22,13 @@ export function Dashboard() {
     <>
       {/* ===== Top Heading ===== */}
       <Header>
-        <TopNav links={topNav} className='me-auto' />
-        <Search />
-        <ThemeSwitch />
-        <ConfigDrawer />
+        <div className='ms-auto'>
+          <ThemeSwitch />
+      </div>
       </Header>
 
       {/* ===== Main ===== */}
       <Main>
-        <div className='mb-2 flex items-center justify-between space-y-2'>
-          <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
-          <div className='flex items-center space-x-2'>
-            <Button>Download</Button>
-          </div>
-        </div>
         <Tabs
           orientation='vertical'
           defaultValue='overview'
@@ -44,13 +37,6 @@ export function Dashboard() {
           <div className='w-full overflow-x-auto pb-2'>
             <TabsList>
               <TabsTrigger value='overview'>Overview</TabsTrigger>
-              <TabsTrigger value='analytics'>Analytics</TabsTrigger>
-              <TabsTrigger value='reports' disabled>
-                Reports
-              </TabsTrigger>
-              <TabsTrigger value='notifications' disabled>
-                Notifications
-              </TabsTrigger>
             </TabsList>
           </div>
           <TabsContent value='overview' className='space-y-4'>
@@ -74,9 +60,9 @@ export function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>$45,231.89</div>
+                  <div className='text-2xl font-bold'>$0.00</div>
                   <p className='text-xs text-muted-foreground'>
-                    +20.1% from last month
+                    0% from last month
                   </p>
                 </CardContent>
               </Card>
@@ -101,9 +87,9 @@ export function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+2350</div>
+                  <div className='text-2xl font-bold'>0</div>
                   <p className='text-xs text-muted-foreground'>
-                    +180.1% from last month
+                    0% from last month
                   </p>
                 </CardContent>
               </Card>
@@ -125,9 +111,9 @@ export function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+12,234</div>
+                  <div className='text-2xl font-bold'>0</div>
                   <p className='text-xs text-muted-foreground'>
-                    +19% from last month
+                    0% from last month
                   </p>
                 </CardContent>
               </Card>
@@ -150,9 +136,9 @@ export function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+573</div>
+                  <div className='text-2xl font-bold'>0</div>
                   <p className='text-xs text-muted-foreground'>
-                    +201 since last hour
+                    0 since last hour
                   </p>
                 </CardContent>
               </Card>
@@ -169,9 +155,7 @@ export function Dashboard() {
               <Card className='col-span-1 lg:col-span-3'>
                 <CardHeader>
                   <CardTitle>Recent Sales</CardTitle>
-                  <CardDescription>
-                    You made 265 sales this month.
-                  </CardDescription>
+                  <CardDescription>No sales this month.</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <RecentSales />

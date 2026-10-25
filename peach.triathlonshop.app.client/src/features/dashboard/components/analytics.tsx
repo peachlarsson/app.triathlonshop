@@ -38,8 +38,8 @@ export function Analytics() {
             </svg>
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>1,248</div>
-            <p className='text-xs text-muted-foreground'>+12.4% vs last week</p>
+            <div className='text-2xl font-bold'>0</div>
+            <p className='text-xs text-muted-foreground'>0% vs last week</p>
           </CardContent>
         </Card>
         <Card>
@@ -62,8 +62,8 @@ export function Analytics() {
             </svg>
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>832</div>
-            <p className='text-xs text-muted-foreground'>+5.8% vs last week</p>
+            <div className='text-2xl font-bold'>0</div>
+            <p className='text-xs text-muted-foreground'>0% vs last week</p>
           </CardContent>
         </Card>
         <Card>
@@ -83,8 +83,8 @@ export function Analytics() {
             </svg>
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>42%</div>
-            <p className='text-xs text-muted-foreground'>-3.2% vs last week</p>
+            <div className='text-2xl font-bold'>0%</div>
+            <p className='text-xs text-muted-foreground'>0% vs last week</p>
           </CardContent>
         </Card>
         <Card>
@@ -105,8 +105,8 @@ export function Analytics() {
             </svg>
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>3m 24s</div>
-            <p className='text-xs text-muted-foreground'>+18s vs last week</p>
+            <div className='text-2xl font-bold'>0m 0s</div>
+            <p className='text-xs text-muted-foreground'>0s vs last week</p>
           </CardContent>
         </Card>
       </div>
@@ -119,10 +119,10 @@ export function Analytics() {
           <CardContent>
             <SimpleBarList
               items={[
-                { name: 'Direct', value: 512 },
-                { name: 'Product Hunt', value: 238 },
-                { name: 'Twitter', value: 174 },
-                { name: 'Blog', value: 104 },
+                { name: 'Direct', value: 0 },
+                { name: 'Product Hunt', value: 0 },
+                { name: 'Twitter', value: 0 },
+                { name: 'Blog', value: 0 },
               ]}
               barClass='bg-primary'
               valueFormatter={(n) => `${n}`}
@@ -137,9 +137,9 @@ export function Analytics() {
           <CardContent>
             <SimpleBarList
               items={[
-                { name: 'Desktop', value: 74 },
-                { name: 'Mobile', value: 22 },
-                { name: 'Tablet', value: 4 },
+                { name: 'Desktop', value: 0 },
+                { name: 'Mobile', value: 0 },
+                { name: 'Tablet', value: 0 },
               ]}
               barClass='bg-muted-foreground'
               valueFormatter={(n) => `${n}%`}

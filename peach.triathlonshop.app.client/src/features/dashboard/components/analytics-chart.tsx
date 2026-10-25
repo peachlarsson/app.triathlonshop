@@ -3,38 +3,38 @@ import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 const data = [
   {
     name: 'Mon',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
+    clicks: 0,
+    uniques: 0,
   },
   {
     name: 'Tue',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
+    clicks: 0,
+    uniques: 0,
   },
   {
     name: 'Wed',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
+    clicks: 0,
+    uniques: 0,
   },
   {
     name: 'Thu',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
+    clicks: 0,
+    uniques: 0,
   },
   {
     name: 'Fri',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
+    clicks: 0,
+    uniques: 0,
   },
   {
     name: 'Sat',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
+    clicks: 0,
+    uniques: 0,
   },
   {
     name: 'Sun',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
+    clicks: 0,
+    uniques: 0,
   },
 ]
 
