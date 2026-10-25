@@ -4,6 +4,16 @@
 @baseUrl = http://localhost:7285/api
 
 
+#################
+### Dashboard ###
+#################
+
+GET {{baseUrl}}/dashboard
+Accept: application/json
+
+
+###
+
 ##############
 ### Orders ###
 ##############
