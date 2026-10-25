@@ -1,4 +1,4 @@
-import { Logo } from '@/assets/logo'
+import triathlonShopLogo from '@/assets/tri-logo-002.png'
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -15,9 +15,11 @@ export function SidebarLogo() {
           asChild
         >
           <div>
-            <div className='flex size-8 shrink-0 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground'>
-              <Logo className='size-5' />
-            </div>
+            <img
+              src={triathlonShopLogo}
+              alt='Triathlon Shop'
+              className='size-10 shrink-0 rounded-lg bg-black object-contain'
+            />
             <span className='truncate font-semibold'>Triathlon Shop</span>
           </div>
         </SidebarMenuButton>
