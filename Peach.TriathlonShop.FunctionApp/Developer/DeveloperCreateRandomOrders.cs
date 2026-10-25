@@ -2,11 +2,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
+using Peach.TriathlonShop.Api.Contract.Developer.Models;
 using Peach.TriathlonShop.Database;
 using Peach.TriathlonShop.Database.Models;
 using Peach.TriathlonShop.Database.Models.Enums;
 using Peach.TriathlonShop.FunctionApp.Http.Developer.Extensions;
-using Peach.TriathlonShop.FunctionApp.Http.Developer.Models;
 using Peach.TriathlonShop.FunctionApp.Services;
 using Peach.TriathlonShop.FunctionApp.Services.Models;
 using System.Text.Json;
@@ -96,23 +96,6 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
 
             return new OkResult();
         }
-    }
-}
-
-namespace Peach.TriathlonShop.FunctionApp.Http.Developer.Models
-{
-    public class CreateRandomOrdersModel
-    {
-        public int? OrderRows { get; set; }
-        public int? ArticlesCountIntervalStart { get; set; }
-        public int? ArticlesCountIntervalEnd { get; set; }
-        public int? QuantityIntervalStart { get; set; }
-        public int? QuantityIntervalEnd { get; set; }
-        public bool UseRandomDelay { get; set; }
-        public int? DelayMsIntervalStart { get; set; }
-        public int? DelayMsIntervalEnd { get; set; }
-        public bool UseRandomOrderStatus { get; set; }
-        public bool UseRandomCreatedDate { get; set; }
     }
 }
 
