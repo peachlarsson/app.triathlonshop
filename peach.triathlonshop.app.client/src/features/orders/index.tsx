@@ -12,6 +12,7 @@ import {
   SortDirection,
   SortKey,
 } from "./data/schema";
+import { OrdersPrimaryButtons } from "./components/orders-primary-buttons";
 import { OrdersTable } from "./components/orders-table";
 
 const route = getRouteApi("/orders/");
@@ -93,6 +94,7 @@ export function Orders() {
             <h2 className="text-2xl font-bold tracking-tight">Orders</h2>
             <p className="text-muted-foreground">Browse and manage orders.</p>
           </div>
+          <OrdersPrimaryButtons />
         </div>
         <OrdersTable
           data={orders?.data ?? []}
