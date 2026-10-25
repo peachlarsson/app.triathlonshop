@@ -1,57 +1,34 @@
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
+import type { MonthlyRevenue } from '../data/schema'
 
-const data = [
-  {
-    name: 'Jan',
-    total: 0,
-  },
-  {
-    name: 'Feb',
-    total: 0,
-  },
-  {
-    name: 'Mar',
-    total: 0,
-  },
-  {
-    name: 'Apr',
-    total: 0,
-  },
-  {
-    name: 'May',
-    total: 0,
-  },
-  {
-    name: 'Jun',
-    total: 0,
-  },
-  {
-    name: 'Jul',
-    total: 0,
-  },
-  {
-    name: 'Aug',
-    total: 0,
-  },
-  {
-    name: 'Sep',
-    total: 0,
-  },
-  {
-    name: 'Oct',
-    total: 0,
-  },
-  {
-    name: 'Nov',
-    total: 0,
-  },
-  {
-    name: 'Dec',
-    total: 0,
-  },
+const months = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
 ]
 
-export function Overview() {
+interface OverviewProps {
+  monthlyRevenue: MonthlyRevenue[]
+}
+
+export function Overview({ monthlyRevenue }: OverviewProps) {
+  const revenueByMonth = new Map(
+    monthlyRevenue.map(({ month, revenue }) => [month, revenue])
+  )
+  const data = months.map((name, index) => ({
+    name,
+    total: revenueByMonth.get(index + 1) ?? 0,
+  }))
+
   return (
     <ResponsiveContainer width='100%' height={350}>
       <BarChart data={data}>
@@ -68,7 +45,13 @@ export function Overview() {
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `$${value}`}
+          tickFormatter={(value) =>
+            new Intl.NumberFormat('sv-SE', {
+              style: 'currency',
+              currency: 'SEK',
+              maximumFractionDigits: 0,
+            }).format(Number(value))
+          }
         />
         <Bar
           dataKey='total'

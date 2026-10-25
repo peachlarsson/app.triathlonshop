@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { useQuery } from '@tanstack/react-query'
 import {
   Card,
   CardContent,
@@ -7,17 +7,39 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { TopNav } from '@/components/layout/top-nav'
-import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { Analytics } from './components/analytics'
 import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
+import type { DashboardData } from './data/schema'
 
 export function Dashboard() {
+  const {
+    data: dashboardData,
+    error,
+    isPending,
+  } = useQuery({
+    queryKey: ['dashboard'],
+    queryFn: async (): Promise<DashboardData> => {
+      const response = await fetch('/api/dashboard')
+      if (!response.ok) {
+        throw new Error(
+          `Could not load dashboard data (HTTP ${response.status}).`
+        )
+      }
+
+      return (await response.json()) as DashboardData
+    },
+  })
+
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat('sv-SE', {
+      style: 'currency',
+      currency: 'SEK',
+    }).format(value)
+
   return (
     <>
       {/* ===== Top Heading ===== */}
@@ -40,6 +62,13 @@ export function Dashboard() {
             </TabsList>
           </div>
           <TabsContent value='overview' className='space-y-4'>
+            {error && (
+              <p role='alert' className='text-sm text-destructive'>
+                {error instanceof Error
+                  ? error.message
+                  : 'Could not load dashboard data.'}
+              </p>
+            )}
             <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
@@ -60,16 +89,22 @@ export function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>$0.00</div>
+                  <div className='text-2xl font-bold'>
+                    {isPending
+                      ? 'Loading...'
+                      : dashboardData
+                        ? formatCurrency(dashboardData.totalRevenue)
+                        : '—'}
+                  </div>
                   <p className='text-xs text-muted-foreground'>
-                    0% from last month
+                    Total revenue from shipped orders
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Subscriptions
+                    Customers
                   </CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -87,15 +122,21 @@ export function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>0</div>
+                  <div className='text-2xl font-bold'>
+                    {isPending
+                      ? 'Loading...'
+                      : dashboardData
+                        ? dashboardData.totalCustomers.toLocaleString()
+                        : '—'}
+                  </div>
                   <p className='text-xs text-muted-foreground'>
-                    0% from last month
+                    Registered customers
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                  <CardTitle className='text-sm font-medium'>Sales</CardTitle>
+                  <CardTitle className='text-sm font-medium'>Orders</CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     viewBox='0 0 24 24'
@@ -111,16 +152,22 @@ export function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>0</div>
+                  <div className='text-2xl font-bold'>
+                    {isPending
+                      ? 'Loading...'
+                      : dashboardData
+                        ? dashboardData.totalOrders.toLocaleString()
+                        : '—'}
+                  </div>
                   <p className='text-xs text-muted-foreground'>
-                    0% from last month
+                    Total orders
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Active Now
+                    Active Orders
                   </CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -136,9 +183,15 @@ export function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>0</div>
+                  <div className='text-2xl font-bold'>
+                    {isPending
+                      ? 'Loading...'
+                      : dashboardData
+                        ? dashboardData.activeOrders.toLocaleString()
+                        : '—'}
+                  </div>
                   <p className='text-xs text-muted-foreground'>
-                    0 since last hour
+                    Created or confirmed
                   </p>
                 </CardContent>
               </Card>
@@ -147,18 +200,41 @@ export function Dashboard() {
               <Card className='col-span-1 lg:col-span-4'>
                 <CardHeader>
                   <CardTitle>Overview</CardTitle>
+                  <CardDescription>Monthly revenue this year</CardDescription>
                 </CardHeader>
                 <CardContent className='ps-2'>
-                  <Overview />
+                  {isPending ? (
+                    <p className='py-8 text-center text-sm text-muted-foreground'>
+                      Loading revenue data...
+                    </p>
+                  ) : dashboardData ? (
+                    <Overview monthlyRevenue={dashboardData.monthlyRevenue} />
+                  ) : (
+                    <p className='py-8 text-center text-sm text-muted-foreground'>
+                      Revenue data is unavailable.
+                    </p>
+                  )}
                 </CardContent>
               </Card>
               <Card className='col-span-1 lg:col-span-3'>
                 <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
-                  <CardDescription>No sales this month.</CardDescription>
+                  <CardTitle>Recent Orders</CardTitle>
+                  <CardDescription>
+                    Orders placed in the last 30 days
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <RecentSales />
+                  {isPending ? (
+                    <p className='py-8 text-center text-sm text-muted-foreground'>
+                      Loading recent orders...
+                    </p>
+                  ) : dashboardData ? (
+                    <RecentSales orders={dashboardData.recentOrdersLast30Days} />
+                  ) : (
+                    <p className='py-8 text-center text-sm text-muted-foreground'>
+                      Recent orders are unavailable.
+                    </p>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -171,12 +247,3 @@ export function Dashboard() {
     </>
   )
 }
-
-const topNav = [
-  {
-    title: 'Overview',
-    href: '',
-    isActive: true,
-    disabled: false,
-  }
-]
