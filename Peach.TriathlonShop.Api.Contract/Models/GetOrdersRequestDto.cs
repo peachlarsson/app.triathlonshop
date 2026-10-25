@@ -5,6 +5,7 @@ namespace Peach.TriathlonShop.Api.Contract.Models;
 
 public class GetOrdersRequestDto
 {
+    public long? Id { get; set; }
     public string? OrderNumber { get; set; }
     public string? CustomerName { get; set; }
     public string? ArticleName { get; set; }

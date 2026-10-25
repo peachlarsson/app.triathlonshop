@@ -31,6 +31,11 @@ public class GetOrders(TriathlonShopDbContext context)
             //.Include(o => o.Customer)
             .AsNoTracking();
 
+        if (request.Id.HasValue)
+        {
+            query = query.Where(c => c.Id == request.Id.Value);
+        }
+
         if (!string.IsNullOrWhiteSpace(request.OrderNumber))
         {
             var term = $"%{request.OrderNumber.Trim()}%";
