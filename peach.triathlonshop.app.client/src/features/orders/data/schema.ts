@@ -48,6 +48,8 @@ export enum SortKey {
     Id = "id",
     OrderNumber = "orderNumber",
     CustomerName = "customerName",
+    OrderStatus = "orderStatus",
+    TotalPrice = "totalPrice",
     CreatedAt = "createdAt",
     UpdatedAt = "updatedAt",
 }

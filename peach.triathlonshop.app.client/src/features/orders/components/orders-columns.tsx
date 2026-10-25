@@ -89,12 +89,11 @@ export const ordersColumns: ColumnDef<Order>[] = [
         </Badge>
       );
     },
-    enableSorting: false,
   },
   {
     accessorKey: "totalPrice",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Total" />
+      <DataTableColumnHeader column={column} title="Total price" />
     ),
     cell: ({ row }) => currencyFormatter.format(row.original.totalPrice),
   },

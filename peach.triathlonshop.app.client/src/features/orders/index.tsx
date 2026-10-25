@@ -20,6 +20,8 @@ const toSortKey = (columnId?: string): SortKey => {
   if (columnId === "id") return SortKey.Id;
   if (columnId === "number") return SortKey.OrderNumber;
   if (columnId === "customerName") return SortKey.CustomerName;
+  if (columnId === "status") return SortKey.OrderStatus;
+  if (columnId === "totalPrice") return SortKey.TotalPrice;
   return SortKey.CreatedAt;
 };
 
