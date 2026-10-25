@@ -54,6 +54,9 @@ public static class ConfigurationExtensions
         try
         {
             services.AddDbContext<TriathlonShopDbContext>(opt => opt.UseSqlServer(options.DatabaseConnectionString));
+            services.AddDbContextFactory<TriathlonShopDbContext>(
+                opt => opt.UseSqlServer(options.DatabaseConnectionString),
+                ServiceLifetime.Scoped);
         }
         catch (Exception ex)
         {
