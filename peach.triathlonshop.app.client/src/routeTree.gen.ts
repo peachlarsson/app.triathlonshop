@@ -10,35 +10,19 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ArticlesRouteImport } from './routes/articles'
-import { Route as CustomersRouteImport } from './routes/customers'
-import { Route as OrderrowsRouteImport } from './routes/orderrows'
 import { Route as errors401RouteImport } from './routes/(errors)/401'
 import { Route as errors403RouteImport } from './routes/(errors)/403'
 import { Route as errors404RouteImport } from './routes/(errors)/404'
 import { Route as errors500RouteImport } from './routes/(errors)/500'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
-import { Route as OrdersIndexRouteImport } from './routes/orders.index'
-import { Route as OrdersIdRouteImport } from './routes/orders.$id'
+import { Route as CustomersIndexRouteImport } from './routes/customers/index'
+import { Route as ErrorsErrorRouteImport } from './routes/errors/$error'
+import { Route as OrdersIndexRouteImport } from './routes/orders/index'
+import { Route as SettingsAppearanceRouteImport } from './routes/settings/appearance'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ArticlesRoute = ArticlesRouteImport.update({
-  id: '/articles',
-  path: '/articles',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CustomersRoute = CustomersRouteImport.update({
-  id: '/customers',
-  path: '/customers',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OrderrowsRoute = OrderrowsRouteImport.update({
-  id: '/orderrows',
-  path: '/orderrows',
   getParentRoute: () => rootRouteImport,
 } as any)
 const errors401Route = errors401RouteImport.update({
@@ -66,110 +50,113 @@ const errors503Route = errors503RouteImport.update({
   path: '/503',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CustomersIndexRoute = CustomersIndexRouteImport.update({
+  id: '/customers/',
+  path: '/customers/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ErrorsErrorRoute = ErrorsErrorRouteImport.update({
+  id: '/errors/$error',
+  path: '/errors/$error',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OrdersIndexRoute = OrdersIndexRouteImport.update({
   id: '/orders/',
   path: '/orders/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const OrdersIdRoute = OrdersIdRouteImport.update({
-  id: '/orders/$id',
-  path: '/orders/$id',
+const SettingsAppearanceRoute = SettingsAppearanceRouteImport.update({
+  id: '/settings/appearance',
+  path: '/settings/appearance',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/articles': typeof ArticlesRoute
-  '/customers': typeof CustomersRoute
-  '/orderrows': typeof OrderrowsRoute
   '/401': typeof errors401Route
   '/403': typeof errors403Route
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
-  '/orders/$id': typeof OrdersIdRoute
+  '/errors/$error': typeof ErrorsErrorRoute
+  '/settings/appearance': typeof SettingsAppearanceRoute
+  '/customers/': typeof CustomersIndexRoute
   '/orders/': typeof OrdersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/articles': typeof ArticlesRoute
-  '/customers': typeof CustomersRoute
-  '/orderrows': typeof OrderrowsRoute
   '/401': typeof errors401Route
   '/403': typeof errors403Route
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
-  '/orders/$id': typeof OrdersIdRoute
+  '/errors/$error': typeof ErrorsErrorRoute
+  '/settings/appearance': typeof SettingsAppearanceRoute
+  '/customers': typeof CustomersIndexRoute
   '/orders': typeof OrdersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/articles': typeof ArticlesRoute
-  '/customers': typeof CustomersRoute
-  '/orderrows': typeof OrderrowsRoute
   '/(errors)/401': typeof errors401Route
   '/(errors)/403': typeof errors403Route
   '/(errors)/404': typeof errors404Route
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
-  '/orders/$id': typeof OrdersIdRoute
+  '/errors/$error': typeof ErrorsErrorRoute
+  '/settings/appearance': typeof SettingsAppearanceRoute
+  '/customers/': typeof CustomersIndexRoute
   '/orders/': typeof OrdersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/articles'
-    | '/customers'
-    | '/orderrows'
     | '/401'
     | '/403'
     | '/404'
     | '/500'
     | '/503'
-    | '/orders/$id'
+    | '/errors/$error'
+    | '/settings/appearance'
+    | '/customers/'
     | '/orders/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/articles'
-    | '/customers'
-    | '/orderrows'
     | '/401'
     | '/403'
     | '/404'
     | '/500'
     | '/503'
-    | '/orders/$id'
+    | '/errors/$error'
+    | '/settings/appearance'
+    | '/customers'
     | '/orders'
   id:
     | '__root__'
     | '/'
-    | '/articles'
-    | '/customers'
-    | '/orderrows'
     | '/(errors)/401'
     | '/(errors)/403'
     | '/(errors)/404'
     | '/(errors)/500'
     | '/(errors)/503'
-    | '/orders/$id'
+    | '/errors/$error'
+    | '/settings/appearance'
+    | '/customers/'
     | '/orders/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ArticlesRoute: typeof ArticlesRoute
-  CustomersRoute: typeof CustomersRoute
-  OrderrowsRoute: typeof OrderrowsRoute
   errors401Route: typeof errors401Route
   errors403Route: typeof errors403Route
   errors404Route: typeof errors404Route
   errors500Route: typeof errors500Route
   errors503Route: typeof errors503Route
-  OrdersIdRoute: typeof OrdersIdRoute
+  ErrorsErrorRoute: typeof ErrorsErrorRoute
+  SettingsAppearanceRoute: typeof SettingsAppearanceRoute
+  CustomersIndexRoute: typeof CustomersIndexRoute
   OrdersIndexRoute: typeof OrdersIndexRoute
 }
 
@@ -180,27 +167,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/articles': {
-      id: '/articles'
-      path: '/articles'
-      fullPath: '/articles'
-      preLoaderRoute: typeof ArticlesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/customers': {
-      id: '/customers'
-      path: '/customers'
-      fullPath: '/customers'
-      preLoaderRoute: typeof CustomersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/orderrows': {
-      id: '/orderrows'
-      path: '/orderrows'
-      fullPath: '/orderrows'
-      preLoaderRoute: typeof OrderrowsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(errors)/401': {
@@ -238,6 +204,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof errors503RouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/customers/': {
+      id: '/customers/'
+      path: '/customers'
+      fullPath: '/customers/'
+      preLoaderRoute: typeof CustomersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/errors/$error': {
+      id: '/errors/$error'
+      path: '/errors/$error'
+      fullPath: '/errors/$error'
+      preLoaderRoute: typeof ErrorsErrorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/orders/': {
       id: '/orders/'
       path: '/orders'
@@ -245,11 +225,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrdersIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/orders/$id': {
-      id: '/orders/$id'
-      path: '/orders/$id'
-      fullPath: '/orders/$id'
-      preLoaderRoute: typeof OrdersIdRouteImport
+    '/settings/appearance': {
+      id: '/settings/appearance'
+      path: '/settings/appearance'
+      fullPath: '/settings/appearance'
+      preLoaderRoute: typeof SettingsAppearanceRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -257,15 +237,14 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ArticlesRoute: ArticlesRoute,
-  CustomersRoute: CustomersRoute,
-  OrderrowsRoute: OrderrowsRoute,
   errors401Route: errors401Route,
   errors403Route: errors403Route,
   errors404Route: errors404Route,
   errors500Route: errors500Route,
   errors503Route: errors503Route,
-  OrdersIdRoute: OrdersIdRoute,
+  ErrorsErrorRoute: ErrorsErrorRoute,
+  SettingsAppearanceRoute: SettingsAppearanceRoute,
+  CustomersIndexRoute: CustomersIndexRoute,
   OrdersIndexRoute: OrdersIndexRoute,
 }
 export const routeTree = rootRouteImport
