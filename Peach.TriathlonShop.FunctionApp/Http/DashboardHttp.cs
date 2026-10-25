@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
+using Peach.TriathlonShop.Api.Contract.Models;
 using Peach.TriathlonShop.Database;
-using Peach.TriathlonShop.Database.Models;
 using Peach.TriathlonShop.Database.Models.Enums;
 
 namespace Peach.TriathlonShop.FunctionApp.Http;
@@ -22,7 +22,7 @@ public class DashboardHttp(IDbContextFactory<TriathlonShopDbContext> contextFact
 
         await Task.WhenAll(totalRevenueTask, totalCustomersTask, totalOrdersTask, activeOrdersTask, monthlyRevenueTask, recentOrdersTask);
 
-        ResponseModel response = new()
+        DashboardResponseModel response = new()
         {
             TotalRevenue = totalRevenueTask.Result,
             TotalCustomers = totalCustomersTask.Result,
@@ -100,27 +100,4 @@ public class DashboardHttp(IDbContextFactory<TriathlonShopDbContext> contextFact
 
         return recentOrders;
     }
-}
-
-public class ResponseModel
-{
-    public decimal TotalRevenue { get; set; }
-    public int TotalCustomers { get; set; }
-    public int TotalOrders { get; set; }
-    public int ActiveOrders { get; set; }
-    public List<MonthlyRevenueModel> MonthlyRevenue { get; set; } = [];
-    public List<RecentOrderModel> RecentOrdersLast30Days { get; set; } = [];
-}
-
-public class MonthlyRevenueModel
-{
-    public int Month { get; set; }
-    public decimal Revenue { get; set; }
-}
-
-public class RecentOrderModel
-{
-    public string OrderNumber { get; set; } = string.Empty;
-    public decimal TotalPrice { get; set; }
-    public DateTimeOffset CreatedAt { get; set; }
 }
