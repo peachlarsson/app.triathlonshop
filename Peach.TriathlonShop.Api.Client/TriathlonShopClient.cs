@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Peach.TriathlonShop.Api.Contract.Developer.Models;
 using Peach.TriathlonShop.Api.Contract.Models;
 using System.Text.Json;
 
@@ -195,6 +196,37 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
             IsSuccess = true,
             StatusCode = (int)response.StatusCode,
             Content = JsonSerializer.Deserialize<DashboardResponseModel>(responseContent, jsonSerializerOptions),
+        };
+    }
+
+    public async Task<Response<string>> CreateRandomOrdersAsync(CreateRandomOrdersModel request)
+    {
+        var httpRequest = new HttpRequestMessage
+        {
+            Method = HttpMethod.Post,
+            RequestUri = new Uri("developer/orders/random", UriKind.Relative),
+            Content = new StringContent(JsonSerializer.Serialize(request), System.Text.Encoding.UTF8, "application/json")
+        };
+
+        var response = await httpClient.SendAsync(httpRequest);
+
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return new Response<string>
+            {
+                IsSuccess = false,
+                StatusCode = (int)response.StatusCode,
+                ErrorMessage = responseContent,
+            };
+        }
+
+        return new Response<string>
+        {
+            IsSuccess = true,
+            StatusCode = (int)response.StatusCode,
+            Content = responseContent
         };
     }
 }
