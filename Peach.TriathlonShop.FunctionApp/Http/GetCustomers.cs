@@ -2,10 +2,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
+using Peach.TriathlonShop.Api.Contract.Enums.Common;
+using Peach.TriathlonShop.Api.Contract.Enums.Customer;
+using Peach.TriathlonShop.Api.Contract.Models;
 using Peach.TriathlonShop.Database;
-using Peach.TriathlonShop.FunctionApp.Http.Enums.Common;
-using Peach.TriathlonShop.FunctionApp.Http.Enums.Customer;
-using Peach.TriathlonShop.FunctionApp.Http.Models;
 using Peach.TriathlonShop.FunctionApp.Utilities;
 
 namespace Peach.TriathlonShop.FunctionApp.Http;

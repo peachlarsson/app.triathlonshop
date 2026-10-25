@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Peach.TriathlonShop.Api.Client.Models;
+using Peach.TriathlonShop.Api.Contract.Models;
 using System.Text.Json;
 
 namespace Peach.TriathlonShop.Api.Client;
@@ -82,7 +82,7 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
         };
     }
 
-    public async Task<Response<PaginatedResponse<OrdersDto>>> GetOrdersAsync(GetOrdersRequestDto request)
+    public async Task<Response<PaginatedResponse<OrderResponseDto>>> GetOrdersAsync(GetOrdersRequestDto request)
     {
         var queryParams = new Dictionary<string, string>
         {
@@ -109,7 +109,7 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
 
         if (!response.IsSuccessStatusCode)
         {
-            return new Response<PaginatedResponse<OrdersDto>>
+            return new Response<PaginatedResponse<OrderResponseDto>>
             {
                 IsSuccess = false,
                 StatusCode = (int)response.StatusCode,
@@ -117,11 +117,11 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
             };
         }
 
-        return new Response<PaginatedResponse<OrdersDto>>
+        return new Response<PaginatedResponse<OrderResponseDto>>
         {
             IsSuccess = true,
             StatusCode = (int)response.StatusCode,
-            Content = JsonSerializer.Deserialize<PaginatedResponse<OrdersDto>>(responseContent, jsonSerializerOptions),
+            Content = JsonSerializer.Deserialize<PaginatedResponse<OrderResponseDto>>(responseContent, jsonSerializerOptions),
         };
     }
 

@@ -10,4 +10,8 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.13" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Peach.TriathlonShop.Api.Contract\Peach.TriathlonShop.Api.Contract.csproj" />
+  </ItemGroup>
+
 </Project>

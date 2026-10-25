@@ -1,8 +1,8 @@
-﻿using Peach.TriathlonShop.Api.Client.Enums.Common;
+﻿using Peach.TriathlonShop.Api.Contract.Enums.Common;
 
-namespace Peach.TriathlonShop.Api.Client.Models;
+namespace Peach.TriathlonShop.Api.Contract.Models;
 
-public class OrdersDto
+public class OrderResponseDto
 {
     public required long Id { get; set; }
     public required OrderStatus Status { get; set; }

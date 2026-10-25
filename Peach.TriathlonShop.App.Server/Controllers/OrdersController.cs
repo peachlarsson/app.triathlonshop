@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Peach.TriathlonShop.Api.Client;
-using Peach.TriathlonShop.Api.Client.Enums.Common;
-using Peach.TriathlonShop.Api.Client.Enums.Order;
-using Peach.TriathlonShop.Api.Client.Models;
+using Peach.TriathlonShop.Api.Contract.Enums.Common;
+using Peach.TriathlonShop.Api.Contract.Enums.Order;
+using Peach.TriathlonShop.Api.Contract.Models;
 
 namespace Peach.TriathlonShop.App.Server.Controllers;
 
@@ -11,7 +11,7 @@ namespace Peach.TriathlonShop.App.Server.Controllers;
 public class OrdersController(ITriathlonShopClient triathlonShopClient) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<PaginatedResponse<OrdersDto>>> GetPaginated(
+    public async Task<ActionResult<PaginatedResponse<OrderResponseDto>>> GetPaginated(
         SortKey sortBy = SortKey.Id,
         SortDirection sortOrder = SortDirection.Asc,
         int pageNumber = 1,
@@ -44,7 +44,7 @@ public class OrdersController(ITriathlonShopClient triathlonShopClient) : Contro
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        var result = new PaginatedResponse<OrdersDto>
+        var result = new PaginatedResponse<OrderResponseDto>
         {
             Data = response.Content.Data,
             TotalPrice = response.Content.TotalPrice,

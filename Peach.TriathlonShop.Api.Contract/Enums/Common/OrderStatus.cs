@@ -1,4 +1,4 @@
-﻿namespace Peach.TriathlonShop.Api.Client.Enums.Common;
+﻿namespace Peach.TriathlonShop.Api.Contract.Enums.Common;
 
 public enum OrderStatus
 {

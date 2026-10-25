@@ -2,10 +2,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
+using Peach.TriathlonShop.Api.Contract.Enums.Common;
+using Peach.TriathlonShop.Api.Contract.Enums.Order;
+using Peach.TriathlonShop.Api.Contract.Models;
 using Peach.TriathlonShop.Database;
-using Peach.TriathlonShop.FunctionApp.Http.Enums.Common;
-using Peach.TriathlonShop.FunctionApp.Http.Enums.Order;
-using Peach.TriathlonShop.FunctionApp.Http.Models;
 using Peach.TriathlonShop.FunctionApp.Utilities;
 
 namespace Peach.TriathlonShop.FunctionApp.Http;
@@ -72,8 +72,8 @@ public class GetOrders(TriathlonShopDbContext context)
         {
             Id = c.Id,
             Number = c.Number,
-            Status = c.Status,
-            Customer = new OrderCustomerDto
+            Status = MapOrderStatus(c.Status),
+            Customer = new CustomerDto
             {
                 Id = c.Customer!.Id,
                 Email = c.Customer.Email,
@@ -107,6 +107,18 @@ public class GetOrders(TriathlonShopDbContext context)
 
         var paginatedResult = await PaginationHelper.PaginateAsync(queryDto, request.PageNumber, request.PageSize);
         return new OkObjectResult(paginatedResult);
+    }
+
+    private static OrderStatus MapOrderStatus(Database.Models.Enums.OrderStatus status)
+    {
+        return status switch
+        {
+            Database.Models.Enums.OrderStatus.Created => OrderStatus.Created,
+            Database.Models.Enums.OrderStatus.Confirmed => OrderStatus.Confirmed,
+            Database.Models.Enums.OrderStatus.Shipped => OrderStatus.Shipped,
+            Database.Models.Enums.OrderStatus.Cancelled => OrderStatus.Cancelled,
+            _ => throw new ArgumentOutOfRangeException(nameof(status), $"Not expected order status value: {status}")
+        };
     }
 
     private static bool TryMapQuery(IQueryCollection query, out GetOrdersRequestDto? request)

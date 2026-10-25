@@ -1,4 +1,4 @@
-﻿namespace Peach.TriathlonShop.Api.Client.Models;
+﻿namespace Peach.TriathlonShop.Api.Contract.Models;
 
 public class CustomerDto
 {
