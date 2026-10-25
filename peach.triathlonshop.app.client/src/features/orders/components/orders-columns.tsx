@@ -43,6 +43,13 @@ export const ordersColumns: ColumnDef<Order>[] = [
     enableHiding: false,
   },
   {
+    accessorKey: "id",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="ID" />
+    ),
+    cell: ({ row }) => <span>{row.original.id}</span>,
+  },
+  {
     accessorKey: "number",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Order" />
