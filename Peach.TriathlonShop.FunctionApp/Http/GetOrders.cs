@@ -141,6 +141,13 @@ public class GetOrders(TriathlonShopDbContext context)
             id = long.TryParse(idValue, out var result) ? result : null;
         }
 
+        string? articleName = null;
+
+        if (query.TryGetValue("articleName", out var an))
+        {
+            articleName = an;
+        }
+
         string? customerName = null;
 
         if (query.TryGetValue("customerName", out var cn))
@@ -198,6 +205,7 @@ public class GetOrders(TriathlonShopDbContext context)
             Id = id,
             CustomerName = customerName,
             OrderNumber = orderNumber,
+            ArticleName = articleName,
             PageNumber = pageNumber,
             PageSize = pageSize,
             SortKey = sortKey,
