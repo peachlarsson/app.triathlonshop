@@ -83,6 +83,11 @@ export const sidebarData: SidebarData = {
         },
 */
         {
+          title: 'Order',
+          url: '/orders',
+          icon: Package,
+        },
+        {
           title: 'Customers',
           url: '/customers',
           icon: Users,
