@@ -5,6 +5,8 @@ public enum SortKey
     Id,
     OrderNumber,
     CustomerName,
+    OrderStatus,
+    TotalPrice,
     CreatedAt,
     UpdatedAt,
 }

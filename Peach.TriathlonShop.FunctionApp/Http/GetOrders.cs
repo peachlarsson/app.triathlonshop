@@ -62,6 +62,12 @@ public class GetOrders(TriathlonShopDbContext context)
             SortKey.CustomerName => request.SortDirection == SortDirection.Asc 
                 ? query.OrderBy(q => q.Customer!.Name) 
                 : query.OrderByDescending(q => q.Customer!.Name),
+            SortKey.OrderStatus => request.SortDirection == SortDirection.Asc
+                ? query.OrderBy(q => q.Status)
+                : query.OrderByDescending(q => q.Status),
+            SortKey.TotalPrice => request.SortDirection == SortDirection.Asc
+                ? query.OrderBy(q => q.OrderRows.Sum(or => or.RowPrice))
+                : query.OrderByDescending(q => q.OrderRows.Sum(or => or.RowPrice)),
             SortKey.CreatedAt => request.SortDirection == SortDirection.Asc 
                 ? query.OrderBy(q => q.CreatedAt) 
                 : query.OrderByDescending(q => q.CreatedAt),
