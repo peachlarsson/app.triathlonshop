@@ -1,6 +1,6 @@
 import { Alert, Box, Paper, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 import { createSignalRConnection } from '../hooks/useSignalRConnection';
 
 interface StatsState {
@@ -158,10 +158,10 @@ function HomePage() {
                 <Typography variant="body1">Loading...</Typography>
             ) : (
                 <Stack spacing={2}>
-                    <StatisticCard label="Orders" value={stats.totalOrders} onClick={() => navigate('/orders')} />
-                    <StatisticCard label="Order rows" value={stats.totalOrderRows} onClick={() => navigate('/orderrows')} />
-                    <StatisticCard label="Articles" value={stats.totalArticles} onClick={() => navigate('/articles')} />
-                    <StatisticCard label="Customers" value={stats.totalCustomers} onClick={() => navigate('/customers')} />
+                    <StatisticCard label="Orders" value={stats.totalOrders} onClick={() => navigate({ to: '/orders' })} />
+                    <StatisticCard label="Order rows" value={stats.totalOrderRows} onClick={() => navigate({ to: '/orderrows' })} />
+                    <StatisticCard label="Articles" value={stats.totalArticles} onClick={() => navigate({ to: '/articles' })} />
+                    <StatisticCard label="Customers" value={stats.totalCustomers} onClick={() => navigate({ to: '/customers' })} />
                 </Stack>
             )}
         </Stack>

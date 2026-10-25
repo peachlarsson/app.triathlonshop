@@ -1,6 +1,5 @@
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { createSignalRConnection } from '../hooks/useSignalRConnection';
 import { DataTable, type ColumnDefinition } from '../components/DataTable';
 import { TimelineSection } from '../components/TimelineSection';
@@ -79,9 +78,7 @@ interface SignalRMessageTimelineItem {
     receivedAt: string;
 }
 
-function App() {
-
-    const { id } = useParams();
+function OrderItemPage({ id }: { id: string }) {
     const [order, setOrder] = useState<Order | null>(null);
     const [signalRMessages, setSignalRMessages] = useState<SignalRMessageTimelineItem[]>([]);
 
@@ -347,4 +344,4 @@ function App() {
     );
 }
 
-export default App;
+export default OrderItemPage;

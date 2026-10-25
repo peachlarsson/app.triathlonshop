@@ -11,7 +11,7 @@ import {
     TableSortLabel,
     Typography
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 
 export interface ColumnDefinition
 {
@@ -149,13 +149,11 @@ export function DataTable(
                         data.map((row, rowIndex) => {
                             const rowId = getRowId(row, rowIdKey);
                             const canClick = isClickable && rowId !== undefined && navigateUrl !== undefined;
-                            const rowUrl = canClick ? `${navigateUrl}/${rowId}` : undefined;
-
                             return (
                                 <TableRow
                                     key={getRowKey(row, rowIndex, rowIdKey)}
                                     hover={canClick}
-                                    onClick={canClick ? () => navigate(rowUrl!) : undefined}
+                                    onClick={canClick ? () => navigate({ to: '/orders/$id', params: { id: String(rowId) } }) : undefined}
                                     sx={canClick ? { cursor: 'pointer' } : undefined}
                                 >
                                     {columns.map((column) => (
