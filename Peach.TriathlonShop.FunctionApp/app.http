@@ -35,9 +35,14 @@ Content-Type: application/json
 {
   "OrderRows": 20,
   "ArticlesCountIntervalStart": 1,
-  "ArticlesCountIntervalEnd": 15,
+  "ArticlesCountIntervalEnd": 10,
   "QuantityIntervalStart": 1,
-  "QuantityIntervalEnd": 15
+  "QuantityIntervalEnd": 5,
+  "UseRandomOrderStatus": true,
+  "UseRandomCreatedDate": true,
+  "UseRandomDelay": true,
+  "DelayMsIntervalStart": 0,
+  "DelayMsIntervalEnd": 3000
 }
 
 
