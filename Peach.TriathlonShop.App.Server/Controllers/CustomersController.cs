@@ -1,16 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
-using Peach.TriathlonShop.App.Server.Controllers.Enums.Common;
-using Peach.TriathlonShop.App.Server.Controllers.Enums.Customer;
-using Peach.TriathlonShop.App.Server.Controllers.Models;
-using Peach.TriathlonShop.App.Server.Models;
-using Peach.TriathlonShop.App.Server.Utilities;
-using Peach.TriathlonShop.Database;
+using Peach.TriathlonShop.FunctionApp.Client;
+using Peach.TriathlonShop.FunctionApp.Client.Enums.Common;
+using Peach.TriathlonShop.FunctionApp.Client.Enums.Customer;
+using Peach.TriathlonShop.FunctionApp.Client.Models;
 
 namespace Peach.TriathlonShop.App.Server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class CustomersController(TriathlonShopDbContext context) : ControllerBase
+public class CustomersController(ITriathlonShopClient triathlonShopClient) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<PaginatedResponse<CustomerDto>>> GetPaginated(
@@ -20,42 +18,42 @@ public class CustomersController(TriathlonShopDbContext context) : ControllerBas
         int pageSize = 100,
         string? customerName = null)
     {
-        var query = context.Customers
-            .Select(q => new CustomerDto
-            {
-                Id = q.Id,
-                Name = q.Name,
-                Email = q.Email,
-                CreatedAt = q.CreatedAt,
-            })
-            .AsQueryable();
-
-        if (!string.IsNullOrWhiteSpace(customerName))
+        var request = new GetCustomersRequest
         {
-            query = query.Where(q => q.Name != null && q.Name.ToLower().Contains(customerName.ToLower()));
-        }
-
-        query = sortBy switch
-        {
-            SortKey.Name => sortOrder == SortDirection.Asc
-                ? query.OrderBy(q => q.Name)
-                : query.OrderByDescending(q => q.Name),
-            SortKey.Email => sortOrder == SortDirection.Asc
-                ? query.OrderBy(q => q.Email)
-                : query.OrderByDescending(q => q.Email),
-            SortKey.CreatedAt => sortOrder == SortDirection.Asc
-                ? query.OrderBy(q => q.CreatedAt)
-                : query.OrderByDescending(q => q.CreatedAt),
-            SortKey.UpdatedAt => sortOrder == SortDirection.Asc
-                ? query.OrderBy(q => q.UpdatedAt)
-                : query.OrderByDescending(q => q.UpdatedAt),
-            _ => sortOrder == SortDirection.Asc
-                ? query.OrderBy(q => q.Id)
-                : query.OrderByDescending(q => q.Id)
+            SortKey = sortBy,
+            SortDirection = sortOrder,
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+            CustomerName = customerName
         };
 
-        var paginatedResult = await PaginationHelper.PaginateAsync(query, pageNumber, pageSize);
-        return Ok(paginatedResult);
+        var response = await triathlonShopClient.GetCustomerAsync(request);
+
+        if (response == null)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        if (!response.IsSuccess)
+        {
+            return StatusCode(response.StatusCode, response.ErrorMessage);
+        }
+
+        if (response.Content == null)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        var result = new PaginatedResponse<CustomerDto>
+        {
+            Data = response.Content.Data,
+            TotalPrice = response.Content.TotalPrice,
+            TotalCount = response.Content.TotalCount,
+            PageNumber = response.Content.PageNumber,
+            PageSize = response.Content.PageSize
+        };
+
+        return Ok(result);
     }
 }
 
