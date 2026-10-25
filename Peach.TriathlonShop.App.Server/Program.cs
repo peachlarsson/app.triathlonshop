@@ -14,16 +14,23 @@ credential = ConfigurationExtensions.CreateClientSecretCredential(builder.Config
 credential = new Azure.Identity.ManagedIdentityCredential(Azure.Identity.ManagedIdentityId.SystemAssigned);
 #endif
 
-builder.Services.AddApplicationInsightsTelemetry();
+try
+{
+    builder.Services.AddApplicationInsightsTelemetry();
 
-/// Register Azure App Configuration
-builder.AddCustomAzureAppConfiguration(credential, ["common", "triathlonshop", "triathlonshop-web"]);
+    /// Register Azure App Configuration
+    builder.AddCustomAzureAppConfiguration(credential, ["common", "triathlonshop", "triathlonshop-web"]);
 
-/// Database
-builder.Services.AddDatabaseConfiguration(builder.Configuration);
+    /// Database
+    builder.Services.AddDatabaseConfiguration(builder.Configuration);
 
-/// TriathlonShop API Client
-builder.Services.AddTriathlonShopClient(builder.Configuration);
+    /// TriathlonShop API Client
+    builder.Services.AddTriathlonShopClient(builder.Configuration);
+}
+catch (Exception ex)
+{
+    throw new InvalidOperationException("Failed to configure services.", ex);
+}
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
