@@ -18,6 +18,7 @@ import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as CustomersIndexRouteImport } from './routes/customers/index'
 import { Route as ErrorsErrorRouteImport } from './routes/errors/$error'
 import { Route as OrdersIndexRouteImport } from './routes/orders/index'
+import { Route as OrdersOrderIdRouteImport } from './routes/orders/$orderId'
 import { Route as SettingsAppearanceRouteImport } from './routes/settings/appearance'
 
 const IndexRoute = IndexRouteImport.update({
@@ -65,6 +66,11 @@ const OrdersIndexRoute = OrdersIndexRouteImport.update({
   path: '/orders/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OrdersOrderIdRoute = OrdersOrderIdRouteImport.update({
+  id: '/orders/$orderId',
+  path: '/orders/$orderId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsAppearanceRoute = SettingsAppearanceRouteImport.update({
   id: '/settings/appearance',
   path: '/settings/appearance',
@@ -79,6 +85,7 @@ export interface FileRoutesByFullPath {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/errors/$error': typeof ErrorsErrorRoute
+  '/orders/$orderId': typeof OrdersOrderIdRoute
   '/settings/appearance': typeof SettingsAppearanceRoute
   '/customers/': typeof CustomersIndexRoute
   '/orders/': typeof OrdersIndexRoute
@@ -91,6 +98,7 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/errors/$error': typeof ErrorsErrorRoute
+  '/orders/$orderId': typeof OrdersOrderIdRoute
   '/settings/appearance': typeof SettingsAppearanceRoute
   '/customers': typeof CustomersIndexRoute
   '/orders': typeof OrdersIndexRoute
@@ -104,6 +112,7 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/errors/$error': typeof ErrorsErrorRoute
+  '/orders/$orderId': typeof OrdersOrderIdRoute
   '/settings/appearance': typeof SettingsAppearanceRoute
   '/customers/': typeof CustomersIndexRoute
   '/orders/': typeof OrdersIndexRoute
@@ -118,6 +127,7 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/errors/$error'
+    | '/orders/$orderId'
     | '/settings/appearance'
     | '/customers/'
     | '/orders/'
@@ -130,6 +140,7 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/errors/$error'
+    | '/orders/$orderId'
     | '/settings/appearance'
     | '/customers'
     | '/orders'
@@ -142,6 +153,7 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/errors/$error'
+    | '/orders/$orderId'
     | '/settings/appearance'
     | '/customers/'
     | '/orders/'
@@ -155,6 +167,7 @@ export interface RootRouteChildren {
   errors500Route: typeof errors500Route
   errors503Route: typeof errors503Route
   ErrorsErrorRoute: typeof ErrorsErrorRoute
+  OrdersOrderIdRoute: typeof OrdersOrderIdRoute
   SettingsAppearanceRoute: typeof SettingsAppearanceRoute
   CustomersIndexRoute: typeof CustomersIndexRoute
   OrdersIndexRoute: typeof OrdersIndexRoute
@@ -225,6 +238,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrdersIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/orders/$orderId': {
+      id: '/orders/$orderId'
+      path: '/orders/$orderId'
+      fullPath: '/orders/$orderId'
+      preLoaderRoute: typeof OrdersOrderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings/appearance': {
       id: '/settings/appearance'
       path: '/settings/appearance'
@@ -243,6 +263,7 @@ const rootRouteChildren: RootRouteChildren = {
   errors500Route: errors500Route,
   errors503Route: errors503Route,
   ErrorsErrorRoute: ErrorsErrorRoute,
+  OrdersOrderIdRoute: OrdersOrderIdRoute,
   SettingsAppearanceRoute: SettingsAppearanceRoute,
   CustomersIndexRoute: CustomersIndexRoute,
   OrdersIndexRoute: OrdersIndexRoute,

@@ -3,9 +3,21 @@ export type Order = {
   number: string;
   status: string;
   totalPrice: number;
+  orderRows: OrderRow[];
   orderRowsCount?: number;
   customer: Customer;
   createdAt: string;
+};
+
+export type OrderRow = {
+  id: number;
+  lineNumber: number;
+  articleName: string;
+  unitPrice: number;
+  quantity: number;
+  rowPrice: number;
+  createdAt: string;
+  updatedAt?: string;
 };
 
 export type Customer = {
@@ -22,6 +34,7 @@ export type PaginatedResponse<T> = {
 };
 
 export type GetOrdersRequestDto = {
+    id?: number;
     orderNumber?: string;
     customerName?: string;
     articleName?: string;

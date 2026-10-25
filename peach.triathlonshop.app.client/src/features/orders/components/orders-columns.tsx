@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { type ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/data-table";
 import { Badge } from "@/components/ui/badge";
@@ -55,7 +56,13 @@ export const ordersColumns: ColumnDef<Order>[] = [
       <DataTableColumnHeader column={column} title="Order" />
     ),
     cell: ({ row }) => (
-      <span className="font-medium">{row.original.number}</span>
+      <Link
+        to="/orders/$orderId"
+        params={{ orderId: String(row.original.id) }}
+        className="font-medium hover:underline"
+      >
+        {row.original.number}
+      </Link>
     ),
   },
   {
