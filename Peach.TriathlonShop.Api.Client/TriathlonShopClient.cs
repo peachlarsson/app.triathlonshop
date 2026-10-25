@@ -167,6 +167,36 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
             ErrorMessage = response.IsSuccessStatusCode ? null : responseContent,
         };
     }
+
+    public async Task<Response<DashboardResponseModel>> GetDashboardDataAsync()
+    {
+        var httpRequest = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri("dashboard", UriKind.Relative)
+        };
+
+        var response = await httpClient.SendAsync(httpRequest);
+
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return new Response<DashboardResponseModel>
+            {
+                IsSuccess = false,
+                StatusCode = (int)response.StatusCode,
+                ErrorMessage = responseContent,
+            };
+        }
+
+        return new Response<DashboardResponseModel>
+        {
+            IsSuccess = true,
+            StatusCode = (int)response.StatusCode,
+            Content = JsonSerializer.Deserialize<DashboardResponseModel>(responseContent, jsonSerializerOptions),
+        };
+    }
 }
 
 public class SignalRConnectionInfo

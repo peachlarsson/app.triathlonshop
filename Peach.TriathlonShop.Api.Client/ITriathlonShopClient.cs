@@ -9,4 +9,5 @@ public interface ITriathlonShopClient
     public Task<Response<PaginatedResponse<OrderResponseDto>>> GetOrdersAsync(GetOrdersRequestDto request);
     public Task<Response<string>> SetOrderConfirm(long orderId);
     public Task<Response<string>> SetOrderShipped(long orderId);
+    public Task<Response<DashboardResponseModel>> GetDashboardDataAsync();
 }
