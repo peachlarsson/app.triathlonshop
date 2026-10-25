@@ -1,20 +1,22 @@
 export type Order = {
   id: number;
   number: string;
-  status: number | string;
+  status: string;
   totalPrice: number;
   orderRowsCount?: number;
-  customerId: number;
-  customerName: string;
+  customer: Customer;
   createdAt: string;
+};
+
+export type Customer = {
+  id: number;
+  email?: string;
+  name?: string;
+  createdAt: string;
+  updatedAt?: string;
 };
 
 export type PaginatedResponse<T> = {
   data: T[];
   totalCount: number;
 };
-
-export function getOrderStatus(status: number | string) {
-  const statuses = ["Created", "Confirmed", "Shipped", "Cancelled"];
-  return typeof status === "number" ? (statuses[status] ?? "Unknown") : status;
-}

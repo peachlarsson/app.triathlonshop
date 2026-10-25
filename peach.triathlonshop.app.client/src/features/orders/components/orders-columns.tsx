@@ -2,7 +2,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/data-table";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { getOrderStatus, type Order } from "../data/schema";
+import { type Order } from "../data/schema";
 
 const currencyFormatter = new Intl.NumberFormat("sv-SE", {
   style: "currency",
@@ -11,6 +11,7 @@ const currencyFormatter = new Intl.NumberFormat("sv-SE", {
 
 const dateFormatter = new Intl.DateTimeFormat("sv-SE", {
   dateStyle: "medium",
+  timeStyle: "short",
 });
 
 export const ordersColumns: ColumnDef<Order>[] = [
@@ -55,6 +56,7 @@ export const ordersColumns: ColumnDef<Order>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Customer" />
     ),
+    cell: ({ row }) => <span>{row.original.customer.name}</span>,
   },
   {
     accessorKey: "status",
@@ -62,7 +64,7 @@ export const ordersColumns: ColumnDef<Order>[] = [
       <DataTableColumnHeader column={column} title="Status" />
     ),
     cell: ({ row }) => {
-      const status = getOrderStatus(row.original.status);
+      const status = row.original.status;
       return (
         <Badge variant={status === "Cancelled" ? "destructive" : "secondary"}>
           {status}
