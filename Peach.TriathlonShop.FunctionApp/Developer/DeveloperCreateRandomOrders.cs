@@ -42,7 +42,7 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
                 var order = new Order
                 {
                     CustomerId = customers[Random.Shared.Next(customers.Count)].Id,
-                    Number = $"ORD-{Guid.NewGuid()}",
+                    Number = $"ORD-{Guid.NewGuid():N}"[..16],
                     Status = model.UseRandomOrderStatus ? CreateRandomOrdersExtensions.GetRandomOrderStatus() : OrderStatus.Created,
                     TotalPrice = 0,
                     CreatedAt = model.UseRandomCreatedDate ? CreateRandomOrdersExtensions.GetRandomDateTimeOffset() : DateTimeOffset.UtcNow,
