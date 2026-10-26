@@ -19,6 +19,7 @@ public class MonthlyRevenueModel
 
 public class RecentOrderModel
 {
+    public long Id { get; set; }
     public string OrderNumber { get; set; } = string.Empty;
     public decimal TotalPrice { get; set; }
     public DateTimeOffset CreatedAt { get; set; }

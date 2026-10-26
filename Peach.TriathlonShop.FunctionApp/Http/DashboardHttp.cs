@@ -92,6 +92,7 @@ public class DashboardHttp(IDbContextFactory<TriathlonShopDbContext> contextFact
             .OrderByDescending(o => o.CreatedAt)
             .Select(o => new RecentOrderModel
             {
+                Id = o.Id,
                 OrderNumber = o.Number,
                 TotalPrice = o.TotalPrice,
                 CreatedAt = o.CreatedAt
