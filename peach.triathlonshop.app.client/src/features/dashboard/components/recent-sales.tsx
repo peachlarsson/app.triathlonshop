@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import type { RecentOrder } from '../data/schema'
 
 interface RecentSalesProps {
@@ -22,12 +23,14 @@ export function RecentSales({ orders }: RecentSalesProps) {
   return (
     <div className='max-h-[350px] space-y-4 overflow-auto'>
       {orders.map((order) => (
-        <div
+        <Link
           key={order.orderNumber}
-          className='flex items-center justify-between gap-4'
+          to='/orders/$orderId'
+          params={{ orderId: String(order.id) }}
+          className='flex items-center justify-between gap-4 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
         >
           <div className='min-w-0'>
-            <p className='truncate text-sm font-medium'>
+            <p className='truncate text-sm font-medium hover:underline'>
               Order #{order.orderNumber}
             </p>
             <p className='text-xs text-muted-foreground'>
@@ -39,7 +42,7 @@ export function RecentSales({ orders }: RecentSalesProps) {
           <p className='shrink-0 text-sm font-medium'>
             {formatCurrency(order.totalPrice)}
           </p>
-        </div>
+        </Link>
       ))}
     </div>
   )

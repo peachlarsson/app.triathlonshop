@@ -13,6 +13,7 @@ export interface MonthlyRevenue {
 }
 
 export interface RecentOrder {
+  id: number
   orderNumber: string
   totalPrice: number
   createdAt: string
