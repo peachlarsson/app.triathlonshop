@@ -14,6 +14,10 @@ public class TriathlonShopDbContext(DbContextOptions<TriathlonShopDbContext> opt
     public DbSet<Invoice> Invoices => Set<Invoice>();
     public DbSet<OrderEvent> OrderEvents => Set<OrderEvent>();
 
+    public DbSet<Warehouse> Warehouses => Set<Warehouse>();
+    public DbSet<Location> Locations => Set<Location>();
+    public DbSet<Route> Routes => Set<Route>();
+
     private const string DefaultSchema = "dbo";
     private const string DefaultTimestampSql = "SYSDATETIMEOFFSET()";
 
@@ -91,6 +95,33 @@ public class TriathlonShopDbContext(DbContextOptions<TriathlonShopDbContext> opt
             entity.ToTable(nameof(OrderEvent), DefaultSchema);
 
             entity.Property(e => e.Status)
+                  .HasConversion<string>();
+
+            entity.Property(e => e.CreatedAt)
+                  .HasDefaultValueSql(DefaultTimestampSql);
+        });
+
+        modelBuilder.Entity<Warehouse>(entity =>
+        {
+            entity.ToTable(nameof(Warehouse), DefaultSchema);
+
+            entity.Property(e => e.CreatedAt)
+                  .HasDefaultValueSql(DefaultTimestampSql);
+        });
+
+        modelBuilder.Entity<Location>(entity =>
+        {
+            entity.ToTable(nameof(Location), DefaultSchema);
+            
+            entity.Property(e => e.CreatedAt)
+                  .HasDefaultValueSql(DefaultTimestampSql);
+        });
+
+        modelBuilder.Entity<Route>(entity =>
+        {
+            entity.ToTable(nameof(Route), DefaultSchema);
+
+            entity.Property(e => e.RouteStatus)
                   .HasConversion<string>();
 
             entity.Property(e => e.CreatedAt)
