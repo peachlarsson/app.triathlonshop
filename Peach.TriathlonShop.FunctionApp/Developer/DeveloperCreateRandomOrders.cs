@@ -45,7 +45,7 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
                     Number = $"ORD-{Guid.NewGuid():N}"[..16],
                     Status = model.UseRandomOrderStatus ? CreateRandomOrdersExtensions.GetRandomOrderStatus() : OrderStatus.Created,
                     TotalPrice = 0,
-                    DestinationLocation = context.Locations.OrderBy(l => Guid.NewGuid()).FirstOrDefault(),
+                    DestinationLocationId = context.Locations.OrderBy(l => Guid.NewGuid()).FirstOrDefault()?.Id ?? 0,
                     PlacedAt = model.UseRandomCreatedDate ? CreateRandomOrdersExtensions.GetRandomDateTimeOffset() : DateTimeOffset.UtcNow,
                     CreatedAt = model.UseRandomCreatedDate ? CreateRandomOrdersExtensions.GetRandomDateTimeOffset() : DateTimeOffset.UtcNow,
                 };

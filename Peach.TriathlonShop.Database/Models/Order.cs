@@ -13,9 +13,9 @@ public class Order : BaseEntity
 
     public required decimal TotalPrice { get; set; }
     public required DateTimeOffset PlacedAt { get; set; }
-    public long DestinationLocationId { get; set; }
+    public required long DestinationLocationId { get; set; }
     public List<OrderRow> OrderRows { get; set; } = [];
 
     public Customer? Customer { get; set; } = null!;
-    public Location? DestinationLocation { get; set; } = null!;
+    public Location DestinationLocation { get; set; } = null!;
 }
