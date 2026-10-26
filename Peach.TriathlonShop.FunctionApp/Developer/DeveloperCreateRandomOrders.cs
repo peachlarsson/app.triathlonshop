@@ -56,35 +56,33 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
                     continue;
                 }
 
-                context.Orders.Add(order);
-                await context.SaveChangesAsync();
-
                 int articleCount = Random.Shared.Next(model.ArticlesCountIntervalStart ?? 1, model.ArticlesCountIntervalEnd ?? 5);
+                var selectedArticleIds = new HashSet<long>();
+                int lineNumber = 1;
 
                 for (int j = 0; j < articleCount; j++)
                 {
-                    int articleId = Random.Shared.Next(articles.Count);
-                    int quantity = Random.Shared.Next(model.QuantityIntervalStart ?? 1, model.QuantityIntervalEnd ?? 10);
+                    var article = articles[Random.Shared.Next(articles.Count)];
 
-                    var orderRow = new OrderRow
-                    {
-                        ArticleId = articles[articleId].Id,
-                        LineNumber = j + 1,
-                        Quantity = quantity,
-                        RowPrice = articles[articleId].UnitPrice * quantity,
-                        OrderId = order.Id,
-                    };
-
-                    if (context.OrderRows.Any(or => or.OrderId == order.Id && or.ArticleId == orderRow.ArticleId))
+                    if (!selectedArticleIds.Add(article.Id))
                     {
                         continue;
                     }
 
-                    context.OrderRows.Add(orderRow);
-                    await context.SaveChangesAsync();
+                    int quantity = Random.Shared.Next(model.QuantityIntervalStart ?? 1, model.QuantityIntervalEnd ?? 10);
+
+                    order.OrderRows.Add(new OrderRow
+                    {
+                        OrderId = order.Id,
+                        ArticleId = article.Id,
+                        LineNumber = lineNumber++,
+                        Quantity = quantity,
+                        RowPrice = article.UnitPrice * quantity,
+                    });
                 }
 
-                order.TotalPrice = context.OrderRows.Where(or => or.OrderId == order.Id).Sum(or => or.RowPrice);
+                order.TotalPrice = order.OrderRows.Sum(or => or.RowPrice);
+                context.Orders.Add(order);
                 await context.SaveChangesAsync();
 
                 await signalRNotifier.SendHomePageUpdateMessageAsync(SignalRHomePageUpdateType.OrderRows, true);
