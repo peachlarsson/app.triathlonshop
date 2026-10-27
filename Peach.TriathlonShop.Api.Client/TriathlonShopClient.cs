@@ -200,7 +200,7 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
         };
     }
 
-    public async Task<Response<List<WarehouseStockDto>>> GetAllWarehouseStockAsync()
+    public async Task<Response<GetAllWarehouseStockDto>> GetAllWarehouseStockAsync()
     {
         var httpRequest = new HttpRequestMessage
         {
@@ -209,12 +209,12 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
         };
 
         var response = await httpClient.SendAsync(httpRequest);
-        
+
         var responseContent = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
         {
-            return new Response<List<WarehouseStockDto>>
+            return new Response<GetAllWarehouseStockDto>
             {
                 IsSuccess = false,
                 StatusCode = (int)response.StatusCode,
@@ -222,11 +222,11 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
             };
         }
 
-        return new Response<List<WarehouseStockDto>>
+        return new Response<GetAllWarehouseStockDto>
         {
             IsSuccess = true,
             StatusCode = (int)response.StatusCode,
-            Content = JsonSerializer.Deserialize<List<WarehouseStockDto>>(responseContent, jsonSerializerOptions),
+            Content = JsonSerializer.Deserialize<GetAllWarehouseStockDto>(responseContent, jsonSerializerOptions),
         };
     }
 
