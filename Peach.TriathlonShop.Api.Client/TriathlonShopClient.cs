@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Peach.TriathlonShop.Api.Contract.Developer.Models;
 using Peach.TriathlonShop.Api.Contract.Models;
+using Peach.TriathlonShop.Api.Contract.Models.Stock;
 using System.Text.Json;
 
 namespace Peach.TriathlonShop.Api.Client;
@@ -198,6 +199,36 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
             Content = JsonSerializer.Deserialize<DashboardResponseModel>(responseContent, jsonSerializerOptions),
         };
     }
+
+    public async Task<Response<List<WarehouseStockDto>>> GetAllWarehouseStockAsync()
+    {
+        var httpRequest = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri("stock/all-warehouses", UriKind.Relative)
+        };
+
+        var response = await httpClient.SendAsync(httpRequest);
+        
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return new Response<List<WarehouseStockDto>>
+            {
+                IsSuccess = false,
+                StatusCode = (int)response.StatusCode,
+                ErrorMessage = responseContent,
+            };
+        }
+
+        return new Response<List<WarehouseStockDto>>
+        {
+            IsSuccess = true,
+            StatusCode = (int)response.StatusCode,
+            Content = JsonSerializer.Deserialize<List<WarehouseStockDto>>(responseContent, jsonSerializerOptions),
+        };
+    }>
 
     public async Task<Response<string>> CreateRandomOrdersAsync(CreateRandomOrdersModel request)
     {
