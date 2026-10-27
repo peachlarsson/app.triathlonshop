@@ -8,6 +8,7 @@ public class OrderResponseDto
     public required OrderStatus Status { get; set; }
     public required string Number { get; set; }
     public required CustomerDto Customer { get; set; }
+    public required LocationDto DestinationLocation { get; set; }
     public List<OrderRowDto> OrderRows { get; set; } = [];
     //public List<OrderNotificationDto> Notifications { get; set; } = [];
     //public List<OrderTransportEventDto> TransportEvents { get; set; } = [];
