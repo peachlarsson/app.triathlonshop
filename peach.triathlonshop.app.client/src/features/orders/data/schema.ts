@@ -6,7 +6,14 @@ export type Order = {
   orderRows: OrderRow[];
   orderRowsCount?: number;
   customer: Customer;
+  destinationLocation: Location;
   createdAt: string;
+};
+
+export type Location = {
+  countryCode: string;
+  countryName: string;
+  city: string;
 };
 
 export type OrderRow = {

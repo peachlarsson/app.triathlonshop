@@ -9,6 +9,7 @@ import {
   Lock,
   Bell,
   Package,
+  Truck,
   Palette,
   ServerOff,
   Settings,
@@ -50,6 +51,11 @@ export const sidebarData: SidebarData = {
           title: 'Orders',
           url: '/orders',
           icon: Package,
+        },
+        {
+          title: 'Logistics',
+          url: '/logistics',
+          icon: Truck,
         },
         {
           title: 'Customers',
