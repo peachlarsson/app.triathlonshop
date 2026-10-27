@@ -21,6 +21,8 @@ import { Route as ErrorsErrorRouteImport } from './routes/errors/$error'
 import { Route as OrdersIndexRouteImport } from './routes/orders/index'
 import { Route as OrdersOrderIdRouteImport } from './routes/orders/$orderId'
 import { Route as SettingsAppearanceRouteImport } from './routes/settings/appearance'
+import { Route as StockIndexRouteImport } from './routes/stock/index'
+import { Route as StockWarehouseWarehouseIdRouteImport } from './routes/stock/warehouse.$warehouseId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -82,6 +84,17 @@ const SettingsAppearanceRoute = SettingsAppearanceRouteImport.update({
   path: '/settings/appearance',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StockIndexRoute = StockIndexRouteImport.update({
+  id: '/stock/',
+  path: '/stock/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StockWarehouseWarehouseIdRoute =
+  StockWarehouseWarehouseIdRouteImport.update({
+    id: '/stock/warehouse/$warehouseId',
+    path: '/stock/warehouse/$warehouseId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -96,6 +109,8 @@ export interface FileRoutesByFullPath {
   '/settings/appearance': typeof SettingsAppearanceRoute
   '/customers/': typeof CustomersIndexRoute
   '/orders/': typeof OrdersIndexRoute
+  '/stock/': typeof StockIndexRoute
+  '/stock/warehouse/$warehouseId': typeof StockWarehouseWarehouseIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -110,6 +125,8 @@ export interface FileRoutesByTo {
   '/settings/appearance': typeof SettingsAppearanceRoute
   '/customers': typeof CustomersIndexRoute
   '/orders': typeof OrdersIndexRoute
+  '/stock': typeof StockIndexRoute
+  '/stock/warehouse/$warehouseId': typeof StockWarehouseWarehouseIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -125,6 +142,8 @@ export interface FileRoutesById {
   '/settings/appearance': typeof SettingsAppearanceRoute
   '/customers/': typeof CustomersIndexRoute
   '/orders/': typeof OrdersIndexRoute
+  '/stock/': typeof StockIndexRoute
+  '/stock/warehouse/$warehouseId': typeof StockWarehouseWarehouseIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -141,6 +160,8 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/customers/'
     | '/orders/'
+    | '/stock/'
+    | '/stock/warehouse/$warehouseId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -155,6 +176,8 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/customers'
     | '/orders'
+    | '/stock'
+    | '/stock/warehouse/$warehouseId'
   id:
     | '__root__'
     | '/'
@@ -169,6 +192,8 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/customers/'
     | '/orders/'
+    | '/stock/'
+    | '/stock/warehouse/$warehouseId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -184,6 +209,8 @@ export interface RootRouteChildren {
   SettingsAppearanceRoute: typeof SettingsAppearanceRoute
   CustomersIndexRoute: typeof CustomersIndexRoute
   OrdersIndexRoute: typeof OrdersIndexRoute
+  StockIndexRoute: typeof StockIndexRoute
+  StockWarehouseWarehouseIdRoute: typeof StockWarehouseWarehouseIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -272,6 +299,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsAppearanceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/stock/': {
+      id: '/stock/'
+      path: '/stock'
+      fullPath: '/stock/'
+      preLoaderRoute: typeof StockIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/stock/warehouse/$warehouseId': {
+      id: '/stock/warehouse/$warehouseId'
+      path: '/stock/warehouse/$warehouseId'
+      fullPath: '/stock/warehouse/$warehouseId'
+      preLoaderRoute: typeof StockWarehouseWarehouseIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -288,6 +329,8 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsAppearanceRoute: SettingsAppearanceRoute,
   CustomersIndexRoute: CustomersIndexRoute,
   OrdersIndexRoute: OrdersIndexRoute,
+  StockIndexRoute: StockIndexRoute,
+  StockWarehouseWarehouseIdRoute: StockWarehouseWarehouseIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

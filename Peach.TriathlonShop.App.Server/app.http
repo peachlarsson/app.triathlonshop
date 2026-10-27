@@ -4,6 +4,13 @@
 @baseUrl = http://localhost:5089/api
 
 
+#############
+### Stock ###
+#############
+
+GET {{baseUrl}}/stock/all-warehouses
+
+
 ##############
 ### Orders ###
 ##############
