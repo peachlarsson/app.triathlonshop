@@ -15,6 +15,7 @@ public class TriathlonShopDbContext(DbContextOptions<TriathlonShopDbContext> opt
     public DbSet<OrderEvent> OrderEvents => Set<OrderEvent>();
 
     public DbSet<Warehouse> Warehouses => Set<Warehouse>();
+    public DbSet<Stock> Stocks => Set<Stock>();
     public DbSet<Location> Locations => Set<Location>();
     public DbSet<Route> Routes => Set<Route>();
 
@@ -104,6 +105,14 @@ public class TriathlonShopDbContext(DbContextOptions<TriathlonShopDbContext> opt
         modelBuilder.Entity<Warehouse>(entity =>
         {
             entity.ToTable(nameof(Warehouse), DefaultSchema);
+
+            entity.Property(e => e.CreatedAt)
+                  .HasDefaultValueSql(DefaultTimestampSql);
+        });
+
+        modelBuilder.Entity<Stock>(entity =>
+        {
+            entity.ToTable(nameof(Stock), DefaultSchema);
 
             entity.Property(e => e.CreatedAt)
                   .HasDefaultValueSql(DefaultTimestampSql);
