@@ -230,6 +230,47 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
         };
     }
 
+    public async Task<Response<PaginatedResponse<ArticleDto>>> GetArticlesAsync(GetArticlesRequestDto request)
+    {
+        var queryParams = new Dictionary<string, string>
+        {
+            { "articleName", request.ArticleName ?? string.Empty },
+            { "pageNumber", request.PageNumber.ToString() },
+            { "pageSize", request.PageSize.ToString() },
+            { "sortBy", request.SortBy.ToString() },
+            { "sortOrder", request.SortOrder.ToString() }
+        };
+
+        var queryString = string.Join("&", queryParams.Select(kvp => $"{kvp.Key}={Uri.EscapeDataString(kvp.Value)}"));
+        
+        var httpRequest = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri($"stock/articles?{queryString}", UriKind.Relative)
+        };
+        
+        var response = await httpClient.SendAsync(httpRequest);
+        
+        var responseContent = await response.Content.ReadAsStringAsync();
+        
+        if (!response.IsSuccessStatusCode)
+        {
+            return new Response<PaginatedResponse<ArticleDto>>
+            {
+                IsSuccess = false,
+                StatusCode = (int)response.StatusCode,
+                ErrorMessage = responseContent,
+            };
+        }
+        
+        return new Response<PaginatedResponse<ArticleDto>>
+        {
+            IsSuccess = true,
+            StatusCode = (int)response.StatusCode,
+            Content = JsonSerializer.Deserialize<PaginatedResponse<ArticleDto>>(responseContent, jsonSerializerOptions),
+        };
+    }
+
     public async Task<Response<string>> CreateRandomOrdersAsync(CreateRandomOrdersModel request)
     {
         var httpRequest = new HttpRequestMessage

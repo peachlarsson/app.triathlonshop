@@ -13,5 +13,6 @@ public interface ITriathlonShopClient
     public Task<Response<string>> SetOrderShipped(long orderId);
     public Task<Response<DashboardResponseModel>> GetDashboardDataAsync();
     public Task<Response<GetAllWarehouseStockDto>> GetAllWarehouseStockAsync();
+    public Task<Response<PaginatedResponse<ArticleDto>>> GetArticlesAsync(GetArticlesRequestDto request);
     public Task<Response<string>> CreateRandomOrdersAsync(CreateRandomOrdersModel request);
 }
