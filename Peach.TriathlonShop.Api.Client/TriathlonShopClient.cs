@@ -228,7 +228,7 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
             StatusCode = (int)response.StatusCode,
             Content = JsonSerializer.Deserialize<List<WarehouseStockDto>>(responseContent, jsonSerializerOptions),
         };
-    }>
+    }
 
     public async Task<Response<string>> CreateRandomOrdersAsync(CreateRandomOrdersModel request)
     {
