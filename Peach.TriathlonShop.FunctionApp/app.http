@@ -68,6 +68,18 @@ Content-Type: application/json
 }
 
 
+#############
+### Stock ###
+#############
+
+
+### Get stock
+
+GET {{baseUrl}}/stock
+Accept: application/json
+
+
+
 #################
 ### Transport ###
 #################
