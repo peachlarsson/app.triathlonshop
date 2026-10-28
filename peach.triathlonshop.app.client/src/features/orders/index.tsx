@@ -58,7 +58,6 @@ export function Orders() {
         <div className="flex flex-wrap items-end justify-between gap-2">
           <div>
             <h2 className="text-2xl font-bold tracking-tight">Orders</h2>
-            <p className="text-muted-foreground">Browse and manage orders.</p>
           </div>
           <OrdersPrimaryButtons />
         </div>

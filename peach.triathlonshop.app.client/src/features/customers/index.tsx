@@ -52,9 +52,6 @@ export function Users() {
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>Customers List</h2>
-            <p className='text-muted-foreground'>
-              Manage customers.
-            </p>
           </div>
           <UsersPrimaryButtons />
         </div>
