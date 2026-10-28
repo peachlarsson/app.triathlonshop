@@ -175,7 +175,7 @@ export function fetchArticlesPage(
   signal: AbortSignal,
 ): Promise<PaginatedResponse<ArticleDto>> {
   return fetchInventory(
-    `/api/articles?articleName=${param.articleName}&pageNumber=${param.pageNumber}&pageSize=${param.pageSize}&sortKey=${param.sortKey}&sortDirection=${param.sortDirection}`,
+    `/api/articles?articleName=${param.articleName ?? ""}&pageNumber=${param.pageNumber}&pageSize=${param.pageSize}&sortKey=${param.sortKey}&sortDirection=${param.sortDirection}`,
     signal,
   );
 }
