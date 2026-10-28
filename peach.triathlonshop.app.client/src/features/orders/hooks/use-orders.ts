@@ -40,3 +40,22 @@ export function useOrders(request: GetOrdersRequestDto) {
     },
   });
 }
+
+export function useOrder(orderId: string) {
+  return useQuery({
+    queryKey: ["order", orderId],
+    queryFn: async ({ signal }): Promise<Order | null> => {
+      const params = new URLSearchParams({ id: orderId });
+      const response = await fetch(`/api/orders?${params.toString()}`, {
+        signal,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Could not load order (HTTP ${response.status}).`);
+      }
+
+      const result: PaginatedResponse<Order> = await response.json();
+      return result.data[0] ?? null;
+    },
+  });
+}

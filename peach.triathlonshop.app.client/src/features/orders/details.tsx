@@ -13,8 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useQuery } from "@tanstack/react-query";
-import type { Order, PaginatedResponse } from "./data/schema";
+import { useOrder } from "./hooks/use-orders";
 
 const route = getRouteApi("/orders/$orderId");
 
@@ -31,22 +30,7 @@ const dateFormatter = new Intl.DateTimeFormat("sv-SE", {
 export default function OrderDetails() {
   const { orderId } = route.useParams();
 
-  const { data: orderQuery, isPending, error } = useQuery({
-    queryKey: ["order", orderId],
-    queryFn: async (): Promise<Order | null> => {
-      const params = new URLSearchParams({ id: orderId });
-      const response = await fetch(`/api/orders?${params.toString()}`);
-
-      if (!response.ok) {
-        throw new Error(`Could not load order (HTTP ${response.status}).`);
-      }
-
-      const result: PaginatedResponse<Order> = await response.json();
-      return result.data[0] ?? null;
-    },
-  });
-
-  const order = orderQuery;
+  const { data: order, isPending, error } = useOrder(orderId);
 
   if (isPending) return <p>Loading order...</p>;
   if (error) return <p role="alert">{error.message}</p>;
