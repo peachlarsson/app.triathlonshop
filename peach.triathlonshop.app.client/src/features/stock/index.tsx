@@ -91,8 +91,8 @@ export function Stock() {
               columns={["Article number", "Article", "Unit price"]}
               renderRow={(item) => (
                 <TableRow key={item.id}>
-                  <TableCell>{item.number}</TableCell>
-                  <TableCell className="font-medium">{item.name}</TableCell>
+                  <TableCell>{item.articleNumber}</TableCell>
+                  <TableCell className="font-medium">{item.articleName}</TableCell>
                   <TableCell>{currency.format(item.unitPrice)}</TableCell>
                 </TableRow>
               )}
@@ -111,7 +111,11 @@ function InventoryTable<T>({
   renderRow,
 }: {
   loadPage: (
-    page: number,
+    articleName: string,
+    pageNumber: number,
+    pageSize: number,
+    sortKey: string,
+    sortDirection: string,
     signal: AbortSignal,
   ) => Promise<PaginatedResponse<T>>;
   label: string;
@@ -119,9 +123,10 @@ function InventoryTable<T>({
   renderRow: (item: T) => ReactNode;
 }) {
   const [page, setPage] = useState(1);
+  const pageSize = 10;
   const { data, error, isPending, isFetching, refetch } = useQuery({
     queryKey: ["inventory", label, page],
-    queryFn: ({ signal }) => loadPage(page, signal),
+    queryFn: ({ signal }) => loadPage("", page, pageSize, "", "", signal),
   });
 
   return (
