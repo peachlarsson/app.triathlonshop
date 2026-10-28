@@ -18,7 +18,8 @@ import { StockOverview } from "./components/stock-overview";
 import { StockChart } from "./components/stock-chart";
 import { WarehouseCards } from "./components/warehouse-cards";
 import { fetchArticlesPage } from "./data/api";
-import type { Article, PaginatedResponse } from "./data/types";
+import { SortDirection, SortKey } from "./data/types";
+import type { ArticleDto, GetArticlesRequest, PaginatedResponse } from "./data/types";
 
 const currency = new Intl.NumberFormat("sv-SE", {
   style: "currency",
@@ -85,7 +86,7 @@ export function Stock() {
           </TabsContent>
 
           <TabsContent value="articles" className="space-y-4">
-            <InventoryTable<Article>
+            <InventoryTable<ArticleDto>
               loadPage={fetchArticlesPage}
               label="articles"
               columns={["Article number", "Article", "Unit price"]}
@@ -111,11 +112,7 @@ function InventoryTable<T>({
   renderRow,
 }: {
   loadPage: (
-    articleName: string,
-    pageNumber: number,
-    pageSize: number,
-    sortKey: string,
-    sortDirection: string,
+    request: GetArticlesRequest,
     signal: AbortSignal,
   ) => Promise<PaginatedResponse<T>>;
   label: string;
@@ -126,7 +123,15 @@ function InventoryTable<T>({
   const pageSize = 10;
   const { data, error, isPending, isFetching, refetch } = useQuery({
     queryKey: ["inventory", label, page],
-    queryFn: ({ signal }) => loadPage("", page, pageSize, "", "", signal),
+    queryFn: ({ signal }) => loadPage({
+        articleName: "",
+        pageNumber: page,
+        pageSize: pageSize,
+        sortKey: SortKey.ArticleNumber,
+        sortDirection: SortDirection.Asc
+      },
+      signal
+    )
   });
 
   return (

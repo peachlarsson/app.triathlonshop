@@ -49,23 +49,23 @@ export interface ArticleDto {
 }
 
 export interface GetArticlesRequest {
-  articleName: string;
-  pageNumber: number;
-  pageSize: number;
-  sortKey: string;
-  sortDirection: string;
+  articleName?: string;
+  pageNumber?: number;
+  pageSize?: number;
+  sortKey?: SortKey;
+  sortDirection?: SortDirection;
 }
 
-export interface SortKey {
-  id: number;
-  articleNumber: string;
-  articleName: string;
-  unitPrice: number;
+export enum SortKey {
+  Id = "Id",
+  ArticleNumber = "ArticleNumber",
+  ArticleName = "ArticleName",
+  UnitPrice = "UnitPrice",
 }
 
-export interface SortDirection {
-  asc: "asc";
-  desc: "desc";
+export enum SortDirection {
+  Asc = "Asc",
+  Desc = "Desc",
 }
 
 export interface WarehouseArticle {
