@@ -19,7 +19,7 @@ public class GetArticles(TriathlonShopDbContext context)
         var queryParam = new GetArticlesRequestDto
         {
             ArticleName = queryParams["articleName"],
-            SortKey = Enum.TryParse<SortKey>(queryParams["sortBy"], out var sortBy) ? sortBy : SortKey.Name,
+            SortKey = Enum.TryParse<SortKey>(queryParams["sortBy"], out var sortBy) ? sortBy : SortKey.ArticleName,
             SortDirection = Enum.TryParse<SortDirection>(queryParams["sortOrder"], out var sortOrder) ? sortOrder : SortDirection.Asc,
             PageNumber = int.TryParse(queryParams["pageNumber"], out var pageNumber) ? pageNumber : 1,
             PageSize = int.TryParse(queryParams["pageSize"], out var pageSize) ? pageSize : 100
@@ -34,10 +34,10 @@ public class GetArticles(TriathlonShopDbContext context)
 
         query = queryParam.SortKey switch
         {
-            SortKey.Number => queryParam.SortDirection == SortDirection.Asc
+            SortKey.ArticleNumber => queryParam.SortDirection == SortDirection.Asc
                 ? query.OrderBy(q => q.Number)
                 : query.OrderByDescending(q => q.Number),
-            SortKey.Name => queryParam.SortDirection == SortDirection.Asc
+            SortKey.ArticleName => queryParam.SortDirection == SortDirection.Asc
                 ? query.OrderBy(q => q.Name)
                 : query.OrderByDescending(q => q.Name),
             SortKey.UnitPrice => queryParam.SortDirection == SortDirection.Asc
