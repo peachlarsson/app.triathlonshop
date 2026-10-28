@@ -23,8 +23,8 @@ namespace Peach.TriathlonShop.App.Server.Controllers
                 ArticleName = articleName,
                 PageNumber = pageNumber,
                 PageSize = pageSize,
-                SortBy = sortKey,
-                SortOrder = sortDirection,
+                SortKey = sortKey,
+                SortDirection = sortDirection,
             });
 
             if (!response.IsSuccess)

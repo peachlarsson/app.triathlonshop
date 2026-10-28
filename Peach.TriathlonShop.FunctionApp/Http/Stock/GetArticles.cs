@@ -19,8 +19,8 @@ public class GetArticles(TriathlonShopDbContext context)
         var queryParam = new GetArticlesRequestDto
         {
             ArticleName = queryParams["articleName"],
-            SortBy = Enum.TryParse<SortKey>(queryParams["sortBy"], out var sortBy) ? sortBy : SortKey.Name,
-            SortOrder = Enum.TryParse<SortDirection>(queryParams["sortOrder"], out var sortOrder) ? sortOrder : SortDirection.Asc,
+            SortKey = Enum.TryParse<SortKey>(queryParams["sortBy"], out var sortBy) ? sortBy : SortKey.Name,
+            SortDirection = Enum.TryParse<SortDirection>(queryParams["sortOrder"], out var sortOrder) ? sortOrder : SortDirection.Asc,
             PageNumber = int.TryParse(queryParams["pageNumber"], out var pageNumber) ? pageNumber : 1,
             PageSize = int.TryParse(queryParams["pageSize"], out var pageSize) ? pageSize : 100
         };
@@ -32,24 +32,24 @@ public class GetArticles(TriathlonShopDbContext context)
             query = query.Where(q => q.Name.ToLower().Contains(queryParam.ArticleName.ToLower()));
         }
 
-        query = queryParam.SortBy switch
+        query = queryParam.SortKey switch
         {
-            SortKey.Number => queryParam.SortOrder == SortDirection.Asc
+            SortKey.Number => queryParam.SortDirection == SortDirection.Asc
                 ? query.OrderBy(q => q.Number)
                 : query.OrderByDescending(q => q.Number),
-            SortKey.Name => queryParam.SortOrder == SortDirection.Asc
+            SortKey.Name => queryParam.SortDirection == SortDirection.Asc
                 ? query.OrderBy(q => q.Name)
                 : query.OrderByDescending(q => q.Name),
-            SortKey.UnitPrice => queryParam.SortOrder == SortDirection.Asc
+            SortKey.UnitPrice => queryParam.SortDirection == SortDirection.Asc
                 ? query.OrderBy(q => q.UnitPrice)
                 : query.OrderByDescending(q => q.UnitPrice),
-            SortKey.CreatedAt => queryParam.SortOrder == SortDirection.Asc
+            SortKey.CreatedAt => queryParam.SortDirection == SortDirection.Asc
                 ? query.OrderBy(q => q.CreatedAt)
                 : query.OrderByDescending(q => q.CreatedAt),
-            SortKey.UpdatedAt => queryParam.SortOrder == SortDirection.Asc
+            SortKey.UpdatedAt => queryParam.SortDirection == SortDirection.Asc
                 ? query.OrderBy(q => q.UpdatedAt)
                 : query.OrderByDescending(q => q.UpdatedAt),
-            _ => queryParam.SortOrder == SortDirection.Asc
+            _ => queryParam.SortDirection == SortDirection.Asc
                 ? query.OrderBy(q => q.Id)
                 : query.OrderByDescending(q => q.Id)
         };

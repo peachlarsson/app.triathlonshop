@@ -237,8 +237,8 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
             { "articleName", request.ArticleName ?? string.Empty },
             { "pageNumber", request.PageNumber.ToString() },
             { "pageSize", request.PageSize.ToString() },
-            { "sortBy", request.SortBy.ToString() },
-            { "sortOrder", request.SortOrder.ToString() }
+            { "sortBy", request.SortKey.ToString() },
+            { "sortOrder", request.SortDirection.ToString() }
         };
 
         var queryString = string.Join("&", queryParams.Select(kvp => $"{kvp.Key}={Uri.EscapeDataString(kvp.Value)}"));
