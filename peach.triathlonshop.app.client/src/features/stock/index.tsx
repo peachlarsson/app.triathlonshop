@@ -89,11 +89,11 @@ export function Stock() {
             <InventoryTable<ArticleDto>
               loadPage={fetchArticlesPage}
               label="articles"
-              columns={["Article number", "Article", "Unit price"]}
+              columns={["Article name", "Article number", "Unit price"]}
               renderRow={(item) => (
                 <TableRow key={item.id}>
-                  <TableCell>{item.articleNumber}</TableCell>
                   <TableCell className="font-medium">{item.articleName}</TableCell>
+                  <TableCell>{item.articleNumber}</TableCell>
                   <TableCell>{currency.format(item.unitPrice)}</TableCell>
                 </TableRow>
               )}
@@ -127,7 +127,7 @@ function InventoryTable<T>({
         articleName: "",
         pageNumber: page,
         pageSize: pageSize,
-        sortKey: SortKey.ArticleNumber,
+        sortKey: SortKey.ArticleName,
         sortDirection: SortDirection.Asc
       },
       signal
