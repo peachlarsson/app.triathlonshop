@@ -2,6 +2,7 @@ export type Order = {
   id: number;
   number: string;
   status: string;
+  estimatedDelivery?: string;
   totalPrice: number;
   orderRows: OrderRow[];
   orderRowsCount?: number;
