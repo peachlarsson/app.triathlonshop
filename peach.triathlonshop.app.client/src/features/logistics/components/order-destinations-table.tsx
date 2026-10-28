@@ -49,7 +49,7 @@ export function OrderDestinationsTable({
             <TableHead>Order</TableHead>
             <TableHead>Destination</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead>Date</TableHead>
+            <TableHead>Estimated Delivery</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -93,7 +93,9 @@ export function OrderDestinationsTable({
                 </Badge>
               </TableCell>
               <TableCell>
-                {dateFormatter.format(new Date(order.createdAt))}
+                {order.estimatedDelivery
+                  ? dateFormatter.format(new Date(order.estimatedDelivery))
+                  : ""}
               </TableCell>
             </TableRow>
           ))}
