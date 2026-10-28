@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import { getRouteApi } from "@tanstack/react-router";
 import { useState } from "react";
 import { type SortingState } from "@tanstack/react-table";
@@ -7,13 +6,12 @@ import { Main } from "@/components/layout/main";
 import { ThemeSwitch } from "@/components/theme-switch";
 import {
   type GetOrdersRequestDto,
-  type Order,
-  type PaginatedResponse,
   SortDirection,
   SortKey,
 } from "./data/schema";
 import { OrdersPrimaryButtons } from "./components/orders-primary-buttons";
 import { OrdersTable } from "./components/orders-table";
+import { useOrders } from "./hooks/use-orders";
 
 const route = getRouteApi("/orders/");
 
@@ -47,39 +45,7 @@ export function Orders() {
     sortDirection: sort?.desc ? SortDirection.Desc : SortDirection.Asc,
   };
 
-  const {
-    data: orders,
-    error,
-    isPending,
-  } = useQuery({
-    queryKey: [
-      "orders",
-      request.pageNumber,
-      request.pageSize,
-      request.customerName,
-      request.articleName,
-      request.sortKey,
-      request.sortDirection,
-    ],
-    queryFn: async (): Promise<PaginatedResponse<Order>> => {
-      const params = new URLSearchParams({
-        id: String(request.id ?? ""),
-        pageNumber: String(request.pageNumber ?? 1),
-        pageSize: String(request.pageSize ?? 10),
-        customerName: request.customerName ?? "",
-        articleName: request.articleName ?? "",
-        sortKey: request.sortKey ?? SortKey.Id,
-        sortDirection: request.sortDirection ?? SortDirection.Asc,
-      });
-
-      const response = await fetch(`/api/orders?${params.toString()}`);
-      if (!response.ok) {
-        throw new Error(`Could not load orders (HTTP ${response.status}).`);
-      }
-
-      return (await response.json()) as PaginatedResponse<Order>;
-    },
-  });
+  const { data: orders, error, isPending } = useOrders(request);
 
   return (
     <>
