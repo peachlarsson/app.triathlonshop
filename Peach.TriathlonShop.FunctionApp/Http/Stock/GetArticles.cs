@@ -58,8 +58,8 @@ public class GetArticles(TriathlonShopDbContext context)
             .Select(a => new ArticleDto
             {
                 Id = a.Id,
-                Name = a.Name,
-                Number = a.Number,
+                ArticleName = a.Name,
+                ArticleNumber = a.Number,
                 UnitPrice = a.UnitPrice,
                 CreatedAt = a.CreatedAt,
                 UpdatedAt = a.UpdatedAt
