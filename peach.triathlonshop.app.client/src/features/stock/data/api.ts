@@ -16,7 +16,21 @@ const pageSize = 20;
 async function loadInventory(signal: AbortSignal) {
   const [stock, catalog] = await Promise.all([
     fetchInventory<WarehouseStockDto[]>("/api/stock/all-warehouses", signal),
-    fetchCatalog(signal),
+    (async () => {
+      const articles: ArticleDto[] = [];
+      let page = 1;
+      let totalPages: number;
+      do {
+        const result = await fetchInventory<PaginatedResponse<ArticleDto>>(
+          `/api/articles?pageNumber=${page}&pageSize=100`,
+          signal,
+        );
+        articles.push(...result.data);
+        totalPages = result.totalPages;
+        page++;
+      } while (page <= totalPages);
+      return articles;
+    })(),
   ]);
   const articleById = new Map(catalog.map((article) => [article.id, article]));
   const assignedByWarehouse = new Map<number, Map<number, number>>();
@@ -100,22 +114,6 @@ async function loadInventory(signal: AbortSignal) {
     outgoingOrders: null,
   };
   return { warehouses, articlesByWarehouse, stockItems, overview };
-}
-
-async function fetchCatalog(signal: AbortSignal): Promise<Article[]> {
-  const articles: Article[] = [];
-  let page = 1;
-  let totalPages: number;
-  do {
-    const result = await fetchInventory<PaginatedResponse<Article>>(
-      `/api/articles?pageNumber=${page}&pageSize=100`,
-      signal,
-    );
-    articles.push(...result.data);
-    totalPages = result.totalPages;
-    page++;
-  } while (page <= totalPages);
-  return articles;
 }
 
 export async function fetchWarehouse(
