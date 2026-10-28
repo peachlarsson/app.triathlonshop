@@ -29,17 +29,17 @@ public class GetArticles(TriathlonShopDbContext context)
 
         if (!string.IsNullOrWhiteSpace(queryParam.ArticleName))
         {
-            query = query.Where(q => q.Name.ToLower().Contains(queryParam.ArticleName.ToLower()));
+            query = query.Where(q => q.ArticleName.ToLower().Contains(queryParam.ArticleName.ToLower()));
         }
 
         query = queryParam.SortKey switch
         {
             SortKey.ArticleNumber => queryParam.SortDirection == SortDirection.Asc
-                ? query.OrderBy(q => q.Number)
-                : query.OrderByDescending(q => q.Number),
+                ? query.OrderBy(q => q.ArticleNumber)
+                : query.OrderByDescending(q => q.ArticleNumber),
             SortKey.ArticleName => queryParam.SortDirection == SortDirection.Asc
-                ? query.OrderBy(q => q.Name)
-                : query.OrderByDescending(q => q.Name),
+                ? query.OrderBy(q => q.ArticleName)
+                : query.OrderByDescending(q => q.ArticleName),
             SortKey.UnitPrice => queryParam.SortDirection == SortDirection.Asc
                 ? query.OrderBy(q => q.UnitPrice)
                 : query.OrderByDescending(q => q.UnitPrice),
@@ -58,8 +58,8 @@ public class GetArticles(TriathlonShopDbContext context)
             .Select(a => new ArticleDto
             {
                 Id = a.Id,
-                ArticleName = a.Name,
-                ArticleNumber = a.Number,
+                ArticleName = a.ArticleName,
+                ArticleNumber = a.ArticleNumber,
                 UnitPrice = a.UnitPrice,
                 CreatedAt = a.CreatedAt,
                 UpdatedAt = a.UpdatedAt

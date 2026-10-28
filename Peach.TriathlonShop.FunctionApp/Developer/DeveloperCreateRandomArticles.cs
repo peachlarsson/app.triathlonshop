@@ -37,12 +37,12 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
             {
                 var article = new Article
                 {
-                    Number = $"ART-{Guid.NewGuid()}",
-                    Name = ArticleExtensions.GetRandomArticle(),
+                    ArticleNumber = $"ART-{Guid.NewGuid()}",
+                    ArticleName = ArticleExtensions.GetRandomArticle(),
                     UnitPrice = Random.Shared.Next(model.UnitPriceIntervalStart ?? 1, model.UnitPriceIntervalEnd ?? 100)
                 };
 
-                if (context.Articles.Any(a => a.Name == article.Name))
+                if (context.Articles.Any(a => a.ArticleName == article.ArticleName))
                 {
                     i--;
                     continue;

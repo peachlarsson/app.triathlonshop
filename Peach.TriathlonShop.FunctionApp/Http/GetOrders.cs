@@ -45,7 +45,7 @@ public class GetOrders(TriathlonShopDbContext context)
         if (!string.IsNullOrWhiteSpace(request.ArticleName))
         {
             var term = $"%{request.ArticleName.Trim()}%";
-            query = query.Where(c => c.OrderRows.Any(or => or.Article != null && EF.Functions.Like(or.Article.Name, term)));
+            query = query.Where(c => c.OrderRows.Any(or => or.Article != null && EF.Functions.Like(or.Article.ArticleName, term)));
         }
 
         if (!string.IsNullOrWhiteSpace(request.CustomerName))
@@ -105,7 +105,7 @@ public class GetOrders(TriathlonShopDbContext context)
                 OrderNumber = or.Order!.Number,
                 LineNumber = or.LineNumber,
                 ArticleId = or.ArticleId,
-                ArticleName = or.Article!.Name,
+                ArticleName = or.Article!.ArticleName,
                 UnitPrice = or.Article!.UnitPrice,
                 Quantity = or.Quantity,
                 RowPrice = or.RowPrice,

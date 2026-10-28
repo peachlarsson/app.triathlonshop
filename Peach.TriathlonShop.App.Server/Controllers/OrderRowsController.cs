@@ -30,7 +30,7 @@ namespace Peach.TriathlonShop.App.Server.Controllers
                     OrderNumber = q.Order!.Number,
                     LineNumber = q.LineNumber,
                     ArticleId = q.ArticleId,
-                    ArticleName = q.Article!.Name,
+                    ArticleName = q.Article!.ArticleName,
                     UnitPrice = q.Article!.UnitPrice,
                     Quantity = q.Quantity,
                     RowPrice = q.RowPrice,

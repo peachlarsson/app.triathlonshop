@@ -36,8 +36,8 @@ public class GetAllWarehouseStock(TriathlonShopDbContext context)
                 Articles = g.Select(a => new ArticleStockDto
                 {
                     ArticleId = a.ArticleId,
-                    ArticleName = a.Article.Name,
-                    ArticleNumber = a.Article.Number,
+                    ArticleName = a.Article.ArticleName,
+                    ArticleNumber = a.Article.ArticleNumber,
                     Quantity = a.Quantity
                 }).ToList()
             })
