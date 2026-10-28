@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { useCustomerSearch } from "@/features/customers/hooks/use-customers";
 
 export function OrdersPrimaryButtons() {
   const [open, setOpen] = useState(false);
@@ -22,22 +22,7 @@ export function OrdersPrimaryButtons() {
     data: customers,
     error,
     isFetching,
-  } = useQuery({
-    queryKey: ["order-customer-search", searchTerm],
-    enabled: open && searchTerm.length > 0,
-    queryFn: async (): Promise<CustomerSearchResponse> => {
-      const params = new URLSearchParams({
-        customerName: searchTerm,
-        pageNumber: "1",
-        pageSize: "10",
-      });
-      const response = await fetch(`/api/customers?${params.toString()}`);
-      if (!response.ok) {
-        throw new Error(`Could not search customers (HTTP ${response.status}).`);
-      }
-      return (await response.json()) as CustomerSearchResponse;
-    },
-  });
+  } = useCustomerSearch(searchTerm, open && searchTerm.length > 0);
 
   return (
     <>
@@ -126,7 +111,3 @@ export function OrdersPrimaryButtons() {
     </>
   );
 }
-
-type CustomerSearchResponse = {
-  data: { id: number; name: string | null }[];
-};
