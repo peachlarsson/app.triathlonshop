@@ -41,11 +41,31 @@ export interface Warehouse {
   outOfStockArticles: number;
 }
 
-export interface Article {
+export interface ArticleDto {
   id: number;
-  number: string;
-  name: string;
+  articleName: string;
+  articleNumber: string;
   unitPrice: number;
+}
+
+export interface GetArticlesRequest {
+  articleName: string;
+  pageNumber: number;
+  pageSize: number;
+  sortKey: string;
+  sortDirection: string;
+}
+
+export interface SortKey {
+  id: number;
+  articleNumber: string;
+  articleName: string;
+  unitPrice: number;
+}
+
+export interface SortDirection {
+  asc: "asc";
+  desc: "desc";
 }
 
 export interface WarehouseArticle {

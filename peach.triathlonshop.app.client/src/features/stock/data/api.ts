@@ -1,5 +1,5 @@
 import type {
-  Article,
+  ArticleDto,
   PaginatedResponse,
   StockItem,
   StockChartResponse,
@@ -8,6 +8,7 @@ import type {
   WarehouseArticle,
   WarehouseDetailsResponse,
   WarehouseStockDto,
+  GetArticlesRequest,
 } from "./types";
 
 const pageSize = 20;
@@ -172,11 +173,11 @@ export async function fetchWarehousesPage(
 }
 
 export function fetchArticlesPage(
-  page: number,
+  param: GetArticlesRequest,
   signal: AbortSignal,
-): Promise<PaginatedResponse<Article>> {
+): Promise<PaginatedResponse<ArticleDto>> {
   return fetchInventory(
-    `/api/stock/pending/articles?pageNumber=${page}&pageSize=${pageSize}`,
+    `/api/articles?articleName=${param.articleName}&pageNumber=${param.pageNumber}&pageSize=${param.pageSize}&sortKey=${param.sortKey}&sortDirection=${param.sortDirection}`,
     signal,
   );
 }
