@@ -66,8 +66,8 @@ async function loadInventory(signal: AbortSignal) {
         const article = articleById.get(id);
         return {
           id,
-          number: article?.number ?? String(id),
-          name: article?.name ?? `Article ${id} (details not available)`,
+          number: article?.articleNumber ?? String(id),
+          name: article?.articleName ?? `Article ${id} (details not available)`,
           quantity,
         };
       })
