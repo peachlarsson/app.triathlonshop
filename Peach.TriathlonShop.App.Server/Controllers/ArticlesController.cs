@@ -1,56 +1,38 @@
 using Microsoft.AspNetCore.Mvc;
-using Peach.TriathlonShop.App.Server.Controllers.Enums.Article;
-using Peach.TriathlonShop.App.Server.Controllers.Enums.Common;
-using Peach.TriathlonShop.App.Server.Models;
-using Peach.TriathlonShop.App.Server.Utilities;
-using Peach.TriathlonShop.Database;
+using Peach.TriathlonShop.Api.Client;
+using Peach.TriathlonShop.Api.Contract.Enums.Article;
+using Peach.TriathlonShop.Api.Contract.Enums.Common;
 using Peach.TriathlonShop.Database.Models;
 
 namespace Peach.TriathlonShop.App.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ArticlesController(TriathlonShopDbContext context) : ControllerBase
+    public class ArticlesController(ITriathlonShopClient triathlonShopClient) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<PaginatedResponse<Article>>> GetPaginated(
-            SortKey sortBy = SortKey.Id,
-            SortDirection sortOrder = SortDirection.Asc,
-            int pageNumber = 1,
-            int pageSize = 100,
-            string? name = null)
+        public async Task<IActionResult> GetPaginated(
+            [FromQuery] string? articleName = null,
+            [FromQuery] SortKey sortKey = SortKey.Id,
+            [FromQuery] SortDirection sortDirection = SortDirection.Asc,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 100)
         {
-            var query = context.Articles.AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(name))
+            var response = await triathlonShopClient.GetArticlesAsync(new Api.Contract.Models.Stock.GetArticlesRequestDto
             {
-                query = query.Where(q => q.Name.ToLower().Contains(name.ToLower()));
+                ArticleName = articleName,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                SortBy = sortKey,
+                SortOrder = sortDirection,
+            });
+
+            if (!response.IsSuccess)
+            {
+                return StatusCode(response.StatusCode, response.ErrorMessage);
             }
 
-            query = sortBy switch
-            {
-                SortKey.Number => sortOrder == SortDirection.Asc
-                    ? query.OrderBy(q => q.Number)
-                    : query.OrderByDescending(q => q.Number),
-                SortKey.Name => sortOrder == SortDirection.Asc
-                    ? query.OrderBy(q => q.Name)
-                    : query.OrderByDescending(q => q.Name),
-                SortKey.UnitPrice => sortOrder == SortDirection.Asc
-                    ? query.OrderBy(q => q.UnitPrice)
-                    : query.OrderByDescending(q => q.UnitPrice),
-                SortKey.CreatedAt => sortOrder == SortDirection.Asc
-                    ? query.OrderBy(q => q.CreatedAt)
-                    : query.OrderByDescending(q => q.CreatedAt),
-                SortKey.UpdatedAt => sortOrder == SortDirection.Asc
-                    ? query.OrderBy(q => q.UpdatedAt)
-                    : query.OrderByDescending(q => q.UpdatedAt),
-                _ => sortOrder == SortDirection.Asc
-                    ? query.OrderBy(q => q.Id)
-                    : query.OrderByDescending(q => q.Id)
-            };
-
-            var paginatedResult = await PaginationHelper.PaginateAsync(query, pageNumber, pageSize);
-            return Ok(paginatedResult);
+            return Ok(response.Content);
         }
     }
 }
