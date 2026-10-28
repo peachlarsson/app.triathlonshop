@@ -12,16 +12,16 @@ public class CustomersController(ITriathlonShopClient triathlonShopClient) : Con
 {
     [HttpGet]
     public async Task<ActionResult<PaginatedResponse<CustomerDto>>> GetPaginated(
-        SortKey sortBy = SortKey.Id,
-        SortDirection sortOrder = SortDirection.Asc,
+        SortKey sortKey = SortKey.Id,
+        SortDirection sortDirection = SortDirection.Asc,
         int pageNumber = 1,
         int pageSize = 100,
         string? customerName = null)
     {
         var request = new GetCustomersRequest
         {
-            SortKey = sortBy,
-            SortDirection = sortOrder,
+            SortKey = sortKey,
+            SortDirection = sortDirection,
             PageNumber = pageNumber,
             PageSize = pageSize,
             CustomerName = customerName
