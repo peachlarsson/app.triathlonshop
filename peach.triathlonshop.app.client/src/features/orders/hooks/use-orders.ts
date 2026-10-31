@@ -1,11 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-  type GetOrdersRequestDto,
-  type Order,
-  type PaginatedResponse,
-  SortDirection,
-  SortKey,
-} from "../data/schema";
+import type { GetOrdersRequestDto } from "../data/schema";
+import { fetchOrder, fetchOrders } from "../data/api";
 
 export function useOrders(request: GetOrdersRequestDto) {
   return useQuery({
@@ -18,44 +13,13 @@ export function useOrders(request: GetOrdersRequestDto) {
       request.sortKey,
       request.sortDirection,
     ],
-    queryFn: async ({ signal }): Promise<PaginatedResponse<Order>> => {
-      const params = new URLSearchParams({
-        id: String(request.id ?? ""),
-        pageNumber: String(request.pageNumber ?? 1),
-        pageSize: String(request.pageSize ?? 10),
-        customerName: request.customerName ?? "",
-        articleName: request.articleName ?? "",
-        sortKey: request.sortKey ?? SortKey.Id,
-        sortDirection: request.sortDirection ?? SortDirection.Asc,
-      });
-
-      const response = await fetch(`/api/orders?${params.toString()}`, {
-        signal,
-      });
-      if (!response.ok) {
-        throw new Error(`Could not load orders (HTTP ${response.status}).`);
-      }
-
-      return (await response.json()) as PaginatedResponse<Order>;
-    },
+    queryFn: ({ signal }) => fetchOrders(request, signal),
   });
 }
 
 export function useOrder(orderId: string) {
   return useQuery({
     queryKey: ["order", orderId],
-    queryFn: async ({ signal }): Promise<Order | null> => {
-      const params = new URLSearchParams({ id: orderId });
-      const response = await fetch(`/api/orders?${params.toString()}`, {
-        signal,
-      });
-
-      if (!response.ok) {
-        throw new Error(`Could not load order (HTTP ${response.status}).`);
-      }
-
-      const result: PaginatedResponse<Order> = await response.json();
-      return result.data[0] ?? null;
-    },
+    queryFn: ({ signal }) => fetchOrder(orderId, signal),
   });
 }
