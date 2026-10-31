@@ -9,7 +9,7 @@ import {
   SortDirection,
   SortKey,
 } from "./data/schema";
-import { OrdersPrimaryButtons } from "./components/orders-primary-buttons";
+import { CreateOrderButton } from "./components/create-order-button";
 import { OrdersTable } from "./components/orders-table";
 import { useOrders } from "./hooks/use-orders";
 
@@ -59,7 +59,7 @@ export function Orders() {
           <div>
             <h2 className="text-2xl font-bold tracking-tight">Orders</h2>
           </div>
-          <OrdersPrimaryButtons />
+          <CreateOrderButton />
         </div>
         <OrdersTable
           data={orders?.data ?? []}

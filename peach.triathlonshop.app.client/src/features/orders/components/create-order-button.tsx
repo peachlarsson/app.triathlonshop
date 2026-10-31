@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useCustomerSearch } from "@/features/customers/hooks/use-customers";
 
-export function OrdersPrimaryButtons() {
+export function CreateOrderButton() {
   const [open, setOpen] = useState(false);
   const [customerSearch, setCustomerSearch] = useState("");
   const [selectedCustomer, setSelectedCustomer] = useState("");
