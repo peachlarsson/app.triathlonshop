@@ -22,7 +22,21 @@ GET {{baseUrl}}/orders?pageSize=10&pageNumber=3
 Accept: application/json
 
 
-###
+### Update order
+PUT {{baseUrl}}/orders/33
+Content-Type: application/json
+{
+  "AddOrderRows": [
+    {
+      "ArticleId": 63,
+      "Quantity": 3
+    },
+    {
+      "ArticleId": 21,
+      "Quantity": 8
+    }
+  ]
+}
 
 #################
 ### Developer ###
@@ -75,7 +89,12 @@ Content-Type: application/json
 
 ### Get stock
 
-GET {{baseUrl}}/stock
+GET {{baseUrl}}/stock/all-warehouses
+Accept: application/json
+
+
+### Get articles
+GET {{baseUrl}}/stock/articles
 Accept: application/json
 
 
