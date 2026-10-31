@@ -1,4 +1,6 @@
 import {
+  type GetArticlesRequestDto,
+  type GetArticlesResponseDto,
   type GetOrdersRequestDto,
   type Order,
   type PaginatedResponse,
@@ -41,4 +43,23 @@ export async function fetchOrder(
 
   const result = (await response.json()) as PaginatedResponse<Order>;
   return result.data[0] ?? null;
+}
+
+export async function fetchArticles(
+  params: GetArticlesRequestDto,
+  signal: AbortSignal,
+): Promise<GetArticlesResponseDto> {
+  const searchParams = new URLSearchParams({
+    articleName: params.articleName ?? "",
+    pageSize: params.pageSize?.toString() ?? "10",
+  });
+  const response = await fetch(`/api/stock/articles?${searchParams.toString()}`, {
+    signal,
+  });
+
+  if (!response.ok) {
+    throw new Error(`Could not load articles (HTTP ${response.status}).`);
+  }
+
+  return (await response.json()) as GetArticlesResponseDto;
 }

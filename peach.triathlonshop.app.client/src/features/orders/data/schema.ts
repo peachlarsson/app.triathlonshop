@@ -39,6 +39,10 @@ export type Customer = {
 export type PaginatedResponse<T> = {
   data: T[];
   totalCount: number;
+  totalPrice?: number;
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
 };
 
 export type GetOrdersRequestDto = {
@@ -66,3 +70,18 @@ export enum SortDirection {
     Asc = "asc",
     Desc = "desc",
 }
+
+// Fetch articles
+
+export type GetArticlesRequestDto = {
+    articleName?: string;
+    pageSize?: number;
+}
+
+export type ArticleDto = {
+    id: number;
+    articleName: string;
+    unitPrice: number;
+}
+
+export type GetArticlesResponseDto = PaginatedResponse<ArticleDto>;
