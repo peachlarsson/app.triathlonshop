@@ -2,7 +2,7 @@
 
 public class OrderRow : BaseEntity
 {
-    public required long OrderId { get; set; }
+    public long OrderId { get; set; }
     public required int LineNumber { get; set; }
     public required long ArticleId { get; set; }
     public required int Quantity { get; set; }
