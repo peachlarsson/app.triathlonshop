@@ -79,21 +79,9 @@ public class UpdateOrder(TriathlonShopDbContext context)
             lineNumber++;
         }
 
-        //var test_check = await context.Orders
-        //    .Include(o => o.OrderRows)
-        //    .Where(o => o.Id == order.Id)
-        //    .Select(o => o.TotalPrice)
-        //    .FirstOrDefaultAsync();
-
         order.TotalPrice = order.OrderRows.Sum(or => or.RowPrice);
 
         await context.SaveChangesAsync();
-
-        //var test_check_2 = await context.Orders
-        //    .Include(o => o.OrderRows)
-        //    .Where(o => o.Id == order.Id)
-        //    .Select(o => o.TotalPrice)
-        //    .FirstOrDefaultAsync();
 
         return new Response<HttpResponse>
         {
