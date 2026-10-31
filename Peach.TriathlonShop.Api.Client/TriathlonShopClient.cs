@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Peach.TriathlonShop.Api.Contract.Developer.Models;
 using Peach.TriathlonShop.Api.Contract.Models;
+using Peach.TriathlonShop.Api.Contract.Models.Orders;
 using Peach.TriathlonShop.Api.Contract.Models.Stock;
+using System.Text;
 using System.Text.Json;
 
 namespace Peach.TriathlonShop.Api.Client;
@@ -84,6 +86,7 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
         };
     }
 
+    #region Orders
     public async Task<Response<PaginatedResponse<OrderResponseDto>>> GetOrdersAsync(GetOrdersRequestDto request)
     {
         var queryParams = new Dictionary<string, string>
@@ -128,6 +131,38 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
         };
     }
 
+    public async Task<Response<string>> CreateOrderAsync(CreateOrderRequestDto request)
+    {
+        var httpRequest = new HttpRequestMessage
+        {
+            Method = HttpMethod.Post,
+            RequestUri = new Uri("orders/create", UriKind.Relative),
+            Content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json")
+        };
+
+        var response = await httpClient.SendAsync(httpRequest);
+        
+        var responseContent = await response.Content.ReadAsStringAsync();
+        
+        if (!response.IsSuccessStatusCode)
+        {
+            return new Response<string>
+            {
+                IsSuccess = false,
+                StatusCode = (int)response.StatusCode,
+                ErrorMessage = responseContent,
+            };
+        }
+        
+        return new Response<string>
+        {
+            IsSuccess = true,
+            StatusCode = (int)response.StatusCode,
+            Content = responseContent
+        };
+    }
+
+    #endregion
     public async Task<Response<string>> SetOrderConfirm(long orderId)
     {
         var request = new HttpRequestMessage
