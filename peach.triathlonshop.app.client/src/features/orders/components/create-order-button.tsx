@@ -11,18 +11,40 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useCustomerSearch } from "@/features/customers/hooks/use-customers";
+import { useArticlesInStock } from "../hooks/use-stock";
 
 export function CreateOrderButton() {
   const [open, setOpen] = useState(false);
   const [customerSearch, setCustomerSearch] = useState("");
-  const [selectedCustomer, setSelectedCustomer] = useState("");
-  const searchTerm = customerSearch.trim();
+  const [selectedCustomerId, setSelectedCustomerId] = useState<number | null>(
+    null,
+  );
+  const [articleSearch, setArticleSearch] = useState("");
+  const [selectedArticleId, setSelectedArticleId] = useState<number | null>(
+    null,
+  );
+  const customerSearchTerm = customerSearch.trim();
+  const articleSearchTerm = articleSearch.trim();
 
   const {
     data: customers,
-    error,
-    isFetching,
-  } = useCustomerSearch(searchTerm, open && searchTerm.length > 0);
+    error: customerError,
+    isFetching: isSearchingCustomers,
+  } = useCustomerSearch(
+    customerSearchTerm,
+    open && customerSearchTerm.length > 0,
+  );
+  const {
+    data: articles,
+    error: articleError,
+    isFetching: isSearchingArticles,
+  } = useArticlesInStock(
+    { 
+      articleName: articleSearchTerm, 
+      pageSize: 100 
+    },
+    open && articleSearchTerm.length > 0,
+  );
 
   return (
     <>
@@ -46,22 +68,22 @@ export function CreateOrderButton() {
                 placeholder="Search customers by name"
                 onChange={(event) => {
                   setCustomerSearch(event.target.value);
-                  setSelectedCustomer("");
+                  setSelectedCustomerId(null);
                 }}
               />
-              {searchTerm && (
+              {customerSearchTerm && selectedCustomerId === null && (
                 <div
                   className="max-h-40 overflow-y-auto rounded-md border"
                   role="listbox"
                   aria-label="Matching customers"
                 >
-                  {isFetching ? (
+                  {isSearchingCustomers ? (
                     <p className="p-3 text-sm text-muted-foreground">
                       Searching customers...
                     </p>
-                  ) : error instanceof Error ? (
+                  ) : customerError instanceof Error ? (
                     <p className="p-3 text-sm text-destructive" role="alert">
-                      {error.message}
+                      {customerError.message}
                     </p>
                   ) : customers?.data.length ? (
                     customers.data.map((customer) => (
@@ -69,10 +91,10 @@ export function CreateOrderButton() {
                         key={customer.id}
                         type="button"
                         role="option"
-                        aria-selected={selectedCustomer === customer.name}
+                        aria-selected={selectedCustomerId === customer.id}
                         className="block w-full px-3 py-2 text-left text-sm hover:bg-muted"
                         onClick={() => {
-                          setSelectedCustomer(customer.name ?? "");
+                          setSelectedCustomerId(customer.id);
                           setCustomerSearch(customer.name ?? "");
                         }}
                       >
@@ -89,7 +111,52 @@ export function CreateOrderButton() {
             </div>
             <div className="space-y-2">
               <label htmlFor="order-article">Article</label>
-              <Input id="order-article" placeholder="Article name or ID" />
+              <Input
+                id="order-article"
+                value={articleSearch}
+                placeholder="Search articles by name"
+                onChange={(event) => {
+                  setArticleSearch(event.target.value);
+                  setSelectedArticleId(null);
+                }}
+              />
+              {articleSearchTerm && selectedArticleId === null && (
+                <div
+                  className="max-h-40 overflow-y-auto rounded-md border"
+                  role="listbox"
+                  aria-label="Matching articles"
+                >
+                  {isSearchingArticles ? (
+                    <p className="p-3 text-sm text-muted-foreground">
+                      Searching articles...
+                    </p>
+                  ) : articleError instanceof Error ? (
+                    <p className="p-3 text-sm text-destructive" role="alert">
+                      {articleError.message}
+                    </p>
+                  ) : articles?.data.length ? (
+                    articles.data.map((article) => (
+                      <button
+                        key={article.id}
+                        type="button"
+                        role="option"
+                        aria-selected={selectedArticleId === article.id}
+                        className="block w-full px-3 py-2 text-left text-sm hover:bg-muted"
+                        onClick={() => {
+                          setSelectedArticleId(article.id);
+                          setArticleSearch(article.articleName);
+                        }}
+                      >
+                        {article.articleName}
+                      </button>
+                    ))
+                  ) : (
+                    <p className="p-3 text-sm text-muted-foreground">
+                      No matching articles.
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
             <div className="space-y-2">
               <label htmlFor="order-quantity">Quantity</label>
