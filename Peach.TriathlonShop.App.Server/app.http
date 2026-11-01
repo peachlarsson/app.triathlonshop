@@ -11,9 +11,29 @@
 GET {{baseUrl}}/stock/all-warehouses
 
 
+### Articles
+
+GET {{baseUrl}}/stock/articles?articleName=&pageNumber=1&pageSize=10&sortKey=ArticleNumber&sortDirection=Asc
+
+
 ##############
 ### Orders ###
 ##############
+
+### Create order (200 OK with no response body)
+
+POST {{baseUrl}}/orders
+Content-Type: application/json
+
+{
+  "customerId": 1,
+  "orderRows": [
+    {
+      "articleId": 1,
+      "quantity": 1
+    }
+  ]
+}
 
 ### Set order confirm
 
