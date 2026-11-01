@@ -85,3 +85,28 @@ export type ArticleDto = {
 }
 
 export type GetArticlesResponseDto = PaginatedResponse<ArticleDto>;
+
+// Create order
+
+export type CreateOrderRequestDto = {
+    orderRows: CreateOrderRowDto[];
+    customerId: number;
+}
+
+export type CreateOrderRowDto = {
+    articleId: number;
+    quantity: number;
+}
+
+// Create order form data
+
+export type CreateOrderFormData = {
+    orderRows: CreateOrderRowFormData[];
+    customerId: number;
+}
+
+export type CreateOrderRowFormData = {
+    articleId: number;
+    articleName: string;
+    quantity: string;
+}

@@ -1,4 +1,5 @@
 import {
+  type CreateOrderRequestDto,
   type GetArticlesRequestDto,
   type GetArticlesResponseDto,
   type GetOrdersRequestDto,
@@ -62,4 +63,20 @@ export async function fetchArticles(
   }
 
   return (await response.json()) as GetArticlesResponseDto;
+}
+
+export async function createOrder(
+  params: CreateOrderRequestDto,
+  signal?: AbortSignal,
+): Promise<void> {
+  const response = await fetch("/api/orders", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(params),
+    signal,
+  });
+
+  if (!response.ok) {
+    throw new Error(`Could not create order (HTTP ${response.status}).`);
+  }
 }
