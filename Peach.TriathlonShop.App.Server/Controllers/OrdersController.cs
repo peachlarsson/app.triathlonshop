@@ -44,7 +44,7 @@ public class OrdersController(ITriathlonShopClient triathlonShopClient) : Contro
     }
 
     [HttpPost]
-    public async Task<ActionResult<OrderResponseDto>> CreateOrder([FromBody] CreateOrderRequestDto request)
+    public async Task<IActionResult> CreateOrder([FromBody] CreateOrderRequestDto request)
     {
         var response = await triathlonShopClient.CreateOrderAsync(request);
 
@@ -52,14 +52,17 @@ public class OrdersController(ITriathlonShopClient triathlonShopClient) : Contro
         {
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
+
         if (!response.IsSuccess)
         {
             return StatusCode(response.StatusCode, response.ErrorMessage);
         }
+
         if (response.Content == null)
         {
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
+
         return Ok(response.Content);
     }
 }
