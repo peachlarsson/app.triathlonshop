@@ -136,7 +136,7 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
         var httpRequest = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
-            RequestUri = new Uri("orders/create", UriKind.Relative),
+            RequestUri = new Uri("orders", UriKind.Relative),
             Content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json")
         };
 

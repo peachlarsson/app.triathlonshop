@@ -43,7 +43,7 @@ public class OrdersController(ITriathlonShopClient triathlonShopClient) : Contro
         return Ok(result);
     }
 
-    [HttpPost("create")]
+    [HttpPost]
     public async Task<ActionResult<OrderResponseDto>> CreateOrder([FromBody] CreateOrderRequestDto request)
     {
         var response = await triathlonShopClient.CreateOrderAsync(request);
