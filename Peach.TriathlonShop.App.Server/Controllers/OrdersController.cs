@@ -83,4 +83,22 @@ public class OrdersController(ITriathlonShopClient triathlonShopClient) : Contro
         
         return Ok();
     }
+
+    [HttpPost("{orderid}/ship")]
+    public async Task<IActionResult> ShipOrder(long orderId)
+    {
+        var response = await triathlonShopClient.SetOrderShipped(orderId);
+
+        if (response == null)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        if (!response.IsSuccess)
+        {
+            return StatusCode(response.StatusCode, response.ErrorMessage);
+        }
+
+        return Ok();
+    }
 }

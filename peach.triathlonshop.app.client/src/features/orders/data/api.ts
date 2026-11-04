@@ -90,3 +90,13 @@ export async function confirmOrder(orderId: number): Promise<void> {
     throw new Error(`Could not confirm order (HTTP ${response.status}).`);
   }
 }
+
+export async function shipOrder(orderId: number): Promise<void> {
+  const response = await fetch(`/api/orders/${orderId}/ship`, {
+    method: "POST",
+  });
+
+  if (!response.ok) {
+    throw new Error(`Could not mark order as shipped (HTTP ${response.status}).`);
+  }
+}

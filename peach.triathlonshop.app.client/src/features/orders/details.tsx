@@ -14,6 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ConfirmOrderButton } from "./components/confirm-order-button";
+import { ShipOrderButton } from "./components/ship-order-button";
 import { useOrder } from "./hooks/use-orders";
 
 const route = getRouteApi("/orders/$orderId");
@@ -56,6 +57,7 @@ export default function OrderDetails() {
             </Button>
             </div>
             <ConfirmOrderButton order={order} />
+            <ShipOrderButton order={order} />
           </div>
         </div>
 
