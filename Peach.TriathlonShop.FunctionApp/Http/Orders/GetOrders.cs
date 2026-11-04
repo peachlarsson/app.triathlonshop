@@ -119,7 +119,7 @@ public class GetOrders(TriathlonShopDbContext context)
             Notifications = c.Notifications.Select(n => new NotificationDto
             {
                 OrderId = n.OrderId,
-                OrderStatus = MapOrderStatus(n.OrderStatus),
+                OrderStatus = n.OrderStatus.ToApiEnum(),
                 Destination = n.Destination,
                 CreatedAt = n.CreatedAt
             }).ToList(),
@@ -137,18 +137,6 @@ public class GetOrders(TriathlonShopDbContext context)
 
         var paginatedResult = await PaginationHelper.PaginateAsync(queryDto, request.PageNumber, request.PageSize);
         return new OkObjectResult(paginatedResult);
-    }
-
-    private static OrderStatus MapOrderStatus(Database.Models.Enums.OrderStatus status)
-    {
-        return status switch
-        {
-            Database.Models.Enums.OrderStatus.Created => OrderStatus.Created,
-            Database.Models.Enums.OrderStatus.Confirmed => OrderStatus.Confirmed,
-            Database.Models.Enums.OrderStatus.Shipped => OrderStatus.Shipped,
-            Database.Models.Enums.OrderStatus.Cancelled => OrderStatus.Cancelled,
-            _ => throw new ArgumentOutOfRangeException(nameof(status), $"Not expected order status value: {status}")
-        };
     }
 
     private static bool TryMapQuery(IQueryCollection query, out GetOrdersRequestDto? request)
