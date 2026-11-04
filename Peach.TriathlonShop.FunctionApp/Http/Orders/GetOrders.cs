@@ -127,7 +127,7 @@ public class GetOrders(TriathlonShopDbContext context)
             Invoices = c.Invoices.Select(i => new InvoiceDto
             {
                 OrderId = i.OrderId,
-                Status = i.Status.MapApiInvoiceStatus(),
+                Status = i.Status.ToApiEnum(),
                 CreatedAt = i.CreatedAt
             }).ToList(),
             TotalPrice = c.OrderRows.Sum(or => or.RowPrice),

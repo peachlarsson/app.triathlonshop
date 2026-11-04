@@ -26,7 +26,7 @@ public static class MappingExtensions
         };
     }
 
-    public static Api.Contract.Enums.Common.InvoiceStatus MapApiInvoiceStatus(this Database.Models.Enums.InvoiceStatus status)
+    public static Api.Contract.Enums.Common.InvoiceStatus ToApiEnum(this Database.Models.Enums.InvoiceStatus status)
     {
         return status switch
         {
@@ -38,7 +38,7 @@ public static class MappingExtensions
         };
     }
 
-    public static Database.Models.Enums.InvoiceStatus MapDatabaseInvoiceStatus(this Api.Contract.Enums.Common.InvoiceStatus status)
+    public static Database.Models.Enums.InvoiceStatus ToDatabaseEnum(this Api.Contract.Enums.Common.InvoiceStatus status)
     {
         return status switch
         {
