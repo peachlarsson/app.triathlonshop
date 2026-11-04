@@ -39,6 +39,8 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
 
             for (int i = 0; i < model.OrderRows; i++)
             {
+                var customer = await GetRandomCustomerAsync();
+
                 var order = new Order
                 {
                     CustomerId = customers[Random.Shared.Next(customers.Count)].Id,
@@ -95,6 +97,49 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
             }
 
             return new OkResult();
+        }
+
+        private async Task<Customer> GetRandomCustomerAsync()
+        {
+            bool newCustomer = Random.Shared.Next(2) == 0;
+            bool isCompanyCustomer = Random.Shared.Next(2) == 0;
+
+            if (newCustomer && !isCompanyCustomer)
+            {
+                var person = new Bogus.Faker().Person;
+
+                var customer = new Customer
+                {
+                    Name = person.FirstName + " " + person.LastName,
+                    Email = person.FirstName.ToLower() + "." + person.LastName.ToLower() + "@private.com",
+                };
+
+                context.Customers.Add(customer);
+                await context.SaveChangesAsync();
+
+                return customer;
+            }
+            if (newCustomer && isCompanyCustomer)
+            {
+                var company = new Bogus.Faker().Company.CompanyName(0);
+
+                var customer = new Customer
+                {
+                    Name = company,
+                    Email = $"sales@{company.Replace(" ", "").ToLower()}.com",
+                    IsCompany = true,
+                };
+
+                context.Customers.Add(customer);
+                await context.SaveChangesAsync();
+
+                return customer;
+            }
+            else
+            {
+                var customers = await context.Customers.ToListAsync();
+                return customers[Random.Shared.Next(customers.Count)];
+            }
         }
     }
 }
