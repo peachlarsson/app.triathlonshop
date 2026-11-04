@@ -8,7 +8,7 @@ using Peach.TriathlonShop.Api.Contract.Models;
 using Peach.TriathlonShop.Database;
 using Peach.TriathlonShop.FunctionApp.Utilities;
 
-namespace Peach.TriathlonShop.FunctionApp.Http;
+namespace Peach.TriathlonShop.FunctionApp.Http.Orders;
 
 public class GetOrders(TriathlonShopDbContext context)
 {
