@@ -4,6 +4,7 @@ using Microsoft.Azure.SignalR.Management;
 using Microsoft.Extensions.Logging;
 using Peach.TriathlonShop.Database;
 using Peach.TriathlonShop.Database.Models;
+using Peach.TriathlonShop.Database.Models.Enums;
 using Peach.TriathlonShop.FunctionApp.Extensions;
 using Peach.TriathlonShop.FunctionApp.Models;
 using Peach.TriathlonShop.FunctionApp.Services;
