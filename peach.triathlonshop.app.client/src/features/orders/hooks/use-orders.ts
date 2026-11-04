@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { CreateOrderRequestDto, GetOrdersRequestDto } from "../data/schema";
-import { createOrder, fetchOrder, fetchOrders } from "../data/api";
+import { confirmOrder, createOrder, fetchOrder, fetchOrders } from "../data/api";
 
 export function useOrders(request: GetOrdersRequestDto) {
   return useQuery({
@@ -30,5 +30,18 @@ export function useCreateOrder() {
   return useMutation({
     mutationFn: (params: CreateOrderRequestDto) => createOrder(params),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["orders"] }),
+  });
+}
+
+export function useConfirmOrder(orderId: number) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => confirmOrder(orderId),
+    onSuccess: () =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["order", String(orderId)] }),
+        queryClient.invalidateQueries({ queryKey: ["orders"] }),
+      ]),
   });
 }

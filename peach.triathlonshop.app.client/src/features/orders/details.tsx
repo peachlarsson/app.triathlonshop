@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ConfirmOrderButton } from "./components/confirm-order-button";
 import { useOrder } from "./hooks/use-orders";
 
 const route = getRouteApi("/orders/$orderId");
@@ -47,11 +48,14 @@ export default function OrderDetails() {
             <p className="text-muted-foreground">Order ID: {order.id}</p>
             <p className="text-muted-foreground">Placed {dateFormatter.format(new Date(order.createdAt))}</p>
           </div>
+          <div className="flex flex-col items-end gap-2">
           <div className="flex items-center gap-2">
             <Badge>{order.status}</Badge>
             <Button asChild variant="outline" size="sm">
               <Link to="/orders">Back to orders</Link>
             </Button>
+            </div>
+            <ConfirmOrderButton order={order} />
           </div>
         </div>
 

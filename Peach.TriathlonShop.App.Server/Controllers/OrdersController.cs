@@ -65,5 +65,22 @@ public class OrdersController(ITriathlonShopClient triathlonShopClient) : Contro
 
         return Ok(response.Content);
     }
-}
 
+    [HttpPost("{orderid}/confirm")]
+    public async Task<IActionResult> ConfirmOrder(long orderId)
+    {
+        var response = await triathlonShopClient.SetOrderConfirm(orderId);
+
+        if (response == null)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+        
+        if (!response.IsSuccess)
+        {
+            return StatusCode(response.StatusCode, response.ErrorMessage);
+        }
+        
+        return Ok();
+    }
+}

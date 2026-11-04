@@ -80,3 +80,13 @@ export async function createOrder(
     throw new Error(`Could not create order (HTTP ${response.status}).`);
   }
 }
+
+export async function confirmOrder(orderId: number): Promise<void> {
+  const response = await fetch(`/api/orders/${orderId}/confirm`, {
+    method: "POST",
+  });
+
+  if (!response.ok) {
+    throw new Error(`Could not confirm order (HTTP ${response.status}).`);
+  }
+}
