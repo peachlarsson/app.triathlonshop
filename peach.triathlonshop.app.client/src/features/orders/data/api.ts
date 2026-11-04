@@ -43,7 +43,15 @@ export async function fetchOrder(
   }
 
   const result = (await response.json()) as PaginatedResponse<Order>;
-  return result.data[0] ?? null;
+  const order = result.data[0];
+  return order
+    ? {
+        ...order,
+        invoices: order.invoices ?? [],
+        transportOrders: order.transportOrders ?? [],
+        notifications: order.notifications ?? [],
+      }
+    : null;
 }
 
 export async function fetchArticles(
@@ -55,7 +63,7 @@ export async function fetchArticles(
     pageSize: params.pageSize?.toString() ?? "10",
   });
   const response = await fetch(`/api/stock/articles?${searchParams.toString()}`, {
-    signal,
+      signal,
   });
 
   if (!response.ok) {

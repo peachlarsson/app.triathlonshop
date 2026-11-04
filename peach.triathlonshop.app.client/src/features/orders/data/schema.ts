@@ -8,7 +8,38 @@ export type Order = {
   orderRowsCount?: number;
   customer: Customer;
   destinationLocation: Location;
+  invoices: OrderInvoice[];
+  transportOrders: OrderTransport[];
+  notifications: OrderNotification[];
   createdAt: string;
+};
+
+export type OrderInvoice = {
+  id: number;
+  status: string;
+  createdAt: string;
+  updatedAt?: string | null;
+};
+
+export type OrderTransport = {
+  id: number;
+  status: string;
+  createdAt: string;
+  consignmentNumber?: string;
+  trackingUrl?: string;
+  carrier?: string;
+  destination?: string;
+  shippedAt?: string;
+  estimatedDeliveryDate?: string;
+  updatedAt?: string | null;
+};
+
+export type OrderNotification = {
+  id: number;
+  orderStatus: string;
+  destination: string;
+  createdAt: string;
+  updatedAt?: string | null;
 };
 
 export type Location = {

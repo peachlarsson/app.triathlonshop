@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ActivityTimelineCard } from "./components/activity-timeline-card";
 import { ConfirmOrderButton } from "./components/confirm-order-button";
 import { ShipOrderButton } from "./components/ship-order-button";
 import { useOrder } from "./hooks/use-orders";
@@ -50,11 +51,11 @@ export default function OrderDetails() {
             <p className="text-muted-foreground">Placed {dateFormatter.format(new Date(order.createdAt))}</p>
           </div>
           <div className="flex flex-col items-end gap-2">
-          <div className="flex items-center gap-2">
-            <Badge>{order.status}</Badge>
-            <Button asChild variant="outline" size="sm">
-              <Link to="/orders">Back to orders</Link>
-            </Button>
+            <div className="flex items-center gap-2">
+              <Badge>{order.status}</Badge>
+              <Button asChild variant="outline" size="sm">
+                <Link to="/orders">Back to orders</Link>
+              </Button>
             </div>
             <ConfirmOrderButton order={order} />
             <ShipOrderButton order={order} />
@@ -95,7 +96,7 @@ export default function OrderDetails() {
           </CardContent>
         </Card>
 
-        <div className="grid gap-4 lg:grid-cols-3">
+        <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
           <Card className="lg:col-span-2">
             <CardHeader>
               <CardTitle>Payment summary</CardTitle>
@@ -126,8 +127,65 @@ export default function OrderDetails() {
               <p className="text-muted-foreground">Email: {order.customer.email}</p>
             </CardContent>
           </Card>
-        </div>
 
+          <ActivityTimelineCard
+            title="Invoice"
+            items={order.invoices.map((invoice) => ({
+              id: invoice.id,
+              status: invoice.status,
+              occurredAt: invoice.updatedAt ?? invoice.createdAt,
+            }))}
+          />
+
+          <ActivityTimelineCard
+            title="Transport"
+            items={order.transportOrders.map((transport) => ({
+              id: transport.id,
+              status: transport.status,
+              occurredAt: transport.updatedAt ?? transport.createdAt,
+              details: (
+                <>
+                  {transport.carrier && <p>Carrier: {transport.carrier}</p>}
+                  {transport.consignmentNumber && (
+                    <p>Consignment: {transport.consignmentNumber}</p>
+                  )}
+                  {transport.trackingUrl && (
+                    <a
+                      className="text-primary underline"
+                      href={transport.trackingUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Track shipment
+                    </a>
+                  )}
+                  {transport.destination && (
+                    <p>Destination: {transport.destination}</p>
+                  )}
+                  {transport.estimatedDeliveryDate && (
+                    <p>
+                      Estimated delivery:{" "}
+                      {dateFormatter.format(
+                        new Date(transport.estimatedDeliveryDate),
+                      )}
+                    </p>
+                  )}
+                </>
+              ),
+            }))}
+          />
+
+          <ActivityTimelineCard
+            title="Notification"
+            items={order.notifications.map((notification) => ({
+              id: notification.id,
+              status: notification.orderStatus,
+              occurredAt: notification.updatedAt ?? notification.createdAt,
+              details: <p>Sent to {notification.destination}</p>,
+            }))}
+          />
+        </div>
+        
       </Main>
     </>
   );
