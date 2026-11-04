@@ -15,6 +15,8 @@ public class Order : BaseEntity
     public required DateTimeOffset PlacedAt { get; set; }
     public required long DestinationLocationId { get; set; }
     public List<OrderRow> OrderRows { get; set; } = [];
+    public List<Notification> Notifications { get; set; } = [];
+    public List<Invoice> Invoices { get; set; } = [];
 
     public Customer? Customer { get; set; } = null!;
     public Location DestinationLocation { get; set; } = null!;

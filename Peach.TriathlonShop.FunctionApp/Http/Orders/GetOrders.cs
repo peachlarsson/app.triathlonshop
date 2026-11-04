@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Peach.TriathlonShop.Api.Contract.Enums.Common;
 using Peach.TriathlonShop.Api.Contract.Enums.Order;
 using Peach.TriathlonShop.Api.Contract.Models;
+using Peach.TriathlonShop.Api.Contract.Models.Orders;
 using Peach.TriathlonShop.Database;
+using Peach.TriathlonShop.FunctionApp.Extensions;
 using Peach.TriathlonShop.FunctionApp.Utilities;
 
 namespace Peach.TriathlonShop.FunctionApp.Http.Orders;
@@ -114,9 +116,20 @@ public class GetOrders(TriathlonShopDbContext context)
                 CreatedAt = or.CreatedAt,
                 UpdatedAt = or.UpdatedAt
             }).ToList(),
-            //Notifications
+            Notifications = c.Notifications.Select(n => new NotificationDto
+            {
+                OrderId = n.OrderId,
+                OrderStatus = MapOrderStatus(n.OrderStatus),
+                Destination = n.Destination,
+                CreatedAt = n.CreatedAt
+            }).ToList(),
             //TransportEvents
-            //Invoices
+            Invoices = c.Invoices.Select(i => new InvoiceDto
+            {
+                OrderId = i.OrderId,
+                Status = i.Status.MapApiInvoiceStatus(),
+                CreatedAt = i.CreatedAt
+            }).ToList(),
             TotalPrice = c.OrderRows.Sum(or => or.RowPrice),
             CreatedAt = c.CreatedAt,
             UpdatedAt = c.UpdatedAt
