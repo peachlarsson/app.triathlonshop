@@ -1,4 +1,6 @@
-﻿namespace Peach.TriathlonShop.Database.Models;
+﻿using Peach.TriathlonShop.Database.Models.Enums;
+
+namespace Peach.TriathlonShop.Database.Models;
 
 public class Invoice : BaseEntity
 {
@@ -7,12 +9,4 @@ public class Invoice : BaseEntity
     public required InvoiceStatus Status { get; set; }
 
     public Order? Order { get; set; } = null!;
-}
-
-public enum InvoiceStatus
-{
-    Created,
-    Sent,
-    Paid,
-    Cancelled
 }
