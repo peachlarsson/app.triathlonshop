@@ -23,7 +23,6 @@
     <ProjectReference Include="..\peach.triathlonshop.app.client\peach.triathlonshop.app.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="..\Peach.TriathlonShop.Database\Peach.TriathlonShop.Database.csproj" />
     <ProjectReference Include="..\Peach.TriathlonShop.Api.Client\Peach.TriathlonShop.Api.Client.csproj" />
   </ItemGroup>
 

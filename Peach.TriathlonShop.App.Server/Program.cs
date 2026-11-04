@@ -21,9 +21,6 @@ try
     /// Register Azure App Configuration
     builder.AddCustomAzureAppConfiguration(credential, ["common", "triathlonshop", "triathlonshop-web"]);
 
-    /// Database
-    builder.Services.AddDatabaseConfiguration(builder.Configuration);
-
     /// TriathlonShop API Client
     builder.Services.AddTriathlonShopClient(builder.Configuration);
 }
