@@ -47,13 +47,14 @@ Content-Type: application/json
 POST {{baseUrl}}/developer/orders/random
 Content-Type: application/json
 {
-  "OrderRows": 20,
+  "OrdersCountIntervalStart": 5,
+  "OrdersCountIntervalEnd": 5,
   "ArticlesCountIntervalStart": 1,
   "ArticlesCountIntervalEnd": 10,
   "QuantityIntervalStart": 1,
   "QuantityIntervalEnd": 5,
   "UseRandomOrderStatus": true,
-  "UseRandomCreatedDate": true,
+  "UseRandomPlacedDate": true,
   "UseRandomDelay": true,
   "DelayMsIntervalStart": 0,
   "DelayMsIntervalEnd": 3000

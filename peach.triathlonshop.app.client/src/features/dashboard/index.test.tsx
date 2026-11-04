@@ -43,13 +43,14 @@ vi.mock('@microsoft/signalr', () => ({
 
 const endpoint = '/api/dashboard/developer/create-random-orders'
 const payload = {
-  OrderRows: 20,
+  OrdersCountIntervalStart: 20,
+  OrdersCountIntervalEnd: 20,
   ArticlesCountIntervalStart: 1,
   ArticlesCountIntervalEnd: 10,
   QuantityIntervalStart: 1,
   QuantityIntervalEnd: 5,
   UseRandomOrderStatus: true,
-  UseRandomCreatedDate: true,
+  UseRandomPlacedDate: true,
   UseRandomDelay: true,
   DelayMsIntervalStart: 0,
   DelayMsIntervalEnd: 3000,
