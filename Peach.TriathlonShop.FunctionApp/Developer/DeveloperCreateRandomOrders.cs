@@ -34,44 +34,53 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
             if (!model.IsValidRequestBody())
                 return new BadRequestResult();
 
-            var articles = await context.Articles.ToListAsync();
-            var customers = await context.Customers.ToListAsync();
+            var ordersCount = Random.Shared.Next(model.OrdersCountIntervalStart ?? 1, (model.OrdersCountIntervalEnd ?? 10) + 1);
 
-            for (int i = 0; i < model.OrderRows; i++)
+            var existingOrderNumbers = context.Orders.Select(o => o.Number).ToHashSet();
+            HashSet<string> orderNumbers = [];
+
+            while (orderNumbers.Count < ordersCount)
+            {
+                var orderNumber = $"ORD-{Guid.NewGuid():N}"[..16];
+
+                if (existingOrderNumbers.Contains(orderNumber) || !orderNumbers.Add(orderNumber))
+                {
+                    continue;
+                }
+            }
+
+            var generatedOrderNumbers = orderNumbers.ToList();
+
+            for (int i = 0; i < ordersCount; i++)
             {
                 var customer = await GetRandomCustomerAsync();
 
                 var order = new Order
                 {
-                    CustomerId = customers[Random.Shared.Next(customers.Count)].Id,
-                    Number = $"ORD-{Guid.NewGuid():N}"[..16],
+                    CustomerId = customer.Id,
+                    Number = generatedOrderNumbers[i],
                     Status = model.UseRandomOrderStatus ? CreateRandomOrdersExtensions.GetRandomOrderStatus() : OrderStatus.Created,
                     TotalPrice = 0,
                     DestinationLocationId = context.Locations.OrderBy(l => Guid.NewGuid()).FirstOrDefault()?.Id ?? 0,
-                    PlacedAt = model.UseRandomCreatedDate ? CreateRandomOrdersExtensions.GetRandomDateTimeOffset() : DateTimeOffset.UtcNow,
-                    CreatedAt = model.UseRandomCreatedDate ? CreateRandomOrdersExtensions.GetRandomDateTimeOffset() : DateTimeOffset.UtcNow,
+                    PlacedAt = model.UseRandomPlacedDate ? CreateRandomOrdersExtensions.GetRandomDateTimeOffset() : DateTimeOffset.UtcNow,
                 };
 
-                if (context.Orders.Any(o => o.Number == order.Number))
-                {
-                    i--;
-                    continue;
-                }
+                int articleCount = Random.Shared.Next(model.ArticlesCountIntervalStart ?? 1, (model.ArticlesCountIntervalEnd ?? 5) + 1);
 
-                int articleCount = Random.Shared.Next(model.ArticlesCountIntervalStart ?? 1, model.ArticlesCountIntervalEnd ?? 5);
-                var selectedArticleIds = new HashSet<long>();
+                var articles = context.Articles.ToList();
+
+                articleCount = Math.Min(articleCount, articles.Count);
+
+                var selectedArticles = articles
+                    .OrderBy(_ => Random.Shared.Next())
+                    .Take(articleCount)
+                    .ToList();
+
                 int lineNumber = 1;
 
-                for (int j = 0; j < articleCount; j++)
+                foreach (var article in selectedArticles)
                 {
-                    var article = articles[Random.Shared.Next(articles.Count)];
-
-                    if (!selectedArticleIds.Add(article.Id))
-                    {
-                        continue;
-                    }
-
-                    int quantity = Random.Shared.Next(model.QuantityIntervalStart ?? 1, model.QuantityIntervalEnd ?? 10);
+                    int quantity = Random.Shared.Next(model.QuantityIntervalStart ?? 1, (model.QuantityIntervalEnd ?? 10) + 1);
 
                     order.OrderRows.Add(new OrderRow
                     {
@@ -150,7 +159,7 @@ namespace Peach.TriathlonShop.FunctionApp.Http.Developer.Extensions
     {
         public static bool IsValidRequestBody(this CreateRandomOrdersModel model)
         {
-            return model != null && model.OrderRows != null && model.OrderRows > 0;
+            return model != null;
         }
 
         public static OrderStatus GetRandomOrderStatus()
