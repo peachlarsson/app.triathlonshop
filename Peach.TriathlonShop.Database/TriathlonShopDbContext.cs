@@ -65,6 +65,9 @@ public class TriathlonShopDbContext(DbContextOptions<TriathlonShopDbContext> opt
         {
             entity.ToTable("CustomerNotification", DefaultSchema);
 
+            entity.Property(e => e.OrderStatus)
+                  .HasConversion<string>();
+
             entity.Property(e => e.CreatedAt)
                   .HasDefaultValueSql(DefaultTimestampSql);
         });
