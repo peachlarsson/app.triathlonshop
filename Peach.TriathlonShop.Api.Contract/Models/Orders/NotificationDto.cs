@@ -4,6 +4,7 @@ namespace Peach.TriathlonShop.Api.Contract.Models.Orders;
 
 public class NotificationDto
 {
+    public required long Id { get; set; }
     public required long OrderId { get; set; }
     public required OrderStatus OrderStatus { get; set; }
     public required string Destination { get; set; }

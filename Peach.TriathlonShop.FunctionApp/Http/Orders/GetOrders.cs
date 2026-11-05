@@ -118,6 +118,7 @@ public class GetOrders(TriathlonShopDbContext context)
             }).ToList(),
             Notifications = c.Notifications.Select(n => new NotificationDto
             {
+                Id = n.Id,
                 OrderId = n.OrderId,
                 OrderStatus = n.OrderStatus.ToApiEnum(),
                 Destination = n.Destination,
@@ -126,6 +127,7 @@ public class GetOrders(TriathlonShopDbContext context)
             //TransportEvents
             Invoices = c.Invoices.Select(i => new InvoiceDto
             {
+                Id = i.Id,
                 OrderId = i.OrderId,
                 Status = i.Status.ToApiEnum(),
                 CreatedAt = i.CreatedAt
