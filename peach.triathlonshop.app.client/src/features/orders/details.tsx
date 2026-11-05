@@ -35,7 +35,8 @@ export default function OrderDetails() {
   const { orderId } = route.useParams();
 
   const { data: order, isPending, error } = useOrder(orderId);
-  const { error: liveUpdateError } = useOrderLiveUpdates(orderId);
+  const { error: liveUpdateError, updateVersion } =
+    useOrderLiveUpdates(orderId);
 
   if (isPending) return <p>Loading order...</p>;
   if (error) return <p role="alert">{error.message}</p>;
@@ -137,19 +138,23 @@ export default function OrderDetails() {
 
           <ActivityTimelineCard
             title="Invoice"
+            updateVersion={updateVersion}
             items={order.invoices.map((invoice) => ({
               id: invoice.id,
               status: invoice.status,
               occurredAt: invoice.updatedAt ?? invoice.createdAt,
+              changeKey: JSON.stringify(invoice),
             }))}
           />
 
           <ActivityTimelineCard
             title="Transport"
+            updateVersion={updateVersion}
             items={order.transportOrders.map((transport) => ({
               id: transport.id,
               status: transport.status,
               occurredAt: transport.updatedAt ?? transport.createdAt,
+              changeKey: JSON.stringify(transport),
               details: (
                 <>
                   {transport.carrier && <p>Carrier: {transport.carrier}</p>}
@@ -184,10 +189,12 @@ export default function OrderDetails() {
 
           <ActivityTimelineCard
             title="Notification"
+            updateVersion={updateVersion}
             items={order.notifications.map((notification) => ({
               id: notification.id,
               status: notification.orderStatus,
               occurredAt: notification.updatedAt ?? notification.createdAt,
+              changeKey: JSON.stringify(notification),
               details: <p>Sent to {notification.destination}</p>,
             }))}
           />

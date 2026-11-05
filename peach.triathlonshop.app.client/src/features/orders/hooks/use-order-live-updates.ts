@@ -11,6 +11,7 @@ interface OrderUpdate {
 export function useOrderLiveUpdates(orderId: string) {
   const queryClient = useQueryClient();
   const [error, setError] = useState<string>();
+  const [updateVersion, setUpdateVersion] = useState(0);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -37,6 +38,7 @@ export function useOrderLiveUpdates(orderId: string) {
             !abortController.signal.aborted &&
             (update?.update ?? update?.Update) === true
           ) {
+            setUpdateVersion((version) => version + 1);
             void queryClient.invalidateQueries({
               queryKey: ["order", orderId],
             });
@@ -90,5 +92,5 @@ export function useOrderLiveUpdates(orderId: string) {
     };
   }, [orderId, queryClient]);
 
-  return { error };
+  return { error, updateVersion };
 }
