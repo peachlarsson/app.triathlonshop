@@ -101,4 +101,21 @@ public class OrdersController(ITriathlonShopClient triathlonShopClient) : Contro
 
         return Ok();
     }
+
+    [HttpGet("negotiation/orders")]
+    public async Task<SignalRConnectionInfo> GetNegotiationAsync()
+    {
+        var response = await triathlonShopClient.GetNegotiationAsync("orders");
+
+        if (!response.IsSuccess || response.Content is null)
+        {
+            throw new Exception($"Failed to get SignalR negotiation info. StatusCode: {response.StatusCode}, ErrorMessage: {response.ErrorMessage}");
+        }
+
+        return new SignalRConnectionInfo
+        {
+            Url = response.Content.Url,
+            AccessToken = response.Content.AccessToken,
+        };
+    }
 }

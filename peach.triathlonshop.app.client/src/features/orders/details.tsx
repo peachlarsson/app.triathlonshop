@@ -16,6 +16,7 @@ import {
 import { ActivityTimelineCard } from "./components/activity-timeline-card";
 import { ConfirmOrderButton } from "./components/confirm-order-button";
 import { ShipOrderButton } from "./components/ship-order-button";
+import { useOrderLiveUpdates } from "./hooks/use-order-live-updates";
 import { useOrder } from "./hooks/use-orders";
 
 const route = getRouteApi("/orders/$orderId");
@@ -34,6 +35,7 @@ export default function OrderDetails() {
   const { orderId } = route.useParams();
 
   const { data: order, isPending, error } = useOrder(orderId);
+  const { error: liveUpdateError } = useOrderLiveUpdates(orderId);
 
   if (isPending) return <p>Loading order...</p>;
   if (error) return <p role="alert">{error.message}</p>;
@@ -44,6 +46,11 @@ export default function OrderDetails() {
       <Header />
 
       <Main className="flex flex-1 flex-col gap-4 sm:gap-6">
+        {liveUpdateError && (
+          <p role="alert" className="text-sm text-destructive">
+            {liveUpdateError}
+          </p>
+        )}
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <h2 className="text-2xl font-bold tracking-tight">Order {order.number}</h2>

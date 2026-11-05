@@ -9,6 +9,24 @@ import {
   SortKey,
 } from "./schema";
 
+export interface OrderLiveUpdateConnectionInfo {
+  url: string;
+  accessToken: string;
+}
+
+export async function negotiateOrderLiveUpdates(
+  signal: AbortSignal,
+): Promise<OrderLiveUpdateConnectionInfo> {
+  const response = await fetch("/api/orders/negotiation/orders", { signal });
+  if (!response.ok) {
+    throw new Error(
+      `Could not connect to order live updates (HTTP ${response.status}).`,
+    );
+  }
+
+  return (await response.json()) as OrderLiveUpdateConnectionInfo;
+}
+
 export async function fetchOrders(
   request: GetOrdersRequestDto,
   signal: AbortSignal,
