@@ -19,6 +19,8 @@ public class TriathlonShopDbContext(DbContextOptions<TriathlonShopDbContext> opt
     public DbSet<Location> Locations => Set<Location>();
     public DbSet<Route> Routes => Set<Route>();
 
+    public DbSet<City> Cities => Set<City>();
+
     private const string DefaultSchema = "dbo";
     private const string DefaultTimestampSql = "SYSDATETIMEOFFSET()";
 
@@ -135,6 +137,14 @@ public class TriathlonShopDbContext(DbContextOptions<TriathlonShopDbContext> opt
 
             entity.Property(e => e.RouteStatus)
                   .HasConversion<string>();
+
+            entity.Property(e => e.CreatedAt)
+                  .HasDefaultValueSql(DefaultTimestampSql);
+        });
+
+        modelBuilder.Entity<City>(entity =>
+        {
+            entity.ToTable(nameof(City), DefaultSchema);
 
             entity.Property(e => e.CreatedAt)
                   .HasDefaultValueSql(DefaultTimestampSql);
