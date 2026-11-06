@@ -30,8 +30,7 @@ public class GetAllWarehouseStock(TriathlonShopDbContext context)
                 Location = new LocationDto
                 {
                     CountryCode = g.Key.CountryCode,
-                    CountryName = g.Key.CountryName,
-                    City = g.Key.City
+                    CityName = g.Key.City
                 },
                 Articles = g.Select(a => new ArticleStockDto
                 {

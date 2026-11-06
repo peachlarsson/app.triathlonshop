@@ -3,6 +3,5 @@
 public class LocationDto
 {
     public required string CountryCode { get; set; }
-    public required string CountryName { get; set; }
-    public required string City { get; set; }
+    public required string CityName { get; set; }
 }

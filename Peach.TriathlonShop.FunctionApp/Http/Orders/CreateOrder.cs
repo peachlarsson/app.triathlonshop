@@ -35,6 +35,7 @@ public class CreateOrder(TriathlonShopDbContext context)
         var order = new Order
         {
             CustomerId = request.CustomerId,
+            DestinationCityId = 1, // TODO
             DestinationLocationId = 1, // TODO
             Number = orderNumber,
             Status = OrderStatus.Created,
