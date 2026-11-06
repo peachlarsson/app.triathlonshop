@@ -72,8 +72,7 @@ export function OrderDestinationsTable({
                   />
                   <span>
                     <span className="block font-medium">
-                      {order.destinationLocation.city},{" "}
-                      {order.destinationLocation.countryName}
+                      {order.destinationLocation.cityName}
                     </span>
                     <span className="text-xs text-muted-foreground">
                       {order.destinationLocation.countryCode}
