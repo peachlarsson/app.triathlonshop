@@ -8,7 +8,7 @@ public class CountryEntity : BaseEntity
     public required string Code { get; set; }
     public string? Name { get; set; }
     public required ContinentCode ContinentCode { get; set; }
-    public required ContinentName ContinentName { get; set; }
+    public required string ContinentName { get; set; }
 
     public ICollection<WarehouseShipToCountry> WarehouseShipToCountries { get; set; } = [];
 }

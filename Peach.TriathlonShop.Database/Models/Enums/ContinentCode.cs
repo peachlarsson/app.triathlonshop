@@ -1,12 +1,27 @@
-﻿namespace Peach.TriathlonShop.Database.Models.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Peach.TriathlonShop.Database.Models.Enums;
 
 public enum ContinentCode
 {
-    AF = 1,
-    AN = 2,
-    AS = 3,
-    EU = 4,
-    NA = 5,
-    OC = 6,
-    SA = 7,
+    [Display(Name = "Africa")]
+    AF,
+
+    [Display(Name = "Antarctica")]
+    AN,
+    
+    [Display(Name = "Asia")]
+    AS,
+    
+    [Display(Name = "Europe")]
+    EU,
+    
+    [Display(Name = "North America")]
+    NA,
+    
+    [Display(Name = "Oceania")]
+    OC,
+    
+    [Display(Name = "South America")]
+    SA,
 }
