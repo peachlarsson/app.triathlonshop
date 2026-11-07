@@ -19,7 +19,10 @@ public class TriathlonShopDbContext(DbContextOptions<TriathlonShopDbContext> opt
     public DbSet<Location> Locations => Set<Location>();
     public DbSet<Route> Routes => Set<Route>();
 
+    public DbSet<CountryEntity> Countries => Set<CountryEntity>();
     public DbSet<City> Cities => Set<City>();
+
+    public DbSet<WarehouseShipToCountry> WarehouseShipToCountries => Set<WarehouseShipToCountry>();
 
     private const string DefaultSchema = "dbo";
     private const string DefaultTimestampSql = "SYSDATETIMEOFFSET()";
@@ -111,6 +114,9 @@ public class TriathlonShopDbContext(DbContextOptions<TriathlonShopDbContext> opt
         {
             entity.ToTable(nameof(Warehouse), DefaultSchema);
 
+            entity.HasMany(w => w.WarehouseShipToCountries)
+                  .WithOne(x => x.Warehouse);
+
             entity.Property(e => e.CreatedAt)
                   .HasDefaultValueSql(DefaultTimestampSql);
         });
@@ -142,9 +148,37 @@ public class TriathlonShopDbContext(DbContextOptions<TriathlonShopDbContext> opt
                   .HasDefaultValueSql(DefaultTimestampSql);
         });
 
+        modelBuilder.Entity<CountryEntity>(entity =>
+        {
+            entity.ToTable(CountryEntity.TableName, DefaultSchema);
+
+            entity.Property(e => e.Name)
+                  .HasColumnName("CountryName");
+
+            entity.HasMany(c => c.WarehouseShipToCountries)
+                  .WithOne(x => x.Country);
+
+            entity.Property(e => e.CreatedAt)
+                  .HasDefaultValueSql(DefaultTimestampSql);
+        });
+
         modelBuilder.Entity<City>(entity =>
         {
             entity.ToTable(nameof(City), DefaultSchema);
+
+            entity.Property(e => e.CreatedAt)
+                  .HasDefaultValueSql(DefaultTimestampSql);
+        });
+
+        modelBuilder.Entity<WarehouseShipToCountry>(entity =>
+        {
+            entity.ToTable(nameof(WarehouseShipToCountry), DefaultSchema);
+
+            entity.HasOne(w => w.Warehouse)
+                  .WithMany(x => x.WarehouseShipToCountries);
+
+            entity.HasOne(c => c.Country)
+                  .WithMany(x => x.WarehouseShipToCountries);
 
             entity.Property(e => e.CreatedAt)
                   .HasDefaultValueSql(DefaultTimestampSql);

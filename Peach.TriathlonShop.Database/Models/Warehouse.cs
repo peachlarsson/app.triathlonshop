@@ -6,4 +6,6 @@ public class Warehouse : BaseEntity
     public required long LocationId { get; set; }
 
     public Location Location { get; set; } = default!;
+
+    public ICollection<WarehouseShipToCountry> WarehouseShipToCountries { get; set; } = [];
 }

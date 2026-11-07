@@ -19,18 +19,29 @@ public class GetArticles(TriathlonShopDbContext context)
         var queryParam = new GetArticlesRequestDto
         {
             ArticleName = queryParams["articleName"],
+            DestinationCountryCode = queryParams["destinationCountryCode"],
             SortKey = Enum.TryParse<SortKey>(queryParams["sortBy"], out var sortBy) ? sortBy : SortKey.ArticleName,
             SortDirection = Enum.TryParse<SortDirection>(queryParams["sortOrder"], out var sortOrder) ? sortOrder : SortDirection.Asc,
             PageNumber = int.TryParse(queryParams["pageNumber"], out var pageNumber) ? pageNumber : 1,
             PageSize = int.TryParse(queryParams["pageSize"], out var pageSize) ? pageSize : 100
         };
 
-        var query = context.Articles.AsQueryable();
+        var stockQuery = context.Stocks
+            .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(queryParam.ArticleName))
         {
-            query = query.Where(q => q.ArticleName.ToLower().Contains(queryParam.ArticleName.ToLower()));
+            stockQuery = stockQuery.Where(q => q.Article.ArticleName.ToLower().Contains(queryParam.ArticleName.ToLower()));
         }
+
+        if (!string.IsNullOrWhiteSpace(queryParam.DestinationCountryCode))
+        {
+            stockQuery = stockQuery.Where(q => q.Warehouse.WarehouseShipToCountries.Any(c => c.Country.Code == queryParam.DestinationCountryCode));
+        }
+
+        var query = stockQuery
+            .Select(s => s.Article)
+            .Distinct();
 
         query = queryParam.SortKey switch
         {
