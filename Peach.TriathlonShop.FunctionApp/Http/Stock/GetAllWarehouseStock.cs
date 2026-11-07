@@ -17,11 +17,11 @@ public class GetAllWarehouseStock(TriathlonShopDbContext context)
             .AsNoTracking()
             .GroupBy(s => new
             {
-                s.WarehouseId,
-                s.Warehouse.WarehouseName,
-                s.Warehouse.Location.CountryCode,
-                s.Warehouse.Location.CountryName,
-                s.Warehouse.Location.City
+                WarehouseId = s.WarehouseId,
+                WarehouseName = s.Warehouse.WarehouseName,
+                CountryCode = s.Warehouse.Location.Country.Code,
+                CountryName = s.Warehouse.Location.Country.Name,
+                CityName = s.Warehouse.Location.City.Name
             })
             .Select(g => new WarehouseStockDto
             {
@@ -30,7 +30,7 @@ public class GetAllWarehouseStock(TriathlonShopDbContext context)
                 Location = new LocationDto
                 {
                     CountryCode = g.Key.CountryCode,
-                    CityName = g.Key.City
+                    CityName = g.Key.CityName
                 },
                 Articles = g.Select(a => new ArticleStockDto
                 {

@@ -23,5 +23,4 @@ public class City : BaseEntity
     public DateOnly ModificationDate { get; set; }
 
     public CountryEntity Country { get; set; } = default!;
-    public ICollection<WarehouseShipToCountry> WarehouseShipToCities { get; set; } = [];
 }

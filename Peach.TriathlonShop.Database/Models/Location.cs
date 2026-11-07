@@ -2,8 +2,10 @@
 
 public class Location : BaseEntity
 {
-    public required string CountryCode { get; set; }
-    public required string CountryName { get; set; }
-    public required string City { get; set; }
+    public required long CountryId { get; set; }
+    public required long CityId { get; set; }
+
+    public CountryEntity Country { get; set; } = default!;
+    public City City { get; set; } = default!;
 }
 
