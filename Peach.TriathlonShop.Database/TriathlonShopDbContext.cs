@@ -155,6 +155,12 @@ public class TriathlonShopDbContext(DbContextOptions<TriathlonShopDbContext> opt
             entity.Property(e => e.Name)
                   .HasColumnName("CountryName");
 
+            entity.Property(e => e.ContinentCode)
+                  .HasConversion<string>();
+
+            entity.Property(e => e.ContinentName)
+                  .HasConversion<string>();
+
             entity.HasMany(c => c.WarehouseShipToCountries)
                   .WithOne(x => x.Country);
 
