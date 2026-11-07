@@ -55,13 +55,16 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
             {
                 var customer = await GetRandomCustomerAsync();
 
+                var destinationCity = context.Cities.OrderBy(c => Guid.NewGuid()).FirstOrDefault();
+
                 var order = new Order
                 {
                     CustomerId = customer.Id,
                     Number = generatedOrderNumbers[i],
                     Status = model.UseRandomOrderStatus ? CreateRandomOrdersExtensions.GetRandomOrderStatus() : OrderStatus.Created,
                     TotalPrice = 0,
-                    DestinationCityId = context.Cities.OrderBy(c => Guid.NewGuid()).FirstOrDefault()?.Id ?? 0,
+                    DestinationCountryId = destinationCity?.CountryId ?? 0,
+                    DestinationCityId = destinationCity?.Id ?? 0,
                     DestinationLocationId = context.Locations.OrderBy(l => Guid.NewGuid()).FirstOrDefault()?.Id ?? 0,
                     PlacedAt = model.UseRandomPlacedDate ? CreateRandomOrdersExtensions.GetRandomDateTimeOffset() : DateTimeOffset.UtcNow,
                 };

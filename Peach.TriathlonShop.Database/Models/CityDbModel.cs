@@ -10,7 +10,7 @@ public class City : BaseEntity
     public double Longitude { get; set; }
     public string FeatureClass { get; set; } = "";
     public string FeatureCode { get; set; } = "";
-    public string CountryCode { get; set; } = "";
+    public long CountryId { get; set; }
     public string Cc2 { get; set; } = "";
     public string Admin1Code { get; set; } = "";
     public string Admin2Code { get; set; } = "";
@@ -21,4 +21,7 @@ public class City : BaseEntity
     public int Dem { get; set; }
     public string Timezone { get; set; } = "";
     public DateOnly ModificationDate { get; set; }
+
+    public CountryEntity Country { get; set; } = default!;
+    public ICollection<WarehouseShipToCountry> WarehouseShipToCities { get; set; } = [];
 }

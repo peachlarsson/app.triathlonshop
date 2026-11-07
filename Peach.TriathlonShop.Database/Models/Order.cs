@@ -13,6 +13,7 @@ public class Order : BaseEntity
 
     public required decimal TotalPrice { get; set; }
     public required DateTimeOffset PlacedAt { get; set; }
+    public required long DestinationCountryId { get; set; }
     public required long DestinationCityId { get; set; }
     public required long DestinationLocationId { get; set; }
     public string? DestinationAddress { get; set; }
@@ -21,6 +22,7 @@ public class Order : BaseEntity
     public List<Invoice> Invoices { get; set; } = [];
 
     public Customer? Customer { get; set; } = null!;
+    public CountryEntity DestinationCountry { get; set; } = null!;
     public City DestinationCity { get; set; } = null!;
     public Location DestinationLocation { get; set; } = null!;
 }

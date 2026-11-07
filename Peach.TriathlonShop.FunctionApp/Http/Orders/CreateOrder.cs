@@ -32,10 +32,13 @@ public class CreateOrder(TriathlonShopDbContext context)
             orderNumber = $"ORD-{Guid.NewGuid():N}"[..16];
         }
 
+        var destinationCity = context.Cities.OrderBy(c => Guid.NewGuid()).FirstOrDefault();
+
         var order = new Order
         {
             CustomerId = request.CustomerId,
-            DestinationCityId = 1, // TODO
+            DestinationCountryId = destinationCity?.CountryId ?? 0,
+            DestinationCityId = destinationCity?.Id ?? 0,
             DestinationLocationId = 1, // TODO
             Number = orderNumber,
             Status = OrderStatus.Created,

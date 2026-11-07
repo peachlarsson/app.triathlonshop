@@ -88,7 +88,7 @@ public class GetOrders(TriathlonShopDbContext context)
             Status = c.Status.ToApiEnum(),
             DestinationLocation = new LocationDto
             {
-                CountryCode = c.DestinationCity.CountryCode,
+                CountryCode = c.DestinationCity.Country.Code,
                 CityName = c.DestinationCity.Name
             },
             Customer = new CustomerDto
