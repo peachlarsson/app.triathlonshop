@@ -36,7 +36,7 @@ export function RecentSales({ orders }: RecentSalesProps) {
             <p className='text-xs text-muted-foreground'>
               {new Intl.DateTimeFormat('en-US', {
                 dateStyle: 'medium',
-              }).format(new Date(order.createdAt))}
+              }).format(new Date(order.placedAt))}
             </p>
           </div>
           <p className='shrink-0 text-sm font-medium'>

@@ -16,5 +16,5 @@ export interface RecentOrder {
   id: number
   orderNumber: string
   totalPrice: number
-  createdAt: string
+  placedAt: string
 }
