@@ -69,8 +69,8 @@ public class DashboardHttp(IDbContextFactory<TriathlonShopDbContext> contextFact
 
         var monthlyRevenue = await context.Orders.AsNoTracking()
             .Where(o => o.Status == OrderStatus.Shipped
-                    && o.CreatedAt.Year == DateTimeOffset.UtcNow.Year)
-            .GroupBy(o => new { o.CreatedAt.Year, o.CreatedAt.Month })
+                    && o.PlacedAt.Year == DateTimeOffset.UtcNow.Year)
+            .GroupBy(o => new { o.PlacedAt.Year, o.PlacedAt.Month })
             .Select(g => new MonthlyRevenueModel
             {
                 Month = g.Key.Month,
@@ -88,14 +88,14 @@ public class DashboardHttp(IDbContextFactory<TriathlonShopDbContext> contextFact
         var createdDate = DateTimeOffset.UtcNow.Date.AddDays(-30);
 
         var recentOrders = await context.Orders.AsNoTracking()
-            .Where(o => o.CreatedAt.Date >= createdDate)
-            .OrderByDescending(o => o.CreatedAt)
+            .Where(o => o.PlacedAt.Date >= createdDate)
+            .OrderByDescending(o => o.PlacedAt)
             .Select(o => new RecentOrderModel
             {
                 Id = o.Id,
                 OrderNumber = o.Number,
                 TotalPrice = o.TotalPrice,
-                CreatedAt = o.CreatedAt
+                PlacedAt = o.PlacedAt
             })
             .ToListAsync();
 
