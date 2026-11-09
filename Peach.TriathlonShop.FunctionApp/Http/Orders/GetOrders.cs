@@ -112,6 +112,7 @@ public class GetOrders(TriathlonShopDbContext context)
                 RowPrice = or.RowPrice,
                 CustomerId = or.Order.CustomerId,
                 CustomerName = or.Order!.Customer!.Name ?? "MissingName",
+                PlacedAt = or.PlacedAt,
                 CreatedAt = or.CreatedAt,
                 UpdatedAt = or.UpdatedAt
             }).ToList(),

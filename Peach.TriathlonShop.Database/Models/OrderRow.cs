@@ -7,6 +7,7 @@ public class OrderRow : BaseEntity
     public required long ArticleId { get; set; }
     public required int Quantity { get; set; }
     public required decimal RowPrice { get; set; }
+    public required DateTimeOffset PlacedAt { get; set; }
 
     public Order? Order { get; set; } = null!;
     public Article? Article { get; set; } = null!;
