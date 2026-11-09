@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Peach.TriathlonShop.Api.Contract.Developer.Models;
 using Peach.TriathlonShop.Database;
 using Peach.TriathlonShop.Database.Models;
@@ -13,7 +14,7 @@ using System.Text.Json;
 
 namespace Peach.TriathlonShop.FunctionApp.Developer
 {
-    public class DeveloperCreateRandomOrders(TriathlonShopDbContext context, SignalRNotifier signalRNotifier)
+    public class DeveloperCreateRandomOrders(ILogger<DeveloperCreateRandomOrders> logger, TriathlonShopDbContext context, SignalRNotifier signalRNotifier)
     {
         private readonly JsonSerializerOptions jsonSerializerOptions = new()
         {
@@ -55,7 +56,36 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
             {
                 var customer = await GetRandomCustomerAsync();
 
-                var destinationCity = context.Cities.OrderBy(c => Guid.NewGuid()).FirstOrDefault();
+                /// Pick random destination location
+                var destinationLocation = context.Locations
+                    .Include(l => l.Country)
+                    .Include(l => l.City)
+                    .OrderBy(l => Guid.NewGuid())
+                    .FirstOrDefault();
+
+                if (destinationLocation == null || destinationLocation.Country == null || destinationLocation.City == null)
+                {
+                    logger.LogError("No destination location found or missing country/city for the location.");
+                    return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                }
+
+                /// Pick warehouse that ships to the destination country and has most stock total quantity
+                var warehouse = context.Stocks
+                    .Where(s => s.Warehouse.WarehouseShipToCountries.Any(wc => wc.CountryId == destinationLocation.Country.Id))
+                    .GroupBy(s => s.Warehouse)
+                    .Select(g => new
+                    {
+                        Warehouse = g.Key,
+                        TotalStock = g.Sum(s => s.Quantity),
+                    })
+                    .OrderByDescending(w => w.TotalStock)
+                    .FirstOrDefault();
+
+                if (warehouse == null)
+                {
+                    logger.LogError($"No warehouse found that ships to the destination: {destinationLocation.City.Name} - {destinationLocation.Country.Name} - {destinationLocation.Country.ContinentName}.");
+                    return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                }
 
                 var order = new Order
                 {
@@ -63,28 +93,51 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
                     Number = generatedOrderNumbers[i],
                     Status = model.UseRandomOrderStatus ? CreateRandomOrdersExtensions.GetRandomOrderStatus() : OrderStatus.Created,
                     TotalPrice = 0,
-                    DestinationCountryId = destinationCity?.CountryId ?? 0,
-                    DestinationCityId = destinationCity?.Id ?? 0,
-                    DestinationLocationId = context.Locations.OrderBy(l => Guid.NewGuid()).FirstOrDefault()?.Id ?? 0,
+                    DestinationCountryId = destinationLocation.Country.Id,
+                    DestinationCityId = destinationLocation.City.Id,
+                    DestinationLocationId = destinationLocation.Id,
                     PlacedAt = model.UseRandomPlacedDate ? CreateRandomOrdersExtensions.GetRandomDateTimeOffset() : DateTimeOffset.UtcNow,
                 };
 
+                /// Pick random articles from the warehouse stock. Quantity > 0.
+                /// If the stock quantity is less than the desired quantity, use the available stock quantity.
                 int articleCount = Random.Shared.Next(model.ArticlesCountIntervalStart ?? 1, (model.ArticlesCountIntervalEnd ?? 5) + 1);
 
-                var articles = context.Articles.ToList();
+                /// Get the stock for the selected warehouse and destination location
+                var stock = context.Stocks
+                    .Include(s => s.Article)
+                    .Where(s => s.WarehouseId == warehouse.Warehouse.Id && s.Quantity > 0)
+                    .ToList();
 
-                articleCount = Math.Min(articleCount, articles.Count);
+                if (stock.Count == 0)
+                {
+                    logger.LogError("No stock found for the selected warehouse.");
+                    return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                }
 
-                var selectedArticles = articles
+                articleCount = Math.Min(articleCount, stock.Count);
+
+                /// Select random articles from the stock
+                var selectedArticles = stock
                     .OrderBy(_ => Random.Shared.Next())
                     .Take(articleCount)
+                    .Select(s => s.Article)
                     .ToList();
 
                 int lineNumber = 1;
 
                 foreach (var article in selectedArticles)
                 {
-                    int quantity = Random.Shared.Next(model.QuantityIntervalStart ?? 1, (model.QuantityIntervalEnd ?? 10) + 1);
+                    var articleStock = stock.First(s => s.ArticleId == article.Id);
+
+                    //int quantity = Random.Shared.Next(model.QuantityIntervalStart ?? 1, (model.QuantityIntervalEnd ?? 10) + 1);
+
+                    /// If the stock quantity is less than the desired quantity, use the available stock quantity
+                    int requestedQuantity = Random.Shared.Next(model.QuantityIntervalStart ?? 1, (model.QuantityIntervalEnd ?? 10) + 1);
+
+                    int stockQuantity = articleStock.Quantity;
+
+                    int quantity = Math.Min(requestedQuantity, stockQuantity);
 
                     order.OrderRows.Add(new OrderRow
                     {
@@ -93,7 +146,11 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
                         LineNumber = lineNumber++,
                         Quantity = quantity,
                         RowPrice = article.UnitPrice * quantity,
+                        PlacedAt = model.UseRandomPlacedDate ? CreateRandomOrdersExtensions.GetRandomDateTimeOffset() : DateTimeOffset.UtcNow,
                     });
+
+                    /// Reduce stock quantities for the selected articles
+                    articleStock.Quantity -= quantity;
                 }
 
                 order.TotalPrice = order.OrderRows.Sum(or => or.RowPrice);
@@ -115,6 +172,12 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
         private async Task<Customer> GetRandomCustomerAsync()
         {
             bool newCustomer = Random.Shared.Next(2) == 0;
+            
+            if (context.Customers.Count() == 0 && !newCustomer)
+            {
+                newCustomer = true;
+            }
+
             bool isCompanyCustomer = Random.Shared.Next(2) == 0;
 
             if (newCustomer && !isCompanyCustomer)
