@@ -73,6 +73,7 @@ public class UpdateOrder(TriathlonShopDbContext context)
                     ArticleId = newArticle.ArticleId,
                     Quantity = newArticle.Quantity,
                     RowPrice = article.UnitPrice * newArticle.Quantity,
+                    PlacedAt = DateTimeOffset.UtcNow,
                 });
             }
 
