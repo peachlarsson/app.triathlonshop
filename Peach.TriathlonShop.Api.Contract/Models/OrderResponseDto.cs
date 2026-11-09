@@ -16,6 +16,7 @@ public class OrderResponseDto
     public List<InvoiceDto> Invoices { get; set; } = [];
     public required decimal TotalPrice { get; set; }
     public int OrderRowsCount => OrderRows.Count;
+    public required DateTimeOffset PlacedAt { get; set; }
     public required DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset? UpdatedAt { get; set; }
 }

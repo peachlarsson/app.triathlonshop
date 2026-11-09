@@ -132,6 +132,7 @@ public class GetOrders(TriathlonShopDbContext context)
                 CreatedAt = i.CreatedAt
             }).ToList(),
             TotalPrice = c.OrderRows.Sum(or => or.RowPrice),
+            PlacedAt = c.PlacedAt,
             CreatedAt = c.CreatedAt,
             UpdatedAt = c.UpdatedAt
         });
