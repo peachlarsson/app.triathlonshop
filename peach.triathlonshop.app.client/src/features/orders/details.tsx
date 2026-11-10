@@ -56,7 +56,8 @@ export default function OrderDetails() {
           <div>
             <h2 className="text-2xl font-bold tracking-tight">Order {order.number}</h2>
             <p className="text-muted-foreground">Order ID: {order.id}</p>
-            <p className="text-muted-foreground">Placed {dateFormatter.format(new Date(order.createdAt))}</p>
+            <p className="text-muted-foreground">Placed {dateFormatter.format(new Date(order.placedAt))}</p>
+            <p className="text-muted-foreground">Created {dateFormatter.format(new Date(order.createdAt))}</p>
           </div>
           <div className="flex flex-col items-end gap-2">
             <div className="flex items-center gap-2">
@@ -83,6 +84,7 @@ export default function OrderDetails() {
                     <TableHead className="text-right">Unit price</TableHead>
                     <TableHead className="text-right">Qty</TableHead>
                     <TableHead className="text-right">Line total</TableHead>
+                    <TableHead className="text-right">Placed at</TableHead>
                     <TableHead className="text-right">Created at</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -95,6 +97,7 @@ export default function OrderDetails() {
                       <TableCell className="text-right">
                         {currencyFormatter.format(item.rowPrice)}
                       </TableCell>
+                      <TableCell className="text-right">{dateFormatter.format(new Date(item.placedAt))}</TableCell>
                       <TableCell className="text-right">{dateFormatter.format(new Date(item.createdAt))}</TableCell>
                     </TableRow>
                   ))}

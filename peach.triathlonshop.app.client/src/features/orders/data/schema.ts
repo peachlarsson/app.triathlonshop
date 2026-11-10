@@ -11,6 +11,7 @@ export type Order = {
   invoices: OrderInvoice[];
   transportOrders: OrderTransport[];
   notifications: OrderNotification[];
+  placedAt: string;
   createdAt: string;
 };
 
@@ -55,6 +56,7 @@ export type OrderRow = {
   unitPrice: number;
   quantity: number;
   rowPrice: number;
+  placedAt: string;
   createdAt: string;
   updatedAt?: string;
 };

@@ -98,6 +98,13 @@ export const ordersColumns: ColumnDef<Order>[] = [
     cell: ({ row }) => currencyFormatter.format(row.original.totalPrice),
   },
   {
+    accessorKey: "placedAt",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Placed" />
+    ),
+    cell: ({ row }) => dateFormatter.format(new Date(row.original.placedAt)),
+  },
+  {
     accessorKey: "createdAt",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Created" />
