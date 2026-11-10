@@ -246,7 +246,9 @@ namespace Peach.TriathlonShop.FunctionApp.Http.Developer.Extensions
 
             var range = (end - start).Days;
 
-            return start.AddDays(Random.Shared.Next(range));
+            var time = new TimeSpan(Random.Shared.Next(0, 24), Random.Shared.Next(0, 60), Random.Shared.Next(0, 60));
+
+            return start.AddDays(Random.Shared.Next(range)).Add(time);
         }
     }
 }
