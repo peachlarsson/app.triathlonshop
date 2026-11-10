@@ -54,6 +54,8 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
 
             for (int i = 0; i < ordersCount; i++)
             {
+                var placedAt = model.UseRandomPlacedDate ? CreateRandomOrdersExtensions.GetRandomDateTimeOffset() : DateTimeOffset.UtcNow;
+
                 var customer = await GetRandomCustomerAsync();
 
                 /// Pick random destination location
@@ -96,7 +98,7 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
                     DestinationCountryId = destinationLocation.Country.Id,
                     DestinationCityId = destinationLocation.City.Id,
                     DestinationLocationId = destinationLocation.Id,
-                    PlacedAt = model.UseRandomPlacedDate ? CreateRandomOrdersExtensions.GetRandomDateTimeOffset() : DateTimeOffset.UtcNow,
+                    PlacedAt = placedAt,
                 };
 
                 /// Pick random articles from the warehouse stock. Quantity > 0.
@@ -146,7 +148,7 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
                         LineNumber = lineNumber++,
                         Quantity = quantity,
                         RowPrice = article.UnitPrice * quantity,
-                        PlacedAt = model.UseRandomPlacedDate ? CreateRandomOrdersExtensions.GetRandomDateTimeOffset() : DateTimeOffset.UtcNow,
+                        PlacedAt = placedAt,
                     });
 
                     /// Reduce stock quantities for the selected articles
