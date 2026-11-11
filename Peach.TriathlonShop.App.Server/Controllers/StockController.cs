@@ -11,6 +11,19 @@ namespace Peach.TriathlonShop.App.Server.Controllers;
 [Route("api/stock")]
 public class StockController(ITriathlonShopClient triathlonShopClient) : ControllerBase
 {
+    [HttpGet("overview")]
+    public async Task<ActionResult<StockOverviewResponseDto>> GetOverviewAsync()
+    {
+        var response = await triathlonShopClient.GetStockOverviewAsync();
+
+        if (!response.IsSuccess)
+        {
+            return StatusCode(response.StatusCode, response.ErrorMessage);
+        }
+
+        return Ok(response.Content);
+    }
+
     [HttpGet("all-warehouses")]
     public async Task<ActionResult<GetAllWarehouseStockDto>> GetAllWarehouseStockAsync()
     {
