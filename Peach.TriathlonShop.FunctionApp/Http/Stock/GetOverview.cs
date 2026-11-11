@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
+using Peach.TriathlonShop.Api.Contract.Models.Stock;
 using Peach.TriathlonShop.Database;
 using Peach.TriathlonShop.Database.Models.Enums;
 
@@ -35,7 +36,7 @@ public class GetOverview(TriathlonShopDbContext context)
                     .Distinct()
                     .ToHashSet();
 
-                return new DashboardWarehouseDto
+                return new WarehouseOverviewDto
                 {
                     Id = g.Key.WarehouseId,
                     Name = g.Key.WarehouseName,
@@ -51,30 +52,25 @@ public class GetOverview(TriathlonShopDbContext context)
                 };
             })
             .ToList();
+        
+        var monthlyStockSales = await context.Orders
+            .Include(o => o.OrderRows)
+            .Where(o => o.Status == OrderStatus.Shipped)
+            .GroupBy(o => new { o.PlacedAt.Year, o.PlacedAt.Month })
+            .Select(g => new MonthlyStockSales
+            {
+                Month = g.Key.Month,
+                Sales = g.Sum(o => o.OrderRows.Sum(or => or.Quantity)),
+                Purchased = 0, // TODO: Future implementation.
+            })
+            .ToListAsync();
 
-
-        var result = new GetStockDashboardResponse
+        var result = new StockOverviewResponseDto
         {
             Warehouses = warehouses,
+            MonthlyStockSales = monthlyStockSales,
         };
 
         return new OkObjectResult(result);
     }
-}
-
-public class GetStockDashboardResponse
-{
-    public List<DashboardWarehouseDto> Warehouses { get; set; } = [];
-
-}
-
-public class DashboardWarehouseDto
-{
-    public long Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public int TotalArticles { get; set; }
-    public int InStock { get; set; }
-    public int OutOfStock { get; set; }
-    public int AwaitingDispatch { get; set; }
-    public int Shipped { get; set; }
 }
