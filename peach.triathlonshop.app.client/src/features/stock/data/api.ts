@@ -1,9 +1,9 @@
 import type {
   ArticleDto,
+  ArticleWarehouseStock,
   PaginatedResponse,
   StockItem,
-  StockChartResponse,
-  StockOverview,
+  StockOverviewResponse,
   Warehouse,
   WarehouseArticle,
   WarehouseDetailsResponse,
@@ -57,7 +57,6 @@ async function loadInventory(signal: AbortSignal) {
   const warehouses: Warehouse[] = [];
   const articlesByWarehouse = new Map<number, WarehouseArticle[]>();
   const stockItems: StockItem[] = [];
-  const globalQuantities = new Map(catalog.map((article) => [article.id, 0]));
   for (const [warehouseId, quantities] of [...assignedByWarehouse].sort(
     ([a], [b]) => a - b,
   )) {
@@ -75,11 +74,14 @@ async function loadInventory(signal: AbortSignal) {
     const inStockArticles = articles.filter(
       (article) => article.quantity > 0,
     ).length;
+    const stockWarehouse = stock.find(
+      (item) => item.warehouseId === warehouseId,
+    );
     const warehouse: Warehouse = {
       id: warehouseId,
-      warehouseName: `Warehouse ${warehouseId}`,
-      city: null,
-      countryName: null,
+      warehouseName: stockWarehouse?.warehouseName ?? `Warehouse ${warehouseId}`,
+      city: stockWarehouse?.location.cityName ?? null,
+      countryName: stockWarehouse?.location.countryCode ?? null,
       inStockArticles,
       outOfStockArticles: zeroStockByWarehouse.get(warehouseId) ?? 0,
     };
@@ -93,27 +95,9 @@ async function loadInventory(signal: AbortSignal) {
         quantity: article.quantity,
         warehouseName: warehouse.warehouseName,
       });
-      globalQuantities.set(
-        article.id,
-        (globalQuantities.get(article.id) ?? 0) + article.quantity,
-      );
     }
   }
-  const inStockArticles = [...globalQuantities.values()].filter(
-    (quantity) => quantity > 0,
-  ).length;
-  const overview: StockOverview = {
-    totalWarehouses: warehouses.length,
-    inStockArticles,
-    outOfStockArticles: [...zeroStockByWarehouse.values()].reduce(
-      (sum, count) => sum + count,
-      0,
-    ),
-    totalUnits: stockItems.reduce((sum, item) => sum + item.quantity, 0),
-    locations: null,
-    outgoingOrders: null,
-  };
-  return { warehouses, articlesByWarehouse, stockItems, overview };
+  return { warehouses, articlesByWarehouse, stockItems };
 }
 
 export async function fetchWarehouse(
@@ -142,8 +126,8 @@ export async function fetchWarehouse(
 
 export async function fetchOverview(
   signal: AbortSignal,
-): Promise<StockOverview> {
-  return (await loadInventory(signal)).overview;
+): Promise<StockOverviewResponse> {
+  return fetchInventory<StockOverviewResponse>("/api/stock/overview", signal);
 }
 
 export async function fetchStockPage(
@@ -151,13 +135,6 @@ export async function fetchStockPage(
   signal: AbortSignal,
 ): Promise<PaginatedResponse<StockItem>> {
   return paginate((await loadInventory(signal)).stockItems, page);
-}
-
-export function fetchStockChart(
-  year: number,
-  signal: AbortSignal,
-): Promise<StockChartResponse> {
-  return fetchInventory(`/api/stock/pending/chart?year=${year}`, signal);
 }
 
 export async function fetchWarehousesPage(
@@ -170,7 +147,7 @@ export async function fetchWarehousesPage(
   );
 }
 
-export function fetchArticlesPage(
+export async function fetchArticlesPage(
   param: GetArticlesRequest,
   signal: AbortSignal,
 ): Promise<PaginatedResponse<ArticleDto>> {
@@ -178,6 +155,28 @@ export function fetchArticlesPage(
     `/api/articles?articleName=${param.articleName ?? ""}&pageNumber=${param.pageNumber}&pageSize=${param.pageSize}&sortKey=${param.sortKey}&sortDirection=${param.sortDirection}`,
     signal,
   );
+}
+
+export async function fetchArticleWarehouseStock(
+  signal: AbortSignal,
+): Promise<ArticleWarehouseStock> {
+  const stock = await fetchInventory<WarehouseStockDto[]>(
+    "/api/stock/all-warehouses",
+    signal,
+  );
+  return {
+    warehouses: stock.map(({ warehouseId, warehouseName }) => ({
+      id: warehouseId,
+      name: warehouseName,
+    })),
+    quantities: stock.flatMap(({ warehouseId, articles }) =>
+      articles.map(({ articleId, quantity }) => ({
+        articleId,
+        warehouseId,
+        quantity,
+      })),
+    ),
+  };
 }
 
 function paginate<T>(data: T[], page: number): PaginatedResponse<T> {

@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -9,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { fetchArticlesPage } from "../data/api";
+import { fetchArticleWarehouseStock, fetchArticlesPage } from "../data/api";
 import { SortDirection, SortKey } from "../data/types";
 
 const currency = new Intl.NumberFormat("sv-SE", {
@@ -19,6 +20,9 @@ const currency = new Intl.NumberFormat("sv-SE", {
 
 export function ArticlesTable() {
   const [page, setPage] = useState(1);
+  const [expandedArticleId, setExpandedArticleId] = useState<number | null>(
+    null,
+  );
   const pageSize = 10;
   const { data, error, isPending, isFetching, refetch } = useQuery({
     queryKey: ["inventory", "articles", page],
@@ -34,25 +38,85 @@ export function ArticlesTable() {
         signal,
       ),
   });
+  const warehouseStock = useQuery({
+    queryKey: ["inventory", "article-warehouse-stock"],
+    queryFn: ({ signal }) => fetchArticleWarehouseStock(signal),
+    staleTime: 5 * 60 * 1000,
+  });
+  const stockByArticle = new Map<number, Map<number, number>>();
+  for (const stock of warehouseStock.data?.quantities ?? []) {
+    let quantities = stockByArticle.get(stock.articleId);
+    if (!quantities) {
+      quantities = new Map();
+      stockByArticle.set(stock.articleId, quantities);
+    }
+    quantities.set(
+      stock.warehouseId,
+      (quantities.get(stock.warehouseId) ?? 0) + stock.quantity,
+    );
+  }
+  const stockSummaryByArticle = new Map(
+    [...stockByArticle].map(([articleId, quantities]) => [
+      articleId,
+      {
+        total: [...quantities.values()].reduce(
+          (sum, quantity) => sum + quantity,
+          0,
+        ),
+        stockedWarehouses: [...quantities.values()].filter(
+          (quantity) => quantity > 0,
+        ).length,
+      },
+    ]),
+  );
+  const quantitiesByWarehouse = new Map(
+    stockByArticle.get(expandedArticleId ?? -1),
+  );
+  const totalQuantity = [...quantitiesByWarehouse.values()].reduce(
+    (total, quantity) => total + quantity,
+    0,
+  );
 
   return (
     <section
       aria-label="articles"
       className="overflow-hidden rounded-lg border bg-card"
     >
-      <Table aria-label="articles" aria-busy={isPending}>
+      <Table
+        aria-label="articles"
+        aria-busy={isPending || warehouseStock.isPending}
+      >
         <TableHeader>
           <TableRow>
             <TableHead>Article name</TableHead>
-            <TableHead>Article number</TableHead>
-            <TableHead>Unit price</TableHead>
+            <TableHead>Stock</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
+          {warehouseStock.error && expandedArticleId === null && (
+            <TableRow>
+              <TableCell colSpan={2}>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <p role="alert" className="text-sm text-destructive">
+                    Unable to load warehouse stock:{" "}
+                    {warehouseStock.error.message}
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => void warehouseStock.refetch()}
+                    disabled={warehouseStock.isFetching}
+                  >
+                    Retry
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          )}
           {error ? (
             <TableRow>
               <TableCell
-                colSpan={3}
+                colSpan={2}
                 className="h-24 text-center text-muted-foreground"
               >
                 <div className="space-y-2 py-4">
@@ -71,23 +135,139 @@ export function ArticlesTable() {
             </TableRow>
           ) : isPending ? (
             <TableRow>
-              <TableCell colSpan={3} className="h-24 text-center">
+              <TableCell colSpan={2} className="h-24 text-center">
                 <span role="status">Loading articles...</span>
               </TableCell>
             </TableRow>
           ) : data && data.data.length > 0 ? (
             data.data.map((article) => (
-              <TableRow key={article.id}>
-                <TableCell className="font-medium">
-                  {article.articleName}
-                </TableCell>
-                <TableCell>{article.articleNumber}</TableCell>
-                <TableCell>{currency.format(article.unitPrice)}</TableCell>
-              </TableRow>
+              <Fragment key={article.id}>
+                <TableRow>
+                  <TableCell className="font-medium">
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        aria-label={`${expandedArticleId === article.id ? "Hide" : "Show"} stock by warehouse for ${article.articleName}`}
+                        aria-expanded={expandedArticleId === article.id}
+                        aria-controls={`article-stock-${article.id}`}
+                        className="inline-flex size-6 shrink-0 items-center justify-center rounded hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        onClick={() =>
+                          setExpandedArticleId((current) =>
+                            current === article.id ? null : article.id,
+                          )
+                        }
+                      >
+                        {expandedArticleId === article.id ? (
+                          <ChevronDown aria-hidden="true" className="size-4" />
+                        ) : (
+                          <ChevronRight aria-hidden="true" className="size-4" />
+                        )}
+                      </button>
+                      <span>{article.articleName}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    {warehouseStock.data ? (
+                      <div className="min-w-36 space-y-1">
+                        <p className="text-xs text-muted-foreground">
+                          {(
+                            stockSummaryByArticle.get(article.id)?.total ?? 0
+                          ).toLocaleString()}{" "}
+                          units ·{" "}
+                          {stockSummaryByArticle.get(article.id)
+                            ?.stockedWarehouses ?? 0}
+                          /{warehouseStock.data.warehouses.length} warehouses
+                        </p>
+                      </div>
+                    ) : warehouseStock.isPending ? (
+                      <span className="text-xs text-muted-foreground">
+                        Loading...
+                      </span>
+                    ) : (
+                      "—"
+                    )}
+                  </TableCell>
+                </TableRow>
+                {expandedArticleId === article.id && (
+                  <TableRow>
+                    <TableCell
+                      id={`article-stock-${article.id}`}
+                      colSpan={2}
+                      className="bg-muted/30 p-4"
+                    >
+                      {warehouseStock.error ? (
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                          <p role="alert" className="text-sm text-destructive">
+                            {warehouseStock.error.message}
+                          </p>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => void warehouseStock.refetch()}
+                            disabled={warehouseStock.isFetching}
+                          >
+                            Retry
+                          </Button>
+                        </div>
+                      ) : warehouseStock.isPending ? (
+                        <p
+                          role="status"
+                          className="text-sm text-muted-foreground"
+                        >
+                          Loading warehouse stock...
+                        </p>
+                      ) : (
+                        <div className="space-y-3">
+                          <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm">
+                            <p>
+                              <span className="text-muted-foreground">
+                                Article number:{" "}
+                              </span>
+                              <span className="font-medium">
+                                {article.articleNumber}
+                              </span>
+                            </p>
+                            <p>
+                              <span className="text-muted-foreground">
+                                Unit price:{" "}
+                              </span>
+                              <span className="font-medium">
+                                {currency.format(article.unitPrice)}
+                              </span>
+                            </p>
+                          </div>
+                          <div className="flex justify-end">
+                            <p className="text-sm text-muted-foreground">
+                              Total: {totalQuantity.toLocaleString()}
+                            </p>
+                          </div>
+                          <div className="grid gap-x-6 gap-y-2 sm:grid-cols-2 lg:grid-cols-3">
+                            {warehouseStock.data.warehouses.map((warehouse) => (
+                              <div
+                                key={warehouse.id}
+                                className="flex items-center justify-between gap-3 text-sm"
+                              >
+                                <span className="truncate">
+                                  {warehouse.name}
+                                </span>
+                                <span className="font-medium tabular-nums">
+                                  {(
+                                    quantitiesByWarehouse.get(warehouse.id) ?? 0
+                                  ).toLocaleString()}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                )}
+              </Fragment>
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={3} className="h-24 text-center">
+              <TableCell colSpan={2} className="h-24 text-center">
                 No articles found.
               </TableCell>
             </TableRow>

@@ -4,20 +4,19 @@ export interface PaginatedResponse<T> {
   totalPages: number;
 }
 
-export interface StockOverview {
-  totalWarehouses: number;
-  inStockArticles: number;
-  outOfStockArticles: number;
-  totalUnits: number;
-  locations: { city: string; countryName: string }[] | null;
-  outgoingOrders:
-    | {
-        warehouseId: number;
-        warehouseName: string;
-        awaitingDispatch: number;
-        shipped: number;
-      }[]
-    | null;
+export interface StockOverviewResponse {
+  warehouses: StockOverviewWarehouse[];
+  monthlyStockSales: { month: number; sales: number; purchased: number }[];
+}
+
+export interface StockOverviewWarehouse {
+  id: number;
+  name: string | null;
+  totalArticles: number | null;
+  inStock: number | null;
+  outOfStock: number | null;
+  awaitingDispatch: number | null;
+  shipped: number | null;
 }
 
 export interface StockItem {
@@ -26,10 +25,6 @@ export interface StockItem {
   articleName: string;
   quantity: number;
   warehouseName: string;
-}
-
-export interface StockChartResponse {
-  months: { month: number; soldCount: number }[];
 }
 
 export interface Warehouse {
@@ -84,5 +79,12 @@ export interface WarehouseDetailsResponse {
 }
 export interface WarehouseStockDto {
   warehouseId: number;
+  warehouseName: string;
+  location: { cityName: string; countryCode: string };
   articles: { articleId: number; quantity: number }[];
+}
+
+export interface ArticleWarehouseStock {
+  warehouses: { id: number; name: string }[];
+  quantities: { articleId: number; warehouseId: number; quantity: number }[];
 }

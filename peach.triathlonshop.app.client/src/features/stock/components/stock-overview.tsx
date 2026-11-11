@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
+import { Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,6 +9,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { fetchOverview } from "../data/api";
 
 export function StockOverview() {
@@ -15,6 +21,13 @@ export function StockOverview() {
     queryKey: ["inventory", "overview"],
     queryFn: ({ signal }) => fetchOverview(signal),
   });
+  const shippedWarehouses = [...(data?.warehouses ?? [])].sort(
+    (a, b) =>
+      (b.shipped ?? 0) - (a.shipped ?? 0) ||
+      (a.name ?? "").localeCompare(b.name ?? ""),
+  );
+  const mostShippedWarehouses = shippedWarehouses;
+  const leastShippedWarehouses = [...shippedWarehouses].reverse();
 
   return (
     <section aria-label="Stock overview" className="space-y-4">
@@ -40,94 +53,172 @@ export function StockOverview() {
           Loading stock overview...
         </p>
       )}
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Total warehouses</CardTitle>
-            <CardDescription>Reported by the stock API</CardDescription>
+            <CardDescription>
+              Locations, stock, and outgoing orders
+            </CardDescription>
           </CardHeader>
-          <CardContent className="text-2xl font-bold">
-            {data?.totalWarehouses.toLocaleString() ??
-              (isPending ? "Loading..." : "Not available")}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Status</CardTitle>
-            <CardDescription>Article stock status</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2 text-sm">
-            {data ? (
-              <>
-                <p>
-                  <span className="font-semibold">
-                    {data.inStockArticles.toLocaleString()}
-                  </span>{" "}
-                  in stock
-                </p>
-                <p>
-                  <span className="font-semibold">
-                    {data.outOfStockArticles.toLocaleString()}
-                  </span>{" "}
-                  out of stock
-                </p>
-              </>
-            ) : (
-              <p className="text-muted-foreground">
-                {isPending ? "Loading..." : "Not available"}
-              </p>
-            )}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Locations</CardTitle>
-            <CardDescription>Warehouse cities and countries</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {data?.locations?.length ? (
-              <ul className="max-h-40 space-y-1 overflow-y-auto text-sm">
-                {data.locations.map(({ city, countryName }) => (
-                  <li key={JSON.stringify([city, countryName])}>
-                    {city}, {countryName}
-                  </li>
-                ))}
-              </ul>
+          <CardContent className="min-w-0 space-y-3 pr-2">
+            <p className="text-2xl font-bold">
+              {data?.warehouses.length.toLocaleString() ??
+                (isPending ? "Loading..." : "Not available")}
+            </p>
+            {data?.warehouses.length ? (
+              <div className="overflow-x-auto">
+                <div className="grid w-full min-w-[26rem] grid-cols-[minmax(5rem,1fr)_3rem_3.5rem_3.5rem_3.5rem_3.5rem] items-center gap-x-2 overflow-y-hidden text-[10px] leading-tight text-muted-foreground [scrollbar-gutter:stable] sm:text-xs">
+                  <span className="min-w-0 text-left">Warehouse</span>
+                  <span className="text-center">In stock</span>
+                  <span className="text-center">Out of stock</span>
+                  <span className="text-center">Total Articles</span>
+                  <span className="border-l pl-2 text-center">
+                    Awaiting dispatch
+                  </span>
+                  <span className="flex flex-col items-center text-center">
+                    Shipped
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          aria-label="About shipped count"
+                          className="inline-flex size-4 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        >
+                          <Info aria-hidden="true" className="size-3" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        Shipped orders in the last 30 days
+                      </TooltipContent>
+                    </Tooltip>
+                  </span>
+                </div>
+                <ul className="max-h-48 space-y-2 overflow-y-auto pt-2 text-sm [scrollbar-gutter:stable]">
+                  {data.warehouses.map((warehouse) => (
+                    <li
+                      key={warehouse.id}
+                      className="grid w-full min-w-[26rem] grid-cols-[minmax(5rem,1fr)_3rem_3.5rem_3.5rem_3.5rem_3.5rem] gap-x-2"
+                    >
+                      <span className="min-w-0 text-left">
+                        <Link
+                          to="/stock/warehouse/$warehouseId"
+                          params={{
+                            warehouseId: String(warehouse.id),
+                          }}
+                          className="block truncate font-medium hover:underline"
+                        >
+                          {warehouse.name ?? `Warehouse ${warehouse.id}`}
+                        </Link>
+                      </span>
+                      <span className="text-center">
+                        {warehouse.inStock?.toLocaleString() ?? "—"}
+                      </span>
+                      <span className="text-center">
+                        {warehouse.outOfStock?.toLocaleString() ?? "—"}
+                      </span>
+                      <span className="text-center">
+                        {warehouse.totalArticles?.toLocaleString() ?? "—"}
+                      </span>
+                      <span className="border-l pl-2 text-center">
+                        {warehouse.awaitingDispatch?.toLocaleString() ?? "—"}
+                      </span>
+                      <span className="text-center">
+                        {warehouse.shipped?.toLocaleString() ?? "—"}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ) : (
               <p className="text-sm text-muted-foreground">
-                No data available.
+                {data
+                  ? "No warehouse stock status available."
+                  : "Loading warehouse details..."}
               </p>
             )}
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Outgoing orders</CardTitle>
-            <CardDescription>By warehouse</CardDescription>
+            <CardTitle>Warehouse shipments</CardTitle>
+            <CardDescription>
+              Highest and lowest shipped order counts
+            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-3 text-sm">
-            {data?.outgoingOrders?.length ? (
-              <ul className="max-h-60 space-y-3 overflow-y-auto">
-                {data.outgoingOrders.map((warehouse) => (
-                  <li key={warehouse.warehouseId}>
-                    <Link
-                      to="/stock/warehouse/$warehouseId"
-                      params={{ warehouseId: String(warehouse.warehouseId) }}
-                      className="font-semibold hover:underline"
-                    >
-                      {warehouse.warehouseName}
-                    </Link>
-                    <p>
-                      {warehouse.awaitingDispatch.toLocaleString()} awaiting
-                      dispatch
-                    </p>
-                    <p>{warehouse.shipped.toLocaleString()} shipped</p>
-                  </li>
-                ))}
-              </ul>
+          <CardContent className="min-w-0 space-y-3">
+            {mostShippedWarehouses.length ? (
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="min-w-0">
+                  <p className="mb-2 text-sm font-semibold">Most shipped</p>
+                  <div className="mb-2 grid grid-cols-[minmax(0,1fr)_5rem] gap-x-2 text-xs text-muted-foreground">
+                    <span>Warehouse</span>
+                    <span className="text-right">Shipped</span>
+                  </div>
+                  <ol className="max-h-48 space-y-2 overflow-y-auto text-sm">
+                    {mostShippedWarehouses.map((warehouse, index) => (
+                      <li
+                        key={warehouse.id}
+                        className="grid grid-cols-[minmax(0,1fr)_5rem] gap-x-2"
+                      >
+                        <span className="flex min-w-0 gap-2">
+                          <span className="shrink-0 text-muted-foreground">
+                            {index + 1}.
+                          </span>
+                          <Link
+                            to="/stock/warehouse/$warehouseId"
+                            params={{
+                              warehouseId: String(warehouse.id),
+                            }}
+                            className="min-w-0 truncate font-medium hover:underline"
+                          >
+                            {warehouse.name ?? `Warehouse ${warehouse.id}`}
+                          </Link>
+                        </span>
+                        <span className="text-right">
+                          {warehouse.shipped?.toLocaleString() ?? "—"}
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+                <div className="min-w-0 border-t pt-3 sm:border-l sm:border-t-0 sm:pl-4 sm:pt-0">
+                  <p className="mb-2 text-sm font-semibold">Least shipped</p>
+                  <div className="mb-2 grid grid-cols-[minmax(0,1fr)_5rem] gap-x-2 text-xs text-muted-foreground">
+                    <span>Warehouse</span>
+                    <span className="text-right">Shipped</span>
+                  </div>
+                  <ol className="max-h-48 space-y-2 overflow-y-auto text-sm">
+                    {leastShippedWarehouses.map((warehouse, index) => (
+                      <li
+                        key={warehouse.id}
+                        className="grid grid-cols-[minmax(0,1fr)_5rem] gap-x-2"
+                      >
+                        <span className="flex min-w-0 gap-2">
+                          <span className="shrink-0 text-muted-foreground">
+                            {index + 1}.
+                          </span>
+                          <Link
+                            to="/stock/warehouse/$warehouseId"
+                            params={{
+                              warehouseId: String(warehouse.id),
+                            }}
+                            className="min-w-0 truncate font-medium hover:underline"
+                          >
+                            {warehouse.name ?? `Warehouse ${warehouse.id}`}
+                          </Link>
+                        </span>
+                        <span className="text-right">
+                          {warehouse.shipped?.toLocaleString() ?? "—"}
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              </div>
             ) : (
-              <p className="text-muted-foreground">
-                No data available.
+              <p className="text-sm text-muted-foreground">
+                No shipment data available.
               </p>
             )}
           </CardContent>

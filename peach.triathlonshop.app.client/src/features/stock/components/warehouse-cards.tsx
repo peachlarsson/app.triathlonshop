@@ -73,7 +73,6 @@ export function WarehouseCards() {
                     {warehouse.warehouseName}
                   </CardTitle>
                   <CardDescription className="break-words">
-                    {warehouse.city ?? "City not available"},{" "}
                     {warehouse.countryName ?? "Country not available"}
                   </CardDescription>
                 </CardHeader>

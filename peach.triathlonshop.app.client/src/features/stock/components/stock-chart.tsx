@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   Bar,
   BarChart,
+  Legend,
   LabelList,
   ResponsiveContainer,
   XAxis,
@@ -9,7 +10,7 @@ import {
 } from "recharts";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { fetchStockChart } from "../data/api";
+import { fetchOverview } from "../data/api";
 
 const monthNames = [
   "Jan",
@@ -29,20 +30,21 @@ const monthNames = [
 export function StockChart() {
   const year = new Date().getFullYear();
   const { data, error, isPending, isFetching, refetch } = useQuery({
-    queryKey: ["inventory", "chart", year],
-    queryFn: ({ signal }) => fetchStockChart(year, signal),
+    queryKey: ["inventory", "overview"],
+    queryFn: ({ signal }) => fetchOverview(signal),
   });
-  const chartData = [...(data?.months ?? [])]
+  const chartData = [...(data?.monthlyStockSales ?? [])]
     .sort((a, b) => a.month - b.month)
-    .map(({ month, soldCount }) => ({
+    .map(({ month, purchased, sales }) => ({
       name: monthNames[month - 1],
-      count: soldCount,
+      purchasedCount: purchased,
+      soldCount: sales,
     }));
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Articles sold - {year}</CardTitle>
+        <CardTitle>Articles purchased and sold - {year}</CardTitle>
       </CardHeader>
       <CardContent>
         <div
@@ -71,13 +73,16 @@ export function StockChart() {
               <p className="sr-only">
                 {chartData
                   .map(
-                    ({ name, count }) =>
-                      `${name}: ${count.toLocaleString()} articles sold.`,
+                    ({ name, purchasedCount, soldCount }) =>
+                      `${name}: ${purchasedCount.toLocaleString()} articles purchased, ${soldCount.toLocaleString()} articles sold.`,
                   )
                   .join(" ")}
               </p>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} margin={{ top: 24, right: 16 }}>
+                <BarChart
+                  data={chartData}
+                  margin={{ top: 24, right: 16, bottom: 8 }}
+                >
                   <XAxis
                     dataKey="name"
                     stroke="var(--muted-foreground)"
@@ -93,14 +98,29 @@ export function StockChart() {
                     tickLine={false}
                     axisLine={false}
                   />
+                  <Legend />
                   <Bar
-                    dataKey="count"
-                    fill="var(--primary)"
+                    dataKey="purchasedCount"
+                    name="Purchased"
+                    fill="var(--chart-1)"
                     radius={[4, 4, 0, 0]}
-                    maxBarSize={100}
+                    maxBarSize={48}
                   >
                     <LabelList
-                      dataKey="count"
+                      dataKey="purchasedCount"
+                      position="top"
+                      fill="var(--foreground)"
+                    />
+                  </Bar>
+                  <Bar
+                    dataKey="soldCount"
+                    name="Sold"
+                    fill="var(--chart-2)"
+                    radius={[4, 4, 0, 0]}
+                    maxBarSize={48}
+                  >
+                    <LabelList
+                      dataKey="soldCount"
                       position="top"
                       fill="var(--foreground)"
                     />
