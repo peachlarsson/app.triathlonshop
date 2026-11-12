@@ -1,7 +1,7 @@
 # app.triathlonshop
 
 ## Purpose
-This project is a portfolio demonstration of building cloud-native applications with .NET and Azure. It showcases:
+This project is a portfolio demonstration of building cloud-native application with .NET and Azure. It showcases:
 
 - API development
 - SQL data persistence
