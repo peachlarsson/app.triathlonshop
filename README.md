@@ -17,6 +17,6 @@ This project is a portfolio demonstration of building cloud-native applications 
 ![](Illustrations/system-architecture.png)
 
 ## Live demo
-Note: The first request after a period of inactivity may be slow because the Azure SQL database pauses while idle to reduce costs.
+**Note**: The first request after a period of inactivity is slow because the database tier pauses while idle to reduce costs. Solution: Be patient and reload after approximately 30 seconds.
 
 https://app-triathlonshop-dev-peach-endtdzegb4apced0.swedencentral-01.azurewebsites.net/orders
