@@ -15,3 +15,8 @@ This project is a portfolio demonstration of building cloud-native applications 
 
 ## Cloud architecture
 ![](Illustrations/system-architecture.png)
+
+## Live demo
+Note: The first request after a period of inactivity may be slow because the Azure SQL database pauses while idle to reduce costs.
+
+https://app-triathlonshop-dev-peach-endtdzegb4apced0.swedencentral-01.azurewebsites.net/orders
