@@ -11,6 +11,7 @@ This project is a portfolio demonstration of building cloud-native applications 
 - Parallel background workflows using Storage Queues
 - Separation of backend and frontend
 - Real-time updates with SignalR
+- GitHub Actions CI/CD pipelines that build and deploy the web app and function app in Azure
 
 ## Cloud architecture
 ![](Illustrations/system-architecture.png)
