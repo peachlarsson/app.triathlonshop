@@ -8,6 +8,7 @@ public class CreateRandomOrdersModel
     public int? ArticlesCountIntervalEnd { get; set; }
     public int? QuantityIntervalStart { get; set; }
     public int? QuantityIntervalEnd { get; set; }
+    public string? ContinentName { get; set; }
     public bool UseRandomDelay { get; set; }
     public int? DelayMsIntervalStart { get; set; }
     public int? DelayMsIntervalEnd { get; set; }

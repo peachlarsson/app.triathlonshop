@@ -59,11 +59,26 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
                 var customer = await GetRandomCustomerAsync();
 
                 /// Pick random destination location
-                var destinationLocation = context.Locations
+                var destinationLocations = await context.Locations
                     .Include(l => l.Country)
                     .Where(l => l.Country != null && l.CityId != null && l.AirportId != null)
-                    .OrderBy(l => Guid.NewGuid())
-                    .FirstOrDefault();
+                    .ToListAsync();
+
+                Location? destinationLocation = null;
+
+                if (!string.IsNullOrEmpty(model.ContinentName))
+                {
+                    destinationLocation = destinationLocations
+                        .Where(l => l.Country.ContinentName.Equals(model.ContinentName, StringComparison.OrdinalIgnoreCase))
+                        .OrderBy(l => Guid.NewGuid())
+                        .FirstOrDefault();
+                }
+                else
+                {
+                    destinationLocation = destinationLocations
+                        .OrderBy(l => Guid.NewGuid())
+                        .FirstOrDefault();
+                }
 
                 if (destinationLocation == null || destinationLocation.Country == null || destinationLocation.CityId == null || destinationLocation.AirportId == null)
                 {
