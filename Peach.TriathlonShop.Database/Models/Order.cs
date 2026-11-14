@@ -20,7 +20,5 @@ public class Order : BaseEntity
     public List<Invoice> Invoices { get; set; } = [];
 
     public Customer? Customer { get; set; } = null!;
-    public CountryEntity DestinationCountry { get; set; } = null!;
-    public City DestinationCity { get; set; } = null!;
     public Location DestinationLocation { get; set; } = null!;
 }
