@@ -13,8 +13,6 @@ public class Order : BaseEntity
 
     public required decimal TotalPrice { get; set; }
     public required DateTimeOffset PlacedAt { get; set; }
-    public required long DestinationCountryId { get; set; }
-    public required long DestinationCityId { get; set; }
     public required long DestinationLocationId { get; set; }
     public string? DestinationAddress { get; set; }
     public List<OrderRow> OrderRows { get; set; } = [];

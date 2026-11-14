@@ -95,8 +95,6 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
                     Number = generatedOrderNumbers[i],
                     Status = model.UseRandomOrderStatus ? CreateRandomOrdersExtensions.GetRandomOrderStatus() : OrderStatus.Created,
                     TotalPrice = 0,
-                    DestinationCountryId = destinationLocation.Country.Id,
-                    DestinationCityId = destinationLocation.City.Id,
                     DestinationLocationId = destinationLocation.Id,
                     PlacedAt = placedAt,
                 };
