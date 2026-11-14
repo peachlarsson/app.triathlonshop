@@ -44,18 +44,20 @@ Content-Type: application/json
 
 ### Random orders
 
+# @timeout 600
 POST {{baseUrl}}/developer/orders/random
 Content-Type: application/json
 {
-  "OrdersCountIntervalStart": 5,
-  "OrdersCountIntervalEnd": 5,
+  "OrdersCountIntervalStart": 100,
+  "OrdersCountIntervalEnd": 100,
   "ArticlesCountIntervalStart": 1,
   "ArticlesCountIntervalEnd": 10,
   "QuantityIntervalStart": 1,
-  "QuantityIntervalEnd": 5,
+  "QuantityIntervalEnd": 10,
+  "ContinentName": "Europe",
   "UseRandomOrderStatus": true,
   "UseRandomPlacedDate": true,
-  "UseRandomDelay": true,
+  "UseRandomDelay": false,
   "DelayMsIntervalStart": 0,
   "DelayMsIntervalEnd": 3000
 }
@@ -72,6 +74,13 @@ Content-Type: application/json
 }
 
 
+### Set random cities
+POST {{baseUrl}}/developer/cities/random
+Content-Type: application/json
+{
+}
+
+
 ### SignalR test
 
 POST {{baseUrl}}/developer/signalr/{hubName}/{eventName}
@@ -81,6 +90,31 @@ Content-Type: application/json
   "Update": true,
   "Timestamp": "2026-10-17T12:34:33Z"
 }
+
+
+
+### developer/warehouse/ship-to-country
+POST {{baseUrl}}/developer/warehouse/ship-to-country
+Content-Type: application/json
+{}
+
+
+### developer/warehouse/main
+POST {{baseUrl}}/developer/warehouses/main
+Content-Type: application/json
+{}
+
+
+### Random stock items
+POST {{baseUrl}}/developer/warehouses/random-stock-items
+Content-Type: application/json
+{}
+
+
+
+### stock/overview
+GET {{baseUrl}}/stock/overview
+Accept: application/json
 
 
 #############
