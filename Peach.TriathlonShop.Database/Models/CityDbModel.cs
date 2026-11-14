@@ -6,8 +6,8 @@ public class City : BaseEntity
     public string Name { get; set; } = "";
     public string AsciiName { get; set; } = "";
     public string AlternateNames { get; set; } = "";
-    public double Latitude { get; set; }
-    public double Longitude { get; set; }
+    public decimal Latitude { get; set; }
+    public decimal Longitude { get; set; }
     public string FeatureClass { get; set; } = "";
     public string FeatureCode { get; set; } = "";
     public long CountryId { get; set; }
