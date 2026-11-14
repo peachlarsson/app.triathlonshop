@@ -61,13 +61,14 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
                 /// Pick random destination location
                 var destinationLocation = context.Locations
                     .Include(l => l.Country)
-                    .Include(l => l.City)
+                    .Include(l => l.Airport)
+                    .Where(l => l.Country != null && l.Airport != null)
                     .OrderBy(l => Guid.NewGuid())
                     .FirstOrDefault();
 
-                if (destinationLocation == null || destinationLocation.Country == null || destinationLocation.City == null)
+                if (destinationLocation == null || destinationLocation.Country == null || destinationLocation.Airport == null)
                 {
-                    logger.LogError("No destination location found or missing country/city for the location.");
+                    logger.LogError("No destination location found or missing country/airport for the location.");
                     return new StatusCodeResult(StatusCodes.Status500InternalServerError);
                 }
 
@@ -85,7 +86,7 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
 
                 if (warehouse == null)
                 {
-                    logger.LogError($"No warehouse found that ships to the destination: {destinationLocation.City.Name} - {destinationLocation.Country.Name} - {destinationLocation.Country.ContinentName}.");
+                    logger.LogError($"No warehouse found that ships to the destination: {destinationLocation.Country.Name} - {destinationLocation.Country.ContinentName}.");
                     return new StatusCodeResult(StatusCodes.Status500InternalServerError);
                 }
 
