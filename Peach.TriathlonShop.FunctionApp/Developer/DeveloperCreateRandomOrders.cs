@@ -61,20 +61,19 @@ namespace Peach.TriathlonShop.FunctionApp.Developer
                 /// Pick random destination location
                 var destinationLocation = context.Locations
                     .Include(l => l.Country)
-                    .Include(l => l.Airport)
-                    .Where(l => l.Country != null && l.Airport != null)
+                    .Where(l => l.Country != null && l.CityId != null && l.AirportId != null)
                     .OrderBy(l => Guid.NewGuid())
                     .FirstOrDefault();
 
-                if (destinationLocation == null || destinationLocation.Country == null || destinationLocation.Airport == null)
+                if (destinationLocation == null || destinationLocation.Country == null || destinationLocation.CityId == null || destinationLocation.AirportId == null)
                 {
-                    logger.LogError("No destination location found or missing country/airport for the location.");
+                    logger.LogError("No destination location found or missing country, city and airport for the location.");
                     return new StatusCodeResult(StatusCodes.Status500InternalServerError);
                 }
 
                 /// Pick warehouse that ships to the destination country and has most stock total quantity
                 var warehouse = context.Stocks
-                    .Where(s => s.Warehouse.WarehouseShipToCountries.Any(wc => wc.CountryId == destinationLocation.Country.Id))
+                    .Where(s => s.Warehouse.WarehouseShipToCountries.Any(wc => wc.CountryId == destinationLocation.CountryId))
                     .GroupBy(s => s.Warehouse)
                     .Select(g => new
                     {
