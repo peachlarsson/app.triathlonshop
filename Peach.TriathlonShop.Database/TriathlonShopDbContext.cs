@@ -133,7 +133,25 @@ public class TriathlonShopDbContext(DbContextOptions<TriathlonShopDbContext> opt
         modelBuilder.Entity<Location>(entity =>
         {
             entity.ToTable(nameof(Location), DefaultSchema);
-            
+
+            entity.HasOne(l => l.Country)
+                  .WithMany()
+                  .HasForeignKey(l => l.CountryId)
+                  .HasConstraintName("FK_Location_Country")
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(l => l.City)
+                  .WithMany()
+                  .HasForeignKey(l => l.CityId)
+                  .HasConstraintName("FK_Location_City")
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(l => l.Airport)
+                  .WithMany()
+                  .HasForeignKey(l => l.AirportId)
+                  .HasConstraintName("FK_Location_Airport")
+                  .OnDelete(DeleteBehavior.Cascade);
+
             entity.Property(e => e.CreatedAt)
                   .HasDefaultValueSql(DefaultTimestampSql);
         });
