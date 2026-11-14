@@ -19,6 +19,7 @@ public class GetOverview(TriathlonShopDbContext context)
             .ToListAsync();
 
         var orders = await context.Orders
+            .Include(o => o.DestinationLocation)
             .Where(o => o.Status == OrderStatus.Confirmed || o.Status == OrderStatus.Shipped)
             .ToListAsync();
 
