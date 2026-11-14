@@ -21,6 +21,7 @@ public class TriathlonShopDbContext(DbContextOptions<TriathlonShopDbContext> opt
 
     public DbSet<CountryEntity> Countries => Set<CountryEntity>();
     public DbSet<City> Cities => Set<City>();
+    public DbSet<AirportEntity> Airports => Set<AirportEntity>();
 
     public DbSet<WarehouseShipToCountry> WarehouseShipToCountries => Set<WarehouseShipToCountry>();
 
@@ -168,6 +169,14 @@ public class TriathlonShopDbContext(DbContextOptions<TriathlonShopDbContext> opt
         modelBuilder.Entity<City>(entity =>
         {
             entity.ToTable(nameof(City), DefaultSchema);
+
+            entity.Property(e => e.CreatedAt)
+                  .HasDefaultValueSql(DefaultTimestampSql);
+        });
+
+        modelBuilder.Entity<AirportEntity>(entity =>
+        {
+            entity.ToTable(AirportEntity.TableName, DefaultSchema);
 
             entity.Property(e => e.CreatedAt)
                   .HasDefaultValueSql(DefaultTimestampSql);
