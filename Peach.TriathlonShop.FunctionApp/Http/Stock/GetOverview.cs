@@ -45,10 +45,10 @@ public class GetOverview(TriathlonShopDbContext context)
                     OutOfStock = g.Count(s => s.Quantity == 0),
                     AwaitingDispatch = orders.Count(o =>
                         o.Status == OrderStatus.Confirmed &&
-                        shipToCountryIds.Contains(o.DestinationCountryId)),
+                        shipToCountryIds.Contains(o.DestinationLocation.CountryId)),
                     Shipped = orders.Count(o =>
                         o.Status == OrderStatus.Shipped &&
-                        shipToCountryIds.Contains(o.DestinationCountryId)),
+                        shipToCountryIds.Contains(o.DestinationLocation.CountryId)),
                 };
             })
             .ToList();
