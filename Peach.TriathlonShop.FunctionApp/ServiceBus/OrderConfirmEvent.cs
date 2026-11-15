@@ -1,6 +1,5 @@
 using Azure.Messaging.ServiceBus;
 using Microsoft.Azure.Functions.Worker;
-using Peach.TriathlonShop.Database.Models;
 using Peach.TriathlonShop.Database.Models.Enums;
 using Peach.TriathlonShop.FunctionApp.Models;
 using Peach.TriathlonShop.FunctionApp.Queues;
@@ -30,7 +29,6 @@ namespace Peach.TriathlonShop.FunctionApp.ServiceBus
                     OrderId = @event.OrderId,
                     Status = OrderStatus.Confirmed
                 },
-                CreateTransportOrderRequestQueueMessage = @event.OrderId.ToString(),
                 CreateInvoiceQueueMessage = new CreateInvoiceModel
                 {
                     OrderId = @event.OrderId,
@@ -47,9 +45,6 @@ namespace Peach.TriathlonShop.FunctionApp.ServiceBus.Models
     {
         [QueueOutput(SendNotification.QueueName)]
         public required SendNotificationModel SendNotificationQueueMessage { get; set; }
-
-        [QueueOutput(CreateTransportOrderRequest.QueueName)]
-        public required string CreateTransportOrderRequestQueueMessage { get; set; }
 
         [QueueOutput(CreateInvoice.QueueName)]
         public required CreateInvoiceModel CreateInvoiceQueueMessage { get; set; }
