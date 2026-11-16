@@ -75,12 +75,30 @@ public class OrdersController(ITriathlonShopClient triathlonShopClient) : Contro
         {
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
-        
+
         if (!response.IsSuccess)
         {
             return StatusCode(response.StatusCode, response.ErrorMessage);
         }
-        
+
+        return Ok();
+    }
+
+    [HttpPost("{orderid}/dispatch")]
+    public async Task<IActionResult> DispatchOrder(long orderId)
+    {
+        var response = await triathlonShopClient.SetOrderDispatch(orderId);
+
+        if (response == null)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        if (!response.IsSuccess)
+        {
+            return StatusCode(response.StatusCode, response.ErrorMessage);
+        }
+
         return Ok();
     }
 
