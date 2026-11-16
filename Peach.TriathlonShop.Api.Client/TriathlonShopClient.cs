@@ -189,7 +189,7 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
-            RequestUri = new Uri($"order/{orderId}/dispatch", UriKind.Relative)
+            RequestUri = new Uri($"orders/{orderId}/dispatch", UriKind.Relative)
         };
 
         var response = await httpClient.SendAsync(request);

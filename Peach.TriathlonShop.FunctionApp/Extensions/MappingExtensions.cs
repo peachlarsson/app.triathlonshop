@@ -8,6 +8,7 @@ public static class MappingExtensions
         {
             Database.Models.Enums.OrderStatus.Created => Api.Contract.Enums.Common.OrderStatus.Created,
             Database.Models.Enums.OrderStatus.Confirmed => Api.Contract.Enums.Common.OrderStatus.Confirmed,
+            Database.Models.Enums.OrderStatus.Dispatched => Api.Contract.Enums.Common.OrderStatus.Dispatched,
             Database.Models.Enums.OrderStatus.Shipped => Api.Contract.Enums.Common.OrderStatus.Shipped,
             Database.Models.Enums.OrderStatus.Cancelled => Api.Contract.Enums.Common.OrderStatus.Cancelled,
             _ => throw new ArgumentOutOfRangeException(nameof(status), $"Not expected order status value: {status}")
@@ -20,6 +21,7 @@ public static class MappingExtensions
         {
             Api.Contract.Enums.Common.OrderStatus.Created => Database.Models.Enums.OrderStatus.Created,
             Api.Contract.Enums.Common.OrderStatus.Confirmed => Database.Models.Enums.OrderStatus.Confirmed,
+            Api.Contract.Enums.Common.OrderStatus.Dispatched => Database.Models.Enums.OrderStatus.Dispatched,
             Api.Contract.Enums.Common.OrderStatus.Shipped => Database.Models.Enums.OrderStatus.Shipped,
             Api.Contract.Enums.Common.OrderStatus.Cancelled => Database.Models.Enums.OrderStatus.Cancelled,
             _ => throw new ArgumentOutOfRangeException(nameof(status), $"Not expected order status value: {status}")
