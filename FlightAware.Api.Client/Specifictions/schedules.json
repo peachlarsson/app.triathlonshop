@@ -1,0 +1,32 @@
+{
+  "links": {
+    "next": "string"
+  },
+  "num_pages": "number",
+  "scheduled": [
+    {
+      "ident": "string",
+      "ident_icao": "string",
+      "ident_iata": "string",
+      "actual_ident": "string",
+      "actual_ident_icao": "string",
+      "actual_ident_iata": "string",
+      "aircraft_type": "string",
+      "scheduled_in": "string",
+      "scheduled_out": "string",
+      "origin": "string",
+      "origin_icao": "string",
+      "origin_iata": "string",
+      "origin_lid": "string",
+      "destination": "string",
+      "destination_icao": "string",
+      "destination_iata": "string",
+      "destination_lid": "string",
+      "fa_flight_id": "string",
+      "meal_service": "string",
+      "seats_cabin_business": "number",
+      "seats_cabin_coach": "number",
+      "seats_cabin_first": "number"
+    }
+  ]
+}
