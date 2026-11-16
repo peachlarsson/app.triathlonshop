@@ -7,6 +7,7 @@ using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Peach.TriathlonShop.FunctionApp.Extensions;
+using Peach.TriathlonShop.FunctionApp.Extensions.Options;
 using Peach.TriathlonShop.FunctionApp.Services;
 
 var builder = FunctionsApplication.CreateBuilder(args);
@@ -24,6 +25,8 @@ builder.ConfigureFunctionsWebApplication();
 /// Register Azure App Configuration
 builder.AddCustomAzureAppConfiguration(credential: credential, labels: ["common", "triathlonshop", "triathlonshop-func"]);
 
+builder.Services.Configure<FlightAwareOptions>(builder.Configuration.GetSection(FlightAwareOptions.SectionName));
+
 /// OpenTelemetry
 if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING")))
 {
@@ -40,5 +43,11 @@ builder.Services.AddServiceBusClientWithNamespace(builder.Configuration, credent
 
 /// SignalR
 builder.Services.AddSignalRConnection(builder.Configuration, credential);
+
+#region API Clients
+
+builder.Services.AddFlightAwareApiClient();
+
+#endregion
 
 builder.Build().Run();
