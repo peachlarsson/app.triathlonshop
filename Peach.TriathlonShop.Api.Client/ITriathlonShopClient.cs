@@ -16,6 +16,7 @@ public interface ITriathlonShopClient
     #endregion
 
     public Task<Response<string>> SetOrderConfirm(long orderId);
+    public Task<Response<string>> SetOrderDispatch(long orderId);
     public Task<Response<string>> SetOrderShipped(long orderId);
     public Task<Response<DashboardResponseModel>> GetDashboardDataAsync();
     public Task<Response<StockOverviewResponseDto>> GetStockOverviewAsync();
