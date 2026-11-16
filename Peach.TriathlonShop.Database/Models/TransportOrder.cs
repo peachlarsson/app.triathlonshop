@@ -7,10 +7,11 @@ public class TransportOrder : BaseEntity
     public required long OrderId { get; set; }
     [System.ComponentModel.DataAnnotations.Schema.Column("TransportStatus")]
     public required TransportStatus Status { get; set; }
-    public string? ConsignmentNumber { get; set; }
+    public required string ConsignmentNumber { get; set; }
     public string? TrackingUrl { get; set; }
     public string? Carrier { get; set; }
     public string? Destination { get; set; }
+    public DateTimeOffset? PickUpDateTime { get; set; }
     public DateTimeOffset? ShippedAt { get; set; }
     public DateTimeOffset? EstimatedDeliveryDate { get; set; }
 
