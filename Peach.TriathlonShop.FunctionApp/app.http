@@ -112,14 +112,16 @@ Content-Type: application/json
 
 
 
+#############
+### Stock ###
+#############
+
+
+
 ### stock/overview
 GET {{baseUrl}}/stock/overview
 Accept: application/json
 
-
-#############
-### Stock ###
-#############
 
 
 ### Get stock
