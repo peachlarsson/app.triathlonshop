@@ -22,6 +22,8 @@ public class TriathlonShopDbContext(DbContextOptions<TriathlonShopDbContext> opt
     public DbSet<CountryEntity> Countries => Set<CountryEntity>();
     public DbSet<City> Cities => Set<City>();
     public DbSet<AirportEntity> Airports => Set<AirportEntity>();
+    public DbSet<AirportScheduleEntity> AirportSchedules => Set<AirportScheduleEntity>();
+    public DbSet<FlightRequestEntity> FlightRequests => Set<FlightRequestEntity>();
 
     public DbSet<WarehouseShipToCountry> WarehouseShipToCountries => Set<WarehouseShipToCountry>();
 
@@ -195,6 +197,31 @@ public class TriathlonShopDbContext(DbContextOptions<TriathlonShopDbContext> opt
         modelBuilder.Entity<AirportEntity>(entity =>
         {
             entity.ToTable(AirportEntity.TableName, DefaultSchema);
+
+            entity.Property(e => e.CreatedAt)
+                  .HasDefaultValueSql(DefaultTimestampSql);
+        });
+
+        modelBuilder.Entity<AirportScheduleEntity>(entity =>
+        {
+            entity.ToTable(AirportScheduleEntity.TableName, DefaultSchema);
+
+            entity.Property(e => e.Status)
+                  .HasColumnName("FlightStatus");
+
+            entity.HasOne(a => a.OriginAirport)
+                  .WithMany()
+                  .HasForeignKey(a => a.OriginAirportId)
+                  .HasConstraintName("FK_AirportSchedule_OriginAirport")
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.Property(e => e.CreatedAt)
+                  .HasDefaultValueSql(DefaultTimestampSql);
+        });
+
+        modelBuilder.Entity<FlightRequestEntity>(entity =>
+        {
+            entity.ToTable(FlightRequestEntity.TableName, DefaultSchema);
 
             entity.Property(e => e.CreatedAt)
                   .HasDefaultValueSql(DefaultTimestampSql);
