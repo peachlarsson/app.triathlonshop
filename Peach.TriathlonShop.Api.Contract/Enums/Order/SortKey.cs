@@ -9,6 +9,7 @@ public enum SortKey
     TotalPrice,
     TransportStatus,
     EstimatedDeliveryDate,
+    PlacedAt,
     CreatedAt,
     UpdatedAt,
 }

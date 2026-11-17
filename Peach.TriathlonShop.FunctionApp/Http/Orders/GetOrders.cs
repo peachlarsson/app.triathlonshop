@@ -76,6 +76,9 @@ public class GetOrders(TriathlonShopDbContext context)
             SortKey.EstimatedDeliveryDate => request.SortDirection == SortDirection.Asc
                 ? query.OrderBy(q => q.TransportOrder != null ? q.TransportOrder.EstimatedDeliveryDate : null)
                 : query.OrderByDescending(q => q.TransportOrder != null ? q.TransportOrder.EstimatedDeliveryDate : null),
+            SortKey.PlacedAt => request.SortDirection == SortDirection.Asc
+                ? query.OrderBy(q => q.PlacedAt)
+                : query.OrderByDescending(q => q.PlacedAt),
             SortKey.CreatedAt => request.SortDirection == SortDirection.Asc 
                 ? query.OrderBy(q => q.CreatedAt) 
                 : query.OrderByDescending(q => q.CreatedAt),
