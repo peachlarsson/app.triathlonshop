@@ -3,19 +3,21 @@ import { Header } from "@/components/layout/header";
 import { Main } from "@/components/layout/main";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { LogisticsHeader } from "./components/logistics-header";
-import { OrderDestinationsTable } from "./components/order-destinations-table";
+import { LogisticsOrdersTable } from "./components/logistics-orders-table";
 import { useLogisticsOrders } from "./hooks/use-logistics-orders";
 
 const route = getRouteApi("/logistics");
-const pageSize = 10;
 
 export function Logistics() {
-  const { page } = route.useSearch();
+  const search = route.useSearch();
   const navigate = route.useNavigate();
-  const { data: orders, error, isPending } = useLogisticsOrders(page, pageSize);
+  const {
+    data: orders,
+    error,
+    isPending,
+  } = useLogisticsOrders(search.page ?? 1, search.pageSize ?? 10);
 
   const totalCount = orders?.totalCount ?? 0;
-  const pageCount = Math.ceil(totalCount / pageSize);
 
   return (
     <>
@@ -30,17 +32,13 @@ export function Logistics() {
           isLoading={isPending}
           hasError={Boolean(error)}
         />
-        <OrderDestinationsTable
-          orders={orders?.data ?? []}
-          page={page}
-          pageCount={pageCount}
-          pageSize={pageSize}
+        <LogisticsOrdersTable
+          data={orders?.data ?? []}
           totalCount={totalCount}
           isLoading={isPending}
           error={error instanceof Error ? error.message : undefined}
-          onPageChange={(nextPage) =>
-            navigate({ search: (previous) => ({ ...previous, page: nextPage }) })
-          }
+          search={search}
+          navigate={navigate}
         />
       </Main>
     </>
