@@ -9,7 +9,7 @@ type ShipOrderButtonProps = {
 export function ShipOrderButton({ order }: ShipOrderButtonProps) {
   const shipOrder = useShipOrder(order.id);
 
-  if (order.status !== "Confirmed") return null;
+  if (order.status !== "Dispatched") return null;
 
   return (
     <div className="flex flex-col items-end gap-1">

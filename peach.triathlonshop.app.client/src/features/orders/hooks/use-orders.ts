@@ -3,6 +3,7 @@ import type { CreateOrderRequestDto, GetOrdersRequestDto } from "../data/schema"
 import {
   confirmOrder,
   createOrder,
+  dispatchOrder,
   fetchOrder,
   fetchOrders,
   shipOrder,
@@ -44,6 +45,19 @@ export function useConfirmOrder(orderId: number) {
 
   return useMutation({
     mutationFn: () => confirmOrder(orderId),
+    onSuccess: () =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["order", String(orderId)] }),
+        queryClient.invalidateQueries({ queryKey: ["orders"] }),
+      ]),
+  });
+}
+
+export function useDispatchOrder(orderId: number) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => dispatchOrder(orderId),
     onSuccess: () =>
       Promise.all([
         queryClient.invalidateQueries({ queryKey: ["order", String(orderId)] }),

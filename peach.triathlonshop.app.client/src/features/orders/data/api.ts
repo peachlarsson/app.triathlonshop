@@ -117,6 +117,16 @@ export async function confirmOrder(orderId: number): Promise<void> {
   }
 }
 
+export async function dispatchOrder(orderId: number): Promise<void> {
+  const response = await fetch(`/api/orders/${orderId}/dispatch`, {
+    method: "POST",
+  });
+
+  if (!response.ok) {
+    throw new Error(`Could not dispatch order (HTTP ${response.status}).`);
+  }
+}
+
 export async function shipOrder(orderId: number): Promise<void> {
   const response = await fetch(`/api/orders/${orderId}/ship`, {
     method: "POST",

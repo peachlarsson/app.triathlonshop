@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/table";
 import { ActivityTimelineCard } from "./components/activity-timeline-card";
 import { ConfirmOrderButton } from "./components/confirm-order-button";
+import { DispatchOrderButton } from "./components/dispatch-order-button";
 import { ShipOrderButton } from "./components/ship-order-button";
 import { useOrderLiveUpdates } from "./hooks/use-order-live-updates";
 import { useOrder } from "./hooks/use-orders";
@@ -67,6 +68,7 @@ export default function OrderDetails() {
               </Button>
             </div>
             <ConfirmOrderButton order={order} />
+            <DispatchOrderButton order={order} />
             <ShipOrderButton order={order} />
           </div>
         </div>
