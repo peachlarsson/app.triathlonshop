@@ -56,11 +56,20 @@ export const logisticsOrdersColumns: ColumnDef<Order>[] = [
       <DataTableColumnHeader column={column} title="Status" />
     ),
     cell: ({ row }) => {
-      const status = row.original.status;
+      const status =
+        row.original.transportOrder?.transportOrderStatus ?? "Unknown";
+      const normalizedStatus = status.toLowerCase();
       return (
         <Badge
           variant={
-            status.toLowerCase() === "cancelled" ? "destructive" : "secondary"
+            normalizedStatus === "cancelled" ? "destructive" : "secondary"
+          }
+          className={
+            normalizedStatus === "accepted"
+              ? "border-transparent bg-green-100 text-green-800 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-300"
+              : normalizedStatus === "requested"
+                ? "border-gray-200 bg-white text-gray-900 hover:bg-gray-50 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100"
+                : undefined
           }
         >
           {status}
