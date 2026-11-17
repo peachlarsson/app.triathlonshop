@@ -1,10 +1,9 @@
+import type { Order, PaginatedResponse } from "@/common/schemas";
 import {
   type CreateOrderRequestDto,
   type GetArticlesRequestDto,
   type GetArticlesResponseDto,
   type GetOrdersRequestDto,
-  type Order,
-  type PaginatedResponse,
   SortDirection,
   SortKey,
 } from "./schema";

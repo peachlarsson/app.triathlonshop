@@ -18,7 +18,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DataTablePagination, DataTableToolbar } from "@/components/data-table";
-import { type Order } from "../data/schema";
+import { type Order } from "@/common/schemas";
 import { ordersColumns as columns } from "./orders-columns";
 
 type OrdersTableProps = {

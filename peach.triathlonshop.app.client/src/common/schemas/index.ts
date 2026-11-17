@@ -6,5 +6,5 @@ export type {
   OrderNotification,
   OrderRow,
   OrderTransport,
-  PaginatedResponse,
 } from "./orders";
+export type { PaginatedResponse } from "./paginated-response";

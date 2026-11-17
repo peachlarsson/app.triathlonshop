@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import type { Order } from "../data/schema";
+import type { Order } from "@/common/schemas";
 import { useShipOrder } from "../hooks/use-orders";
 
 type ShipOrderButtonProps = {

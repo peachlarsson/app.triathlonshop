@@ -8,9 +8,13 @@ export type Order = {
   orderRowsCount?: number;
   customer: Customer;
   destinationLocation: Location;
+  destinationPostalCode?: string;
+  destinationAddress?: string;
   invoices: OrderInvoice[];
+  transportOrder?: OrderTransport;
   transportOrders: OrderTransport[];
   notifications: OrderNotification[];
+  placedAt: string;
   createdAt: string;
 };
 
@@ -23,12 +27,13 @@ export type OrderInvoice = {
 
 export type OrderTransport = {
   id: number;
-  status: string;
+  transportOrderStatus: string;
   createdAt: string;
   consignmentNumber?: string;
   trackingUrl?: string;
   carrier?: string;
   destination?: string;
+  dispatchDateTime?: string;
   shippedAt?: string;
   estimatedDeliveryDate?: string;
   updatedAt?: string | null;
@@ -55,6 +60,7 @@ export type OrderRow = {
   unitPrice: number;
   quantity: number;
   rowPrice: number;
+  placedAt: string;
   createdAt: string;
   updatedAt?: string;
 };
@@ -65,13 +71,4 @@ export type Customer = {
   name?: string;
   createdAt: string;
   updatedAt?: string;
-};
-
-export type PaginatedResponse<T> = {
-  data: T[];
-  totalCount: number;
-  totalPrice?: number;
-  pageNumber: number;
-  pageSize: number;
-  totalPages: number;
 };
