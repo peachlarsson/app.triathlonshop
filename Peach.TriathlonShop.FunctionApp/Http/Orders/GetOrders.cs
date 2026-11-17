@@ -124,6 +124,16 @@ public class GetOrders(TriathlonShopDbContext context)
                 Destination = n.Destination,
                 CreatedAt = n.CreatedAt
             }).ToList(),
+            TransportOrder = c.TransportOrder == null ? null : new TransportOrderDto
+            {
+                Id = c.TransportOrder.Id,
+                ConsignmentNumber = c.TransportOrder.ConsignmentNumber,
+                TransportOrderStatus = c.TransportOrder.Status.ToString(),
+                Carrier = c.TransportOrder.Carrier,
+                Destination = c.TransportOrder.Destination,
+                ShippedAt = c.TransportOrder.ShippedAt,
+                EstimatedDeliveryDate = c.TransportOrder.EstimatedDeliveryDate,
+            },
             //TransportEvents
             Invoices = c.Invoices.Select(i => new InvoiceDto
             {

@@ -12,7 +12,7 @@ public class OrderResponseDto
     public required LocationDto DestinationLocation { get; set; }
     public List<OrderRowDto> OrderRows { get; set; } = [];
     public List<NotificationDto> Notifications { get; set; } = [];
-    //public List<OrderTransportEventDto> TransportEvents { get; set; } = [];
+    public TransportOrderDto? TransportOrder { get; set; }
     public List<InvoiceDto> Invoices { get; set; } = [];
     public required decimal TotalPrice { get; set; }
     public int OrderRowsCount => OrderRows.Count;
