@@ -13,8 +13,7 @@ import { SortDirection } from "@/common/schemas/sort";
 const route = getRouteApi("/logistics");
 
 const toSortKey = (columnId?: string): SortKey => {
-  if (columnId === "number") return SortKey.OrderNumber;
-  if (columnId === "destination") return SortKey.DestinationCity;
+  if (columnId === "orderNumber") return SortKey.OrderNumber;
   if (columnId === "status") return SortKey.TransportOrderStatus;
   if (columnId === "estimatedDelivery") return SortKey.EstimatedDeliveryDate;
   if (columnId === "placedAt") return SortKey.PlacedAt;

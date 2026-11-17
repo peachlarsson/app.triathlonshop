@@ -42,7 +42,7 @@ function sortableHeader<TData, TValue>({
 
 export const logisticsOrdersColumns: ColumnDef<Order>[] = [
   {
-    accessorKey: "number",
+    accessorKey: "orderNumber",
     header: ({ column }) => sortableHeader({ column, title: "Order" }),
     cell: ({ row }) => (
       <Link
