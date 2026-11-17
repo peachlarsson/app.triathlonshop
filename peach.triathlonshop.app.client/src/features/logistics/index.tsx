@@ -14,7 +14,7 @@ const route = getRouteApi("/logistics");
 
 const toSortKey = (columnId?: string): SortKey => {
   if (columnId === "orderNumber") return SortKey.OrderNumber;
-  if (columnId === "status") return SortKey.TransportOrderStatus;
+  if (columnId === "status") return SortKey.TransportStatus;
   if (columnId === "estimatedDelivery") return SortKey.EstimatedDeliveryDate;
   if (columnId === "placedAt") return SortKey.PlacedAt;
   return SortKey.CreatedAt;
