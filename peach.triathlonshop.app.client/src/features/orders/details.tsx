@@ -56,17 +56,18 @@ export default function OrderDetails() {
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <h2 className="text-2xl font-bold tracking-tight">Order {order.number}</h2>
-            <p className="text-muted-foreground">Order ID: {order.id}</p>
-            <p className="text-muted-foreground">Placed {dateFormatter.format(new Date(order.placedAt))}</p>
-            <p className="text-muted-foreground">Created {dateFormatter.format(new Date(order.createdAt))}</p>
+            <p className="text-sm text-muted-foreground">Order ID: {order.id}</p>
+            <p className="text-sm text-muted-foreground">Placed {dateFormatter.format(new Date(order.placedAt))}</p>
+            <p className="text-sm text-muted-foreground">Created {dateFormatter.format(new Date(order.createdAt))}</p>
+            <p className="flex items-center gap-2 text-sm text-muted-foreground">
+              <span>Status:</span>
+              <Badge>{order.status}</Badge>
+            </p>
           </div>
           <div className="flex flex-col items-end gap-2">
-            <div className="flex items-center gap-2">
-              <Badge>{order.status}</Badge>
-              <Button asChild variant="outline" size="sm">
-                <Link to="/orders">Back to orders</Link>
-              </Button>
-            </div>
+            <Button asChild variant="outline" size="sm">
+              <Link to="/orders">Back to orders</Link>
+            </Button>
             <ConfirmOrderButton order={order} />
             <DispatchOrderButton order={order} />
             <ShipOrderButton order={order} />
