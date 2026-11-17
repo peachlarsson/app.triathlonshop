@@ -157,7 +157,7 @@ export default function OrderDetails() {
             updateVersion={updateVersion}
             items={order.transportOrders.map((transport) => ({
               id: transport.id,
-              status: transport.status,
+              status: transport.transportOrderStatus,
               occurredAt: transport.updatedAt ?? transport.createdAt,
               changeKey: JSON.stringify(transport),
               details: (
@@ -203,6 +203,98 @@ export default function OrderDetails() {
               details: <p>Sent to {notification.destination}</p>,
             }))}
           />
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Destination</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-1 text-sm">
+              <p>
+                <span className="text-muted-foreground">Country:</span>{" "}
+                {order.destinationLocation.countryName} ({order.destinationLocation.countryCode})
+              </p>
+              <p>
+                <span className="text-muted-foreground">City:</span>{" "}
+                {order.destinationLocation.cityName}
+              </p>
+              <p>
+                <span className="text-muted-foreground">Postal code:</span>{" "}
+                {order.destinationPostalCode || "-"}
+              </p>
+              <p>
+                <span className="text-muted-foreground">Address:</span>{" "}
+                {order.destinationAddress || "-"}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Transport order</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-1 text-sm">
+              {order.transportOrder ? (
+                <>
+                  {order.transportOrder.transportOrderStatus && (
+                    <p className="font-medium">
+                      Status: {order.transportOrder.transportOrderStatus}
+                    </p>
+                  )}
+                  {order.transportOrder.carrier && (
+                    <p>Carrier: {order.transportOrder.carrier}</p>
+                  )}
+                  {order.transportOrder.consignmentNumber && (
+                    <p>
+                      Consignment: {order.transportOrder.consignmentNumber}
+                    </p>
+                  )}
+                  {order.transportOrder.destination && (
+                    <p>Destination: {order.transportOrder.destination}</p>
+                  )}
+                  {order.transportOrder.dispatchDateTime && (
+                    <p>
+                      Dispatched:{" "}
+                      {dateFormatter.format(
+                        new Date(order.transportOrder.dispatchDateTime),
+                      )}
+                    </p>
+                  )}
+                  {order.transportOrder.shippedAt && (
+                    <p>
+                      Shipped:{" "}
+                      {dateFormatter.format(
+                        new Date(order.transportOrder.shippedAt),
+                      )}
+                    </p>
+                  )}
+                  {order.transportOrder.estimatedDeliveryDate && (
+                    <p>
+                      Estimated delivery:{" "}
+                      {dateFormatter.format(
+                        new Date(order.transportOrder.estimatedDeliveryDate),
+                      )}
+                    </p>
+                  )}
+                  {order.transportOrder.trackingUrl && (
+                    <a
+                      className="text-primary underline"
+                      href={order.transportOrder.trackingUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Track shipment
+                    </a>
+                  )}
+                </>
+              ) : (
+                <p className="text-muted-foreground">
+                  No transport order yet.
+                </p>
+              )}
+            </CardContent>
+          </Card>
         </div>
         
       </Main>

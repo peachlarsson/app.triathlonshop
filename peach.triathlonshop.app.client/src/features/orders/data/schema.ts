@@ -8,7 +8,10 @@ export type Order = {
   orderRowsCount?: number;
   customer: Customer;
   destinationLocation: Location;
+  destinationPostalCode?: string;
+  destinationAddress?: string;
   invoices: OrderInvoice[];
+  transportOrder?: OrderTransport;
   transportOrders: OrderTransport[];
   notifications: OrderNotification[];
   placedAt: string;
@@ -24,12 +27,13 @@ export type OrderInvoice = {
 
 export type OrderTransport = {
   id: number;
-  status: string;
+  transportOrderStatus: string;
   createdAt: string;
   consignmentNumber?: string;
   trackingUrl?: string;
   carrier?: string;
   destination?: string;
+  dispatchDateTime?: string;
   shippedAt?: string;
   estimatedDeliveryDate?: string;
   updatedAt?: string | null;
@@ -45,8 +49,8 @@ export type OrderNotification = {
 
 export type Location = {
   countryCode: string;
-  countryName: string;
-  city: string;
+  countryName?: string | null;
+  cityName: string;
 };
 
 export type OrderRow = {
