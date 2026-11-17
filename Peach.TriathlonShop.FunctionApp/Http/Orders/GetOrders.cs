@@ -89,6 +89,7 @@ public class GetOrders(TriathlonShopDbContext context)
             DestinationLocation = new LocationDto
             {
                 CountryCode = c.DestinationLocation.Country.Code,
+                CountryName = c.DestinationLocation.Country.Name,
                 CityName = c.DestinationLocation.City.Name,
             },
             Customer = new CustomerDto
