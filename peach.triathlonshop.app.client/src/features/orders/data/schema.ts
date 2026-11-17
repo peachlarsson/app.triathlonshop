@@ -1,4 +1,5 @@
 import { PaginatedResponse } from "@/common/schemas/paginated-response";
+import { SortDirection } from "@/common/schemas/sort";
 
 export type GetOrdersRequestDto = {
     id?: number;
@@ -19,11 +20,6 @@ export enum SortKey {
     TotalPrice = "totalPrice",
     CreatedAt = "createdAt",
     UpdatedAt = "updatedAt",
-}
-
-export enum SortDirection {
-    Asc = "asc",
-    Desc = "desc",
 }
 
 // Fetch articles
