@@ -10,7 +10,7 @@ public class AirportScheduleEntity : BaseEntity
     public string? Status { get; set; }
 
     public long OriginAirportId { get; set; }
-    public long? DestinationAirportId { get; set; }
+    public long? DestinationLocationId { get; set; }
 
     public required DateTimeOffset ScheduledDeparture { get; set; }
     public required DateTimeOffset ScheduledArrival { get; set; }
@@ -18,5 +18,5 @@ public class AirportScheduleEntity : BaseEntity
     public DateTimeOffset? ActualArrival { get; set; }
 
     public AirportEntity OriginAirport { get; set; } = null!;
-    public AirportEntity? DestinationAirport { get; set; }
+    public Location? DestinationLocation { get; set; }
 }

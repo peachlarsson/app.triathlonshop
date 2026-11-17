@@ -86,8 +86,8 @@ public class CreateTransportOrderRequest(ILogger<CreateTransportOrderRequest> lo
         var existingSchedule = await context.AirportSchedules
             .Where(s => s.ScheduledDeparture >= dateStart
                         && s.OriginAirport.IcaoCode == originAirportCode 
-                        && s.DestinationAirport != null 
-                        && s.DestinationAirport.IcaoCode == order.DestinationLocation.Airport.IcaoCode)
+                        && s.DestinationLocation != null 
+                        && s.DestinationLocation.City.Id == order.DestinationLocation.City.Id)
             .OrderBy(s => s.ScheduledDeparture)
             .FirstOrDefaultAsync();
 
@@ -97,7 +97,7 @@ public class CreateTransportOrderRequest(ILogger<CreateTransportOrderRequest> lo
             {
                 OrderId = orderId,
                 Status = Database.Models.Enums.TransportStatus.Accepted,
-                Destination = existingSchedule.DestinationAirport?.IcaoCode,
+                Destination = existingSchedule.DestinationLocation?.City.Name,
                 ConsignmentNumber = existingSchedule.IdentIcao,
                 Carrier = existingSchedule.Operator,
                 ShippedAt = existingSchedule.ScheduledDeparture,
@@ -200,8 +200,9 @@ public class CreateTransportOrderRequest(ILogger<CreateTransportOrderRequest> lo
                     return;
                 }
 
-                var commonDestination = await context.Airports
-                    .FirstOrDefaultAsync(a => a.IcaoCode == flight.DestinationIcao);
+                var commonDestinationLocation = await context.Locations
+                    .Include(l => l.Airport)
+                    .FirstOrDefaultAsync(l => l.Airport != null && l.Airport.IcaoCode == flight.DestinationIcao);
 
                 var airportSchedule = new AirportScheduleEntity
                 {
@@ -214,7 +215,7 @@ public class CreateTransportOrderRequest(ILogger<CreateTransportOrderRequest> lo
                     ActualDeparture = null,
                     ActualArrival = null,
                     OriginAirportId = warehouse.Location.Airport.Id,
-                    DestinationAirportId = commonDestination?.Id,
+                    DestinationLocationId = commonDestinationLocation?.Id,
                 };
 
                 context.AirportSchedules.Add(airportSchedule);
