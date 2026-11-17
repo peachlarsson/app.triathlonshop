@@ -11,7 +11,7 @@ export async function fetchLogisticsOrders(
     sortKey: "createdAt",
     sortDirection: "desc",
   });
-  const response = await fetch(`/api/orders?${params.toString()}`, { signal });
+  const response = await fetch(`/api/logistics?${params.toString()}`, { signal });
   if (!response.ok) {
     throw new Error(
       `Could not load logistics orders (HTTP ${response.status}).`,

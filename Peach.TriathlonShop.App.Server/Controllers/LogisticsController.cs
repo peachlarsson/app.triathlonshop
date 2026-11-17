@@ -1,0 +1,42 @@
+using Microsoft.AspNetCore.Mvc;
+using Peach.TriathlonShop.Api.Client;
+using Peach.TriathlonShop.Api.Contract.Models;
+
+namespace Peach.TriathlonShop.App.Server.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class LogisticsController(ITriathlonShopClient triathlonShopClient) : ControllerBase
+{
+    [HttpGet]
+    public async Task<ActionResult<PaginatedResponse<OrderResponseDto>>> GetPaginated([FromQuery] GetOrdersRequestDto request)
+    {
+        var response = await triathlonShopClient.GetOrdersAsync(request);
+
+        if (response == null)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        if (!response.IsSuccess)
+        {
+            return StatusCode(response.StatusCode, response.ErrorMessage);
+        }
+
+        if (response.Content == null)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        var result = new PaginatedResponse<OrderResponseDto>
+        {
+            Data = response.Content.Data,
+            TotalPrice = response.Content.TotalPrice,
+            TotalCount = response.Content.TotalCount,
+            PageNumber = response.Content.PageNumber,
+            PageSize = response.Content.PageSize
+        };
+
+        return Ok(result);
+    }
+}
