@@ -21,4 +21,6 @@ public class Order : BaseEntity
 
     public Customer? Customer { get; set; } = null!;
     public Location DestinationLocation { get; set; } = null!;
+
+    public TransportOrder? TransportOrder { get; set; }
 }
