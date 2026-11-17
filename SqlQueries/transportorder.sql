@@ -6,6 +6,7 @@ CREATE TABLE TransportOrder (
     TrackingUrl             NVARCHAR(MAX)       NULL,
     Carrier                 NVARCHAR(100)       NULL,
     Destination             NVARCHAR(MAX)       NULL,
+    PickUpDateTime          DATETIMEOFFSET      NULL,
     ShippedAt               DATETIMEOFFSET      NULL,
     EstimatedDeliveryDate   DATETIMEOFFSET      NULL,
     CreatedAt               DATETIMEOFFSET      NOT NULL                DEFAULT SYSDATETIMEOFFSET(),
