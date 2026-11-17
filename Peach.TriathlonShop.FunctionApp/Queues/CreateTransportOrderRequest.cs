@@ -100,7 +100,7 @@ public class CreateTransportOrderRequest(ILogger<CreateTransportOrderRequest> lo
                 Destination = existingSchedule.DestinationAirport?.IcaoCode,
                 ConsignmentNumber = existingSchedule.IdentIcao,
                 Carrier = existingSchedule.Operator,
-                PickUpDateTime = existingSchedule.ScheduledDeparture,
+                ShippedAt = existingSchedule.ScheduledDeparture,
                 EstimatedDeliveryDate = existingSchedule.ScheduledArrival
             });
 
@@ -228,7 +228,7 @@ public class CreateTransportOrderRequest(ILogger<CreateTransportOrderRequest> lo
                     transportOrder.Destination = flight.DestinationIcao;
                     transportOrder.ConsignmentNumber = flight.IdentIcao ?? string.Empty;
                     transportOrder.Carrier = flight.FaFlightId ?? string.Empty;
-                    transportOrder.PickUpDateTime = flight.ScheduledOut;
+                    transportOrder.ShippedAt = flight.ScheduledOut;
                     transportOrder.EstimatedDeliveryDate = flight.ScheduledIn;
                     transportOrder.Status = Database.Models.Enums.TransportStatus.Accepted;
                 }
