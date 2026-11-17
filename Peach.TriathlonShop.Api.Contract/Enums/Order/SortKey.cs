@@ -7,6 +7,8 @@ public enum SortKey
     CustomerName,
     OrderStatus,
     TotalPrice,
+    TransportStatus,
+    EstimatedDeliveryDate,
     CreatedAt,
     UpdatedAt,
 }

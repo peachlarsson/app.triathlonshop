@@ -70,6 +70,12 @@ public class GetOrders(TriathlonShopDbContext context)
             SortKey.TotalPrice => request.SortDirection == SortDirection.Asc
                 ? query.OrderBy(q => q.OrderRows.Sum(or => or.RowPrice))
                 : query.OrderByDescending(q => q.OrderRows.Sum(or => or.RowPrice)),
+            SortKey.TransportStatus => request.SortDirection == SortDirection.Asc
+                ? query.OrderBy(q => q.TransportOrder!.Status)
+                : query.OrderByDescending(q => q.TransportOrder!.Status),
+            SortKey.EstimatedDeliveryDate => request.SortDirection == SortDirection.Asc
+                ? query.OrderBy(q => q.TransportOrder != null ? q.TransportOrder.EstimatedDeliveryDate : null)
+                : query.OrderByDescending(q => q.TransportOrder != null ? q.TransportOrder.EstimatedDeliveryDate : null),
             SortKey.CreatedAt => request.SortDirection == SortDirection.Asc 
                 ? query.OrderBy(q => q.CreatedAt) 
                 : query.OrderByDescending(q => q.CreatedAt),
