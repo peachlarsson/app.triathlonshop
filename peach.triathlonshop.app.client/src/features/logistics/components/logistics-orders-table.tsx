@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import {
+  type SortingState,
+  type Updater,
   type VisibilityState,
   flexRender,
   getCoreRowModel,
@@ -15,7 +17,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DataTablePagination } from "@/components/data-table";
+import {
+  DataTablePagination,
+  DataTableViewOptions,
+} from "@/components/data-table";
 import type { Order } from "../../../common/schemas";
 import { logisticsOrdersColumns as columns } from "./logistics-orders-columns";
 
@@ -26,6 +31,8 @@ type LogisticsOrdersTableProps = {
   error?: string;
   search: Record<string, unknown>;
   navigate: NavigateFn;
+  sorting: SortingState;
+  onSortingChange: (updater: Updater<SortingState>) => void;
 };
 
 export function LogisticsOrdersTable({
@@ -35,6 +42,8 @@ export function LogisticsOrdersTable({
   error,
   search,
   navigate,
+  sorting,
+  onSortingChange,
 }: LogisticsOrdersTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const { pagination, onPaginationChange, ensurePageInRange } =
@@ -51,11 +60,13 @@ export function LogisticsOrdersTable({
     data,
     columns,
     state: {
+      sorting,
       pagination,
       columnVisibility,
     },
     getRowId: (order) => String(order.id),
     onColumnVisibilityChange: setColumnVisibility,
+    onSortingChange,
     onPaginationChange,
     manualSorting: true,
     manualFiltering: true,
@@ -70,6 +81,9 @@ export function LogisticsOrdersTable({
 
   return (
     <div className="flex flex-1 flex-col gap-4">
+      <div className="flex items-center justify-end">
+        <DataTableViewOptions table={table} />
+      </div>
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>

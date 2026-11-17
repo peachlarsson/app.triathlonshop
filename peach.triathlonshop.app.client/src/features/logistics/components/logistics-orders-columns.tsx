@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { type ColumnDef } from "@tanstack/react-table";
+import { type Column, type ColumnDef } from "@tanstack/react-table";
+import { ArrowDownIcon, ArrowUpIcon, CaretSortIcon } from "@radix-ui/react-icons";
 import { MapPin } from "lucide-react";
-import { DataTableColumnHeader } from "@/components/data-table";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { Order } from "../../../common/schemas";
 
@@ -9,12 +10,40 @@ const dateFormatter = new Intl.DateTimeFormat("sv-SE", {
   dateStyle: "medium",
 });
 
+function sortableHeader<TData, TValue>({
+  column,
+  title,
+}: {
+  column: Column<TData, TValue>;
+  title: string;
+}) {
+  const sorted = column.getIsSorted();
+
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      size="sm"
+      className="h-8 px-0 has-[>svg]:px-0"
+      aria-label={`Sort ${title} ${sorted === "asc" ? "descending" : "ascending"}`}
+      onClick={() => column.toggleSorting(sorted === "asc")}
+    >
+      <span>{title}</span>
+      {sorted === "asc" ? (
+        <ArrowUpIcon className="ms-2 h-4 w-4" />
+      ) : sorted === "desc" ? (
+        <ArrowDownIcon className="ms-2 h-4 w-4" />
+      ) : (
+        <CaretSortIcon className="ms-2 h-4 w-4" />
+      )}
+    </Button>
+  );
+}
+
 export const logisticsOrdersColumns: ColumnDef<Order>[] = [
   {
     accessorKey: "number",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Order" />
-    ),
+    header: ({ column }) => sortableHeader({ column, title: "Order" }),
     cell: ({ row }) => (
       <Link
         to="/orders/$orderId"
@@ -24,13 +53,13 @@ export const logisticsOrdersColumns: ColumnDef<Order>[] = [
         {row.original.number}
       </Link>
     ),
-    enableSorting: false,
+    enableSorting: true,
   },
   {
     id: "destination",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Destination" />
-    ),
+    accessorFn: (order) => order.destinationLocation.cityName,
+    header: ({ column }) =>
+      sortableHeader({ column, title: "Destination" }),
     cell: ({ row }) => {
       const destination = row.original.destinationLocation;
       return (
@@ -48,13 +77,11 @@ export const logisticsOrdersColumns: ColumnDef<Order>[] = [
         </div>
       );
     },
-    enableSorting: false,
+    enableSorting: true,
   },
   {
     accessorKey: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
+    header: ({ column }) => sortableHeader({ column, title: "Status" }),
     cell: ({ row }) => {
       const status =
         row.original.transportOrder?.transportOrderStatus ?? "Unknown";
@@ -76,17 +103,26 @@ export const logisticsOrdersColumns: ColumnDef<Order>[] = [
         </Badge>
       );
     },
-    enableSorting: false,
+    enableSorting: true,
   },
   {
     accessorKey: "estimatedDelivery",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Estimated Delivery" />
-    ),
+    header: ({ column }) =>
+      sortableHeader({ column, title: "Estimated Delivery" }),
     cell: ({ row }) =>
       row.original.estimatedDelivery
         ? dateFormatter.format(new Date(row.original.estimatedDelivery))
         : "",
-    enableSorting: false,
+    enableSorting: true,
   },
+  {
+    accessorKey: "placedAt",
+    header: ({ column }) =>
+      sortableHeader({ column, title: "Placed At" }),
+    cell: ({ row }) =>
+      row.original.placedAt
+        ? dateFormatter.format(new Date(row.original.placedAt))
+        : "",
+    enableSorting: true,
+  }
 ];
