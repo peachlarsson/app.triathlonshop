@@ -108,6 +108,7 @@ public class CreateTransportOrderRequest(ILogger<CreateTransportOrderRequest> lo
             transportOrder.EstimatedDeliveryDate = existingScheduleByCity.ScheduledArrival;
             transportOrder.Status = Database.Models.Enums.TransportStatus.Accepted;
 
+            context.TransportOrders.Add(transportOrder);
             await context.SaveChangesAsync();
             return;
         }
