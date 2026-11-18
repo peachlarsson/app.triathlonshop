@@ -11,6 +11,8 @@ public class AirportScheduleEntity : BaseEntity
 
     public long OriginAirportId { get; set; }
     public long? DestinationLocationId { get; set; }
+    public string? DestinationAirportIcao { get; set; }
+    public string? DestinationAirportIata { get; set; }
 
     public required DateTimeOffset ScheduledDeparture { get; set; }
     public required DateTimeOffset ScheduledArrival { get; set; }
