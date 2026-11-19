@@ -44,6 +44,11 @@ public class GetOrders(TriathlonShopDbContext context)
             query = query.Where(c => c.Number != null && EF.Functions.Like(c.Number, term));
         }
 
+        if (request.OrderStatus.HasValue)
+        {
+            query = query.Where(c => c.Status == request.OrderStatus.Value.ToDatabaseEnum());
+        }
+
         if (!string.IsNullOrWhiteSpace(request.ArticleName))
         {
             var term = $"%{request.ArticleName.Trim()}%";

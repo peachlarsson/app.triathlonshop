@@ -7,6 +7,7 @@ public class GetOrdersRequestDto
 {
     public long? Id { get; set; }
     public string? OrderNumber { get; set; }
+    public OrderStatus? OrderStatus { get; set; }
     public string? CustomerName { get; set; }
     public string? ArticleName { get; set; }
     public int PageNumber { get; set; } = 1;
