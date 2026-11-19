@@ -89,19 +89,24 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
     #region Orders
     public async Task<Response<PaginatedResponse<OrderResponseDto>>> GetOrdersAsync(GetOrdersRequestDto request)
     {
-        var queryParams = new Dictionary<string, string>
+        var queryParts = new List<string>
         {
-            { "id", request.Id?.ToString() ?? string.Empty },
-            { "orderNumber", request.OrderNumber ?? string.Empty },
-            { "customerName", request.CustomerName ?? string.Empty },
-            { "articleName", request.ArticleName ?? string.Empty },
-            { "pageNumber", request.PageNumber.ToString() },
-            { "pageSize", request.PageSize.ToString() },
-            { "sortKey", request.SortKey.ToString() },
-            { "sortDirection", request.SortDirection.ToString() }
+            $"id={Uri.EscapeDataString(request.Id?.ToString() ?? string.Empty)}",
+            $"orderNumber={Uri.EscapeDataString(request.OrderNumber ?? string.Empty)}",
+            $"customerName={Uri.EscapeDataString(request.CustomerName ?? string.Empty)}",
+            $"articleName={Uri.EscapeDataString(request.ArticleName ?? string.Empty)}",
+            $"pageNumber={Uri.EscapeDataString(request.PageNumber.ToString())}",
+            $"pageSize={Uri.EscapeDataString(request.PageSize.ToString())}",
+            $"sortKey={Uri.EscapeDataString(request.SortKey.ToString())}",
+            $"sortDirection={Uri.EscapeDataString(request.SortDirection.ToString())}"
         };
 
-        var queryString = string.Join("&", queryParams.Select(kvp => $"{kvp.Key}={Uri.EscapeDataString(kvp.Value)}"));
+        if (request.OrderStatuses != null)
+        {
+            queryParts.AddRange(request.OrderStatuses.Select(status => $"orderStatus={Uri.EscapeDataString(status.ToString())}"));
+        }
+
+        var queryString = string.Join("&", queryParts);
 
         var httpRequest = new HttpRequestMessage
         {
