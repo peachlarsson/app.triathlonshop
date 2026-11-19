@@ -55,7 +55,7 @@ export default function OrderDetails() {
         )}
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">Order {order.number}</h2>
+            <h2 className="text-2xl font-bold tracking-tight">Order {order.orderNumber}</h2>
             <p className="text-sm text-muted-foreground">Order ID: {order.id}</p>
             <p className="text-sm text-muted-foreground">Placed {dateFormatter.format(new Date(order.placedAt))}</p>
             <p className="text-sm text-muted-foreground">Created {dateFormatter.format(new Date(order.createdAt))}</p>

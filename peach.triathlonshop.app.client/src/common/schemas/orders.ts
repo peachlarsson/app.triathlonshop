@@ -1,6 +1,6 @@
 export type Order = {
   id: number;
-  number: string;
+  orderNumber: string;
   status: string;
   estimatedDelivery?: string;
   totalPrice: number;

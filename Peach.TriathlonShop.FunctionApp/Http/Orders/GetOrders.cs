@@ -97,7 +97,7 @@ public class GetOrders(TriathlonShopDbContext context)
         var queryDto = query.Select(c => new OrderResponseDto
         {
             Id = c.Id,
-            Number = c.Number,
+            OrderNumber = c.Number,
             Status = c.Status.ToApiEnum(),
             DestinationLocation = new LocationDto
             {

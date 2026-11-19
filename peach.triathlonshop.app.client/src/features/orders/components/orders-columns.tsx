@@ -51,7 +51,7 @@ export const ordersColumns: ColumnDef<Order>[] = [
     cell: ({ row }) => <span>{row.original.id}</span>,
   },
   {
-    accessorKey: "number",
+    accessorKey: "orderNumber",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Order" />
     ),
@@ -61,7 +61,7 @@ export const ordersColumns: ColumnDef<Order>[] = [
         params={{ orderId: String(row.original.id) }}
         className="font-medium hover:underline"
       >
-        {row.original.number}
+        {row.original.orderNumber}
       </Link>
     ),
   },

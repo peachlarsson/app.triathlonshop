@@ -50,7 +50,7 @@ export const logisticsOrdersColumns: ColumnDef<Order>[] = [
         params={{ orderId: String(row.original.id) }}
         className="font-medium hover:underline"
       >
-        {row.original.number}
+        {row.original.orderNumber}
       </Link>
     ),
     enableSorting: true,
