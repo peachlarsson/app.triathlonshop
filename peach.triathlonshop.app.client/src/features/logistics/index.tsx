@@ -8,16 +8,17 @@ import { LogisticsHeader } from "./components/logistics-header";
 import { LogisticsOrdersTable } from "./components/logistics-orders-table";
 import { useLogisticsOrders } from "./hooks/use-logistics-orders";
 import { SortKey } from "./data/schema";
+import { SortKey as SortKeyOrders } from "@/common/schemas/orders-request-dto";
 import { SortDirection } from "@/common/schemas/sort";
 
 const route = getRouteApi("/logistics");
 
-const toSortKey = (columnId?: string): SortKey => {
-  if (columnId === "orderNumber") return SortKey.OrderNumber;
-  if (columnId === "status") return SortKey.TransportStatus;
-  if (columnId === "estimatedDelivery") return SortKey.EstimatedDeliveryDate;
-  if (columnId === "placedAt") return SortKey.PlacedAt;
-  return SortKey.CreatedAt;
+const toSortKey = (columnId?: string): SortKeyOrders => {
+  if (columnId === "orderNumber") return SortKeyOrders.OrderNumber;
+  if (columnId === "status") return SortKeyOrders.TransportStatus;
+  if (columnId === "estimatedDelivery") return SortKeyOrders.EstimatedDeliveryDate;
+  if (columnId === "placedAt") return SortKeyOrders.PlacedAt;
+  return SortKeyOrders.PlacedAt;
 };
 
 export function Logistics() {
@@ -32,10 +33,12 @@ export function Logistics() {
     error,
     isPending,
   } = useLogisticsOrders(
-    search.page ?? 1,
-    search.pageSize ?? 10,
-    toSortKey(sort?.id),
-    sort?.desc ? SortDirection.Desc : SortDirection.Asc,
+    {
+      pageNumber: search.page ?? 1,
+      pageSize: search.pageSize ?? 10,
+      sortKey: toSortKey(sort?.id),
+      sortDirection: sort?.desc ? SortDirection.Desc : SortDirection.Asc,
+    }
   );
 
   const totalCount = orders?.totalCount ?? 0;
