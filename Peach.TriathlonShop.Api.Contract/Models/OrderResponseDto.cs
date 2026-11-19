@@ -1,11 +1,14 @@
 ﻿using Peach.TriathlonShop.Api.Contract.Enums.Common;
 using Peach.TriathlonShop.Api.Contract.Models.Orders;
+using System.Text.Json.Serialization;
 
 namespace Peach.TriathlonShop.Api.Contract.Models;
 
 public class OrderResponseDto
 {
     public required long Id { get; set; }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public required OrderStatus Status { get; set; }
     public required string Number { get; set; }
     public required CustomerDto Customer { get; set; }

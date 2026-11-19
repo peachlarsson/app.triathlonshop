@@ -30,7 +30,6 @@ public class GetOrders(TriathlonShopDbContext context)
         }
 
         var query = context.Orders
-            //.Include(o => o.Customer)
             .AsNoTracking();
 
         if (request.Id.HasValue)
@@ -197,6 +196,13 @@ public class GetOrders(TriathlonShopDbContext context)
             orderNumber = on;
         }
 
+        string? orderStatus = null;
+
+        if (query.TryGetValue("orderStatus", out var os))
+        {
+            orderStatus = os;
+        }
+
         var pageNumber = 1;
 
         if (query.TryGetValue("pageNumber", out var pn))
@@ -239,6 +245,7 @@ public class GetOrders(TriathlonShopDbContext context)
         {
             Id = id,
             CustomerName = customerName,
+            OrderStatus = orderStatus != null && Enum.TryParse<OrderStatus>(orderStatus, true, out var statusEnum) ? statusEnum : null,
             OrderNumber = orderNumber,
             ArticleName = articleName,
             PageNumber = pageNumber,
