@@ -19,11 +19,11 @@ export type Order = {
 };
 
 export enum OrderStatus {
-  Created = "Created",
-  Confirmed = "Confirmed",
-  Dispatched = "Dispatched",
-  Shipped = "Shipped",
-  Cancelled = "Cancelled",
+  Created,
+  Confirmed,
+  Dispatched,
+  Shipped,
+  Cancelled,
 }
 
 export type OrderInvoice = {
