@@ -7,17 +7,17 @@ import { ThemeSwitch } from "@/components/theme-switch";
 import { LogisticsHeader } from "./components/logistics-header";
 import { LogisticsOrdersTable } from "./components/logistics-orders-table";
 import { useLogisticsOrders } from "./hooks/use-logistics-orders";
-import { SortKey } from "./data/schema";
 import { SortKey as SortKeyOrders } from "@/common/schemas/orders-request-dto";
 import { SortDirection } from "@/common/schemas/sort";
+import { ColumnId } from "./data/schema";
 
 const route = getRouteApi("/logistics");
 
 const toSortKey = (columnId?: string): SortKeyOrders => {
-  if (columnId === "orderNumber") return SortKeyOrders.OrderNumber;
-  if (columnId === "status") return SortKeyOrders.TransportStatus;
-  if (columnId === "estimatedDelivery") return SortKeyOrders.EstimatedDeliveryDate;
-  if (columnId === "placedAt") return SortKeyOrders.PlacedAt;
+  if (columnId === ColumnId.OrderNumber) return SortKeyOrders.OrderNumber;
+  if (columnId === ColumnId.TransportStatus) return SortKeyOrders.TransportStatus;
+  if (columnId === ColumnId.EstimatedDeliveryDate) return SortKeyOrders.EstimatedDeliveryDate;
+  if (columnId === ColumnId.PlacedAt) return SortKeyOrders.PlacedAt;
   return SortKeyOrders.PlacedAt;
 };
 
@@ -25,7 +25,7 @@ export function Logistics() {
   const search = route.useSearch();
   const navigate = route.useNavigate();
   const [sorting, setSorting] = useState<SortingState>([
-    { id: "placedAt", desc: true },
+    { id: ColumnId.PlacedAt, desc: true },
   ]);
   const sort = sorting[0];
   const {
