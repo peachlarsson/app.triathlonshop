@@ -1,7 +1,7 @@
 export type Order = {
   id: number;
   orderNumber: string;
-  status: string;
+  status: OrderStatus;
   estimatedDelivery?: string;
   totalPrice: number;
   orderRows: OrderRow[];
@@ -17,6 +17,14 @@ export type Order = {
   placedAt: string;
   createdAt: string;
 };
+
+export enum OrderStatus {
+  Created = "Created",
+  Confirmed = "Confirmed",
+  Dispatched = "Dispatched",
+  Shipped = "Shipped",
+  Cancelled = "Cancelled",
+}
 
 export type OrderInvoice = {
   id: number;

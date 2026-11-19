@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import type { Order } from "@/common/schemas";
 import { useShipOrder } from "../hooks/use-orders";
+import { OrderStatus } from "@/common/schemas/orders";
 
 type ShipOrderButtonProps = {
   order: Pick<Order, "id" | "status">;
@@ -9,7 +10,7 @@ type ShipOrderButtonProps = {
 export function ShipOrderButton({ order }: ShipOrderButtonProps) {
   const shipOrder = useShipOrder(order.id);
 
-  if (order.status !== "Dispatched") return null;
+  if (order.status !== OrderStatus.Dispatched) return null;
 
   return (
     <div className="flex flex-col items-end gap-1">

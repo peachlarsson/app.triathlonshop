@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import type { Order } from "@/common/schemas";
+import { OrderStatus } from "@/common/schemas/orders";
 import { useConfirmOrder } from "../hooks/use-orders";
 
 type ConfirmOrderButtonProps = {
@@ -9,7 +10,7 @@ type ConfirmOrderButtonProps = {
 export function ConfirmOrderButton({ order }: ConfirmOrderButtonProps) {
   const confirmOrder = useConfirmOrder(order.id);
 
-  if (order.status !== "Created") return null;
+  if (order.status !== OrderStatus.Created) return null;
 
   return (
     <div className="flex flex-col items-end gap-1">

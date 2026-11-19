@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import type { Order } from "@/common/schemas";
 import { useDispatchOrder } from "../hooks/use-orders";
+import { OrderStatus } from "@/common/schemas/orders";
 
 type DispatchOrderButtonProps = {
   order: Pick<Order, "id" | "status">;
@@ -9,7 +10,7 @@ type DispatchOrderButtonProps = {
 export function DispatchOrderButton({ order }: DispatchOrderButtonProps) {
   const dispatchOrder = useDispatchOrder(order.id);
 
-  if (order.status !== "Confirmed") return null;
+  if (order.status !== OrderStatus.Confirmed) return null;
 
   return (
     <div className="flex flex-col items-end gap-1">

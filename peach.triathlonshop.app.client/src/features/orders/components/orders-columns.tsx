@@ -1,9 +1,10 @@
+import type { Order } from "@/common/schemas";
+import { OrderStatus } from "@/common/schemas/orders";
 import { Link } from "@tanstack/react-router";
-import { type ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/data-table";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { type Order } from "@/common/schemas";
+import type { ColumnDef } from "@tanstack/react-table";
 
 const currencyFormatter = new Intl.NumberFormat("sv-SE", {
   style: "currency",
@@ -84,7 +85,7 @@ export const ordersColumns: ColumnDef<Order>[] = [
     cell: ({ row }) => {
       const status = row.original.status;
       return (
-        <Badge variant={status === "Cancelled" ? "destructive" : "secondary"}>
+        <Badge variant={status === OrderStatus.Cancelled ? "destructive" : "secondary"}>
           {status}
         </Badge>
       );
