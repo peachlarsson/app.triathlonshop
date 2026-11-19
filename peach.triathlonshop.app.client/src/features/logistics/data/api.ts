@@ -1,20 +1,26 @@
 import type { Order, PaginatedResponse } from "../../../common/schemas";
-import type { SortDirection } from "@/common/schemas/sort";
-import type { SortKey } from "./schema";
+import { OrderStatus, SortKey, type OrdersRequestDto } from "@/common/schemas/orders-request-dto";
 
 export async function fetchLogisticsOrders(
-  page: number,
-  pageSize: number,
-  sortKey: SortKey,
-  sortDirection: SortDirection,
+  request: OrdersRequestDto,
   signal: AbortSignal,
 ): Promise<PaginatedResponse<Order>> {
   const params = new URLSearchParams({
-    pageNumber: String(page),
-    pageSize: String(pageSize),
-    sortKey,
-    sortDirection,
+    pageNumber: String(request.pageNumber),
+    pageSize: String(request.pageSize),
+    sortKey: SortKey[request.sortKey],
+    sortDirection: request.sortDirection,
   });
+
+  if (request.id !== undefined) params.set("id", String(request.id));
+  if (request.orderNumber !== undefined) params.set("orderNumber", request.orderNumber);
+  if (request.customerName !== undefined) params.set("customerName", request.customerName);
+  if (request.articleName !== undefined) params.set("articleName", request.articleName);
+
+  request.orderStatuses?.forEach((status) =>
+    params.append("orderStatus", OrderStatus[status]),
+  );
+  
   const response = await fetch(`/api/logistics?${params.toString()}`, { signal });
   if (!response.ok) {
     throw new Error(

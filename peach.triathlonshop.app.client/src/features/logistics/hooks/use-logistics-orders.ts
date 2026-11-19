@@ -1,17 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import type { SortDirection } from "@/common/schemas/sort";
-import type { SortKey } from "../data/schema";
 import { fetchLogisticsOrders } from "../data/api";
+import type { OrdersRequestDto } from "@/common/schemas/orders-request-dto";
 
 export function useLogisticsOrders(
-  page: number,
-  pageSize: number,
-  sortKey: SortKey,
-  sortDirection: SortDirection,
+  request: OrdersRequestDto
 ) {
   return useQuery({
-    queryKey: ["logistics-orders", page, pageSize, sortKey, sortDirection],
+    queryKey: ["logistics-orders", request],
     queryFn: ({ signal }) =>
-      fetchLogisticsOrders(page, pageSize, sortKey, sortDirection, signal),
+      fetchLogisticsOrders(request, signal),
   });
 }
