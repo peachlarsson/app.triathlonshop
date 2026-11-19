@@ -18,12 +18,12 @@ Accept: application/json
 ### Orders ###
 ##############
 
-GET {{baseUrl}}/orders?pageSize=10&pageNumber=3
+GET {{baseUrl}}/orders?orderStatus=created&orderStatus=confirmed
 Accept: application/json
 
 
 ### Update order
-PUT {{baseUrl}}/orders/33
+PUT {{baseUrl}}/orders/45
 Content-Type: application/json
 {
   "AddOrderRows": [
@@ -55,7 +55,7 @@ Content-Type: application/json
   "QuantityIntervalStart": 1,
   "QuantityIntervalEnd": 10,
   "ContinentName": "Europe",
-  "UseRandomOrderStatus": true,
+  "UseRandomOrderStatus": false,
   "UseRandomPlacedDate": true,
   "UseRandomDelay": false,
   "DelayMsIntervalStart": 0,

@@ -43,9 +43,13 @@ public class GetOrders(TriathlonShopDbContext context)
             query = query.Where(c => c.Number != null && EF.Functions.Like(c.Number, term));
         }
 
-        if (request.OrderStatus.HasValue)
+        if (request.OrderStatuses is { Count: > 0 })
         {
-            query = query.Where(c => c.Status == request.OrderStatus.Value.ToDatabaseEnum());
+            var statuses = request.OrderStatuses
+                .Select(s => s.ToDatabaseEnum())
+                .ToList();
+
+            query = query.Where(c => statuses.Contains(c.Status));
         }
 
         if (!string.IsNullOrWhiteSpace(request.ArticleName))
@@ -196,11 +200,28 @@ public class GetOrders(TriathlonShopDbContext context)
             orderNumber = on;
         }
 
-        string? orderStatus = null;
+        List<OrderStatus>? orderStatuses = null;
 
-        if (query.TryGetValue("orderStatus", out var os))
+        if (query.TryGetValue("orderStatus", out var orderStatusValues))
         {
-            orderStatus = os;
+            var parsedStatuses = new List<OrderStatus>();
+
+            foreach (var rawValue in orderStatusValues)
+            {
+                if (string.IsNullOrWhiteSpace(rawValue))
+                {
+                    continue;
+                }
+
+                if (Enum.TryParse<OrderStatus>(rawValue.ToString().Trim(), true, out var statusEnum))
+                {
+                    parsedStatuses.Add(statusEnum);
+                }
+            }
+
+            orderStatuses = parsedStatuses.Count > 0
+                ? parsedStatuses.Distinct().ToList()
+                : null;
         }
 
         var pageNumber = 1;
@@ -245,7 +266,7 @@ public class GetOrders(TriathlonShopDbContext context)
         {
             Id = id,
             CustomerName = customerName,
-            OrderStatus = orderStatus != null && Enum.TryParse<OrderStatus>(orderStatus, true, out var statusEnum) ? statusEnum : null,
+            OrderStatuses = orderStatuses,
             OrderNumber = orderNumber,
             ArticleName = articleName,
             PageNumber = pageNumber,
