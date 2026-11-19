@@ -18,7 +18,7 @@ export async function fetchLogisticsOrders(
   if (request.articleName !== undefined) params.set("articleName", request.articleName);
 
   request.orderStatuses?.forEach((status) =>
-    params.append("orderStatus", OrderStatus[status]),
+    params.append("orderStatuses", OrderStatus[status]),
   );
   
   const response = await fetch(`/api/logistics?${params.toString()}`, { signal });

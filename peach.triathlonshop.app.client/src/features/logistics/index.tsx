@@ -7,11 +7,13 @@ import { ThemeSwitch } from "@/components/theme-switch";
 import { LogisticsHeader } from "./components/logistics-header";
 import { LogisticsOrdersTable } from "./components/logistics-orders-table";
 import { useLogisticsOrders } from "./hooks/use-logistics-orders";
-import { SortKey as SortKeyOrders } from "@/common/schemas/orders-request-dto";
+import { OrderStatus, SortKey as SortKeyOrders } from "@/common/schemas/orders-request-dto";
 import { SortDirection } from "@/common/schemas/sort";
 import { ColumnId } from "./data/schema";
 
 const route = getRouteApi("/logistics");
+
+const orderStatuses = [OrderStatus.Confirmed, OrderStatus.Dispatched, OrderStatus.Shipped];
 
 const toSortKey = (columnId?: string): SortKeyOrders => {
   if (columnId === ColumnId.OrderNumber) return SortKeyOrders.OrderNumber;
@@ -34,6 +36,7 @@ export function Logistics() {
     isPending,
   } = useLogisticsOrders(
     {
+      orderStatuses,
       pageNumber: search.page ?? 1,
       pageSize: search.pageSize ?? 10,
       sortKey: toSortKey(sort?.id),
