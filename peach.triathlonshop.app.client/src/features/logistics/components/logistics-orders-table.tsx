@@ -21,8 +21,10 @@ import {
   DataTablePagination,
   DataTableViewOptions,
 } from "@/components/data-table";
+import { Input } from "@/components/ui/input";
 import type { Order } from "../../../common/schemas";
 import { logisticsOrdersColumns as columns } from "./logistics-orders-columns";
+import { Search } from "lucide-react";
 
 type LogisticsOrdersTableProps = {
   data: Order[];
@@ -33,6 +35,7 @@ type LogisticsOrdersTableProps = {
   navigate: NavigateFn;
   sorting: SortingState;
   onSortingChange: (updater: Updater<SortingState>) => void;
+  destinationLocation: string;
 };
 
 export function LogisticsOrdersTable({
@@ -44,6 +47,7 @@ export function LogisticsOrdersTable({
   navigate,
   sorting,
   onSortingChange,
+  destinationLocation,
 }: LogisticsOrdersTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const { pagination, onPaginationChange, ensurePageInRange } =
@@ -81,7 +85,28 @@ export function LogisticsOrdersTable({
 
   return (
     <div className="flex flex-1 flex-col gap-4">
-      <div className="flex items-center justify-end">
+      <div className="flex items-center justify-between gap-4">
+        <div className="relative w-full max-w-sm">
+          <Search
+            className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+            aria-hidden="true"
+          />
+          <Input
+            value={destinationLocation}
+            onChange={(event) =>
+              navigate({
+                search: (previous) => ({
+                  ...previous,
+                  page: undefined,
+                  destinationLocation: event.target.value || undefined,
+                }),
+              })
+            }
+            placeholder="Search by destination city or country"
+            aria-label="Search by destination city or country"
+            className="pl-9"
+          />
+        </div>
         <DataTableViewOptions table={table} />
       </div>
       <div className="overflow-hidden rounded-md border">

@@ -16,6 +16,9 @@ export async function fetchLogisticsOrders(
   if (request.orderNumber !== undefined) params.set("orderNumber", request.orderNumber);
   if (request.customerName !== undefined) params.set("customerName", request.customerName);
   if (request.articleName !== undefined) params.set("articleName", request.articleName);
+  if (request.destinationLocation !== undefined) {
+    params.set("destinationLocation", request.destinationLocation);
+  }
 
   request.orderStatuses?.forEach((status) =>
     params.append("orderStatuses", OrderStatus[status]),

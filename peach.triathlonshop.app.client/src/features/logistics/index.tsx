@@ -30,6 +30,10 @@ export function Logistics() {
     { id: ColumnId.PlacedAt, desc: true },
   ]);
   const sort = sorting[0];
+  const destinationLocation =
+    typeof search.destinationLocation === "string"
+      ? search.destinationLocation
+      : "";
   const {
     data: orders,
     error,
@@ -37,6 +41,7 @@ export function Logistics() {
   } = useLogisticsOrders(
     {
       orderStatuses,
+      destinationLocation,
       pageNumber: search.page ?? 1,
       pageSize: search.pageSize ?? 10,
       sortKey: toSortKey(sort?.id),
@@ -68,6 +73,7 @@ export function Logistics() {
           navigate={navigate}
           sorting={sorting}
           onSortingChange={setSorting}
+          destinationLocation={destinationLocation}
         />
       </Main>
     </>

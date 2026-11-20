@@ -5,6 +5,7 @@ import { Logistics } from "@/features/logistics";
 const logisticsSearchSchema = z.object({
   page: z.number().optional().catch(1),
   pageSize: z.number().optional().catch(10),
+  destinationLocation: z.string().optional().catch(""),
 });
 
 export const Route = createFileRoute("/logistics")({
