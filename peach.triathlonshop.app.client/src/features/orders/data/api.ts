@@ -33,11 +33,12 @@ export async function fetchOrders(
     id: String(request.id ?? ""),
     pageNumber: String(request.pageNumber ?? 1),
     pageSize: String(request.pageSize ?? 10),
-    customerName: request.customerName ?? "",
-    articleName: request.articleName ?? "",
-    sortKey: request.sortKey ?? SortKey.Id,
-    sortDirection: request.sortDirection ?? SortDirection.Asc,
+    sortKey: String(request.sortKey ?? SortKey.Id),
+    sortDirection: String(request.sortDirection ?? SortDirection.Asc),
   });
+  
+  if (request.customerName) params.set("customerName", request.customerName);
+  if (request.articleName) params.set("articleName", request.articleName);
 
   const response = await fetch(`/api/orders?${params.toString()}`, { signal });
   if (!response.ok) {

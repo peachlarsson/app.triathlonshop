@@ -30,8 +30,8 @@ export function Orders() {
 
   const page = search.page ?? 1;
   const pageSize = search.pageSize ?? 10;
-  const customerName = search.customerName ?? "";
-  const articleName = search.articleName ?? "";
+  const customerName = search.customerName;
+  const articleName = search.articleName;
   const sort = sorting[0];
   const request: GetOrdersRequestDto = {
     customerName,
