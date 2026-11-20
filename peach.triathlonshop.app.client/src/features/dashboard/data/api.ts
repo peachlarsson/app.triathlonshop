@@ -44,7 +44,7 @@ export async function createRandomOrders(): Promise<void> {
         ArticlesCountIntervalEnd: 5,
         QuantityIntervalStart: 1,
         QuantityIntervalEnd: 20,
-        UseRandomOrderStatus: false,
+        UseRandomOrderStatus: true,
         UseRandomPlacedDate: true,
         UseRandomDelay: true,
         DelayMsIntervalStart: 0,
