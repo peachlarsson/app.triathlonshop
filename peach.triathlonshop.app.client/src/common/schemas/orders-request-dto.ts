@@ -6,6 +6,11 @@ export type OrdersRequestDto = {
   orderStatuses?: OrderStatus[];
   customerName?: string;
   articleName?: string;
+  includeOrderRows?: boolean;
+  includeCustomer?: boolean;
+  destinationCountry?: string;
+  destinationCity?: string;
+  destinationLocation?: string;
   pageNumber: number;
   pageSize: number;
   sortKey: SortKey;

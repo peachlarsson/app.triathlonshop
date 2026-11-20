@@ -6,7 +6,7 @@ export type Order = {
   totalPrice: number;
   orderRows: OrderRow[];
   orderRowsCount?: number;
-  customer: Customer;
+  customer?: Customer;
   destinationLocation: Location;
   destinationPostalCode?: string;
   destinationAddress?: string;
