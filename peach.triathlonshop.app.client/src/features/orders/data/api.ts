@@ -3,10 +3,9 @@ import {
   type CreateOrderRequestDto,
   type GetArticlesRequestDto,
   type GetArticlesResponseDto,
-  type GetOrdersRequestDto,
-  SortKey,
 } from "./schema";
 import { SortDirection } from "@/common/schemas/sort";
+import { GetOrdersRequestDto, SortKey } from "@/common/schemas/orders-request-dto";
 
 export interface OrderLiveUpdateConnectionInfo {
   url: string;

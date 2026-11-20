@@ -1,26 +1,4 @@
 import { PaginatedResponse } from "@/common/schemas/paginated-response";
-import { SortDirection } from "@/common/schemas/sort";
-
-export type GetOrdersRequestDto = {
-    id?: number;
-    orderNumber?: string;
-    customerName?: string;
-    articleName?: string;
-    pageNumber?: number;
-    pageSize?: number;
-    sortKey?: SortKey;
-    sortDirection?: SortDirection;
-};
-
-export enum SortKey {
-    Id = "id",
-    OrderNumber = "orderNumber",
-    CustomerName = "customerName",
-    OrderStatus = "orderStatus",
-    TotalPrice = "totalPrice",
-    CreatedAt = "createdAt",
-    UpdatedAt = "updatedAt",
-}
 
 // Fetch articles
 

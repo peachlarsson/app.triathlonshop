@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { CreateOrderRequestDto, GetOrdersRequestDto } from "../data/schema";
+import type { CreateOrderRequestDto } from "../data/schema";
 import {
   confirmOrder,
   createOrder,
@@ -8,6 +8,7 @@ import {
   fetchOrders,
   shipOrder,
 } from "../data/api";
+import { GetOrdersRequestDto } from "@/common/schemas/orders-request-dto";
 
 export function useOrders(request: GetOrdersRequestDto) {
   return useQuery({

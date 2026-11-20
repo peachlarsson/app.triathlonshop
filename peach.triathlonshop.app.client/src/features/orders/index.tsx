@@ -4,14 +4,11 @@ import { type SortingState } from "@tanstack/react-table";
 import { Header } from "@/components/layout/header";
 import { Main } from "@/components/layout/main";
 import { ThemeSwitch } from "@/components/theme-switch";
-import {
-  type GetOrdersRequestDto,
-  SortKey,
-} from "./data/schema";
 import { SortDirection } from "@/common/schemas/sort";
 import { CreateOrderButton } from "./components/create-order-button";
 import { OrdersTable } from "./components/orders-table";
 import { useOrders } from "./hooks/use-orders";
+import { GetOrdersRequestDto, SortKey } from "@/common/schemas/orders-request-dto";
 
 const route = getRouteApi("/orders/");
 
