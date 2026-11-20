@@ -73,7 +73,7 @@ export const ordersColumns: ColumnDef<Order>[] = [
     ),
     cell: ({ row }) => (
       <Link to="/customers" className="font-medium hover:underline">
-        {row.original.customer.name}
+        {row.original.customer?.name}
       </Link>
     ),
   },

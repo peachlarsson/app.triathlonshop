@@ -137,8 +137,8 @@ export default function OrderDetails() {
               <CardTitle>Customer</CardTitle>
             </CardHeader>
             <CardContent className="space-y-1 text-sm">
-              <p className="font-medium">Name: {order.customer.name}</p>
-              <p className="text-muted-foreground">Email: {order.customer.email}</p>
+              <p className="font-medium">Name: {order.customer?.name}</p>
+              <p className="text-muted-foreground">Email: {order.customer?.email}</p>
             </CardContent>
           </Card>
 
