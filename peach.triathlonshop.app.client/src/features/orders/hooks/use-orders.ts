@@ -18,6 +18,7 @@ export function useOrders(request: GetOrdersRequestDto) {
       request.pageSize,
       request.customerName,
       request.articleName,
+      request.destinationLocation,
       request.sortKey,
       request.sortDirection,
     ],

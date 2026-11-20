@@ -7,6 +7,7 @@ const ordersSearchSchema = z.object({
   pageSize: z.number().optional().catch(10),
   customerName: z.string().optional().catch(""),
   articleName: z.string().optional().catch(""),
+  destinationLocation: z.string().optional().catch(""),
 });
 
 export const Route = createFileRoute("/orders/")({

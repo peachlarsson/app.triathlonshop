@@ -44,6 +44,8 @@ export function OrdersTable({
 }: OrdersTableProps) {
   const articleName =
     typeof search.articleName === "string" ? search.articleName : "";
+  const destinationLocation =
+    typeof search.destinationLocation === "string" ? search.destinationLocation : "";
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const {
@@ -97,18 +99,45 @@ export function OrdersTable({
         table={table}
         searchPlaceholder="Filter orders by customer"
         searchKey="customerName"
-        additionalSearch={{
-          placeholder: "Filter orders by article",
-          value: articleName,
-          onChange: (value) =>
-            navigate({
-              search: (prev) => ({
-                ...prev,
-                page: undefined,
-                articleName: value || undefined,
+        additionalSearches={[
+          {
+            key: "articleName",
+            placeholder: "Filter orders by article",
+            value: articleName,
+            onChange: (value) =>
+              navigate({
+                search: (prev) => ({
+                  ...prev,
+                  page: undefined,
+                  articleName: value || undefined,
+                }),
               }),
+          },
+          {
+            key: "destinationLocation",
+            placeholder: "Filter by destination location",
+            value: destinationLocation,
+            onChange: (value) =>
+              navigate({
+                search: (prev) => ({
+                  ...prev,
+                  page: undefined,
+                  destinationLocation: value || undefined,
+                }),
+              }),
+          },
+        ]}
+        onResetAdditionalSearches={() =>
+          navigate({
+            search: (prev) => ({
+              ...prev,
+              page: undefined,
+              customerName: undefined,
+              articleName: undefined,
+              destinationLocation: undefined,
             }),
-        }}
+          })
+        }
       />
       <div className="overflow-hidden rounded-md border">
         <Table>

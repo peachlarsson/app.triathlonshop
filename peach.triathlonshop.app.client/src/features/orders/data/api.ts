@@ -39,6 +39,7 @@ export async function fetchOrders(
   
   if (request.customerName) params.set("customerName", request.customerName);
   if (request.articleName) params.set("articleName", request.articleName);
+  if (request.destinationLocation) params.set("destinationLocation", request.destinationLocation);
 
   const response = await fetch(`/api/orders?${params.toString()}`, { signal });
   if (!response.ok) {

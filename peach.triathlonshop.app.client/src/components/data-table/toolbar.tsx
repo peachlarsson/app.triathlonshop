@@ -9,11 +9,13 @@ type DataTableToolbarProps<TData> = {
   table: Table<TData>
   searchPlaceholder?: string
   searchKey?: string
-  additionalSearch?: {
+  additionalSearches?: {
+    key: string
     placeholder: string
     value: string
     onChange: (value: string) => void
-  }
+  }[]
+  onResetAdditionalSearches?: () => void
   filters?: {
     columnId: string
     title: string
@@ -29,17 +31,18 @@ export function DataTableToolbar<TData>({
   table,
   searchPlaceholder = 'Filter...',
   searchKey,
-  additionalSearch,
+  additionalSearches = [],
+  onResetAdditionalSearches,
   filters = [],
 }: DataTableToolbarProps<TData>) {
   const isFiltered =
     table.getState().columnFilters.length > 0 ||
     table.getState().globalFilter ||
-    additionalSearch?.value
+    additionalSearches.some((search) => search.value)
 
   return (
     <div className='flex items-center justify-between'>
-      <div className='flex flex-1 flex-col-reverse items-start gap-y-2 sm:flex-row sm:items-center sm:space-x-2'>
+      <div className='flex flex-1 flex-col-reverse items-start gap-2 sm:flex-row sm:flex-wrap sm:items-center'>
         {searchKey ? (
           <Input
             placeholder={searchPlaceholder}
@@ -59,14 +62,16 @@ export function DataTableToolbar<TData>({
             className='h-8 w-37.5 lg:w-62.5'
           />
         )}
-        {additionalSearch && (
+        {additionalSearches.map((search) => (
           <Input
-            placeholder={additionalSearch.placeholder}
-            value={additionalSearch.value}
-            onChange={(event) => additionalSearch.onChange(event.target.value)}
+            key={search.key}
+            placeholder={search.placeholder}
+            aria-label={search.placeholder}
+            value={search.value}
+            onChange={(event) => search.onChange(event.target.value)}
             className='h-8 w-37.5 lg:w-62.5'
           />
-        )}
+        ))}
         <div className='flex gap-x-2'>
           {filters.map((filter) => {
             const column = table.getColumn(filter.columnId)
@@ -87,7 +92,7 @@ export function DataTableToolbar<TData>({
             onClick={() => {
               table.resetColumnFilters()
               table.setGlobalFilter('')
-              additionalSearch?.onChange('')
+              onResetAdditionalSearches?.()
             }}
             className='h-8 px-2 lg:px-3'
           >

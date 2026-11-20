@@ -32,10 +32,12 @@ export function Orders() {
   const pageSize = search.pageSize ?? 10;
   const customerName = search.customerName;
   const articleName = search.articleName;
+  const destinationLocation = search.destinationLocation;
   const sort = sorting[0];
   const request: GetOrdersRequestDto = {
     customerName,
     articleName,
+    destinationLocation,
     pageNumber: page,
     pageSize,
     sortKey: toSortKey(sort?.id),
