@@ -1,8 +1,8 @@
 import type { Order, PaginatedResponse } from "../../../common/schemas";
-import { OrderStatus, SortKey, type OrdersRequestDto } from "@/common/schemas/orders-request-dto";
+import { OrderStatus, SortKey, type GetOrdersRequestDto } from "@/common/schemas/orders-request-dto";
 
 export async function fetchLogisticsOrders(
-  request: OrdersRequestDto,
+  request: GetOrdersRequestDto,
   signal: AbortSignal,
 ): Promise<PaginatedResponse<Order>> {
   const params = new URLSearchParams({

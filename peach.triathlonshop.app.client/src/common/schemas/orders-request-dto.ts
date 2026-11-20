@@ -1,6 +1,6 @@
 import type { SortDirection } from "./sort";
 
-export type OrdersRequestDto = {
+export type GetOrdersRequestDto = {
   id?: number;
   orderNumber?: string;
   orderStatuses?: OrderStatus[];
