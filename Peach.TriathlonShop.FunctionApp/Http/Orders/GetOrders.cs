@@ -64,6 +64,26 @@ public class GetOrders(TriathlonShopDbContext context)
             query = query.Where(c => c.Customer!.Name != null && EF.Functions.Like(c.Customer.Name, term));
         }
 
+        if (!string.IsNullOrWhiteSpace(request.DestinationCountry))
+        {
+            var term = $"%{request.DestinationCountry.Trim()}%";
+            query = query.Where(c => c.DestinationLocation.Country.Name != null && EF.Functions.Like(c.DestinationLocation.Country.Name, term));
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.DestinationCity))
+        {
+            var term = $"%{request.DestinationCity.Trim()}%";
+            query = query.Where(c => c.DestinationLocation.City.Name != null && EF.Functions.Like(c.DestinationLocation.City.Name, term));
+        }
+
+        
+        if (!string.IsNullOrWhiteSpace(request.DestinationLocation))
+        {
+            var term = $"%{request.DestinationLocation.Trim()}%";
+            query = query.Where(c => c.DestinationLocation.City.Name != null && EF.Functions.Like(c.DestinationLocation.City.Name, term) ||
+                                     c.DestinationLocation.Country.Name != null && EF.Functions.Like(c.DestinationLocation.Country.Name, term));
+        }
+
         query = request.SortKey switch
         {
             SortKey.OrderNumber => request.SortDirection == SortDirection.Asc 
@@ -109,7 +129,7 @@ public class GetOrders(TriathlonShopDbContext context)
                 CountryName = c.DestinationLocation.Country.Name,
                 CityName = c.DestinationLocation.City.Name,
             },
-            Customer = new CustomerDto
+            Customer = !request.IncludeCustomer ? null : new CustomerDto
             {
                 Id = c.Customer!.Id,
                 Email = c.Customer.Email,
@@ -117,7 +137,7 @@ public class GetOrders(TriathlonShopDbContext context)
                 CreatedAt = c.Customer.CreatedAt,
                 UpdatedAt = c.Customer.UpdatedAt
             },
-            OrderRows = c.OrderRows.Select(or => new OrderRowDto
+            OrderRows = !request.IncludeOrderRows ? new() : c.OrderRows.Select(or => new OrderRowDto
             {
                 Id = or.Id,
                 OrderId = or.OrderId,
@@ -224,6 +244,13 @@ public class GetOrders(TriathlonShopDbContext context)
                 : null;
         }
 
+        var includeOrderRows = query.TryGetValue("includeOrderRows", out var ior) && bool.TryParse(ior, out var iorResult) && iorResult;
+        var includeCustomer = query.TryGetValue("includeCustomer", out var ic) && bool.TryParse(ic, out var icResult) && icResult;
+
+        var destinationCountry = query.TryGetValue("destinationCountry", out var dc) ? dc.ToString() : null;
+        var destinationCity = query.TryGetValue("destinationCity", out var dci) ? dci.ToString() : null;
+        var destinationLocation = query.TryGetValue("destinationLocation", out var dl) ? dl.ToString() : null;
+
         var pageNumber = 1;
 
         if (query.TryGetValue("pageNumber", out var pn))
@@ -269,6 +296,11 @@ public class GetOrders(TriathlonShopDbContext context)
             OrderStatuses = orderStatuses,
             OrderNumber = orderNumber,
             ArticleName = articleName,
+            IncludeOrderRows = includeOrderRows,
+            IncludeCustomer = includeCustomer,
+            DestinationCountry = destinationCountry,
+            DestinationCity = destinationCity,
+            DestinationLocation = destinationLocation,
             PageNumber = pageNumber,
             PageSize = pageSize,
             SortKey = sortKey,

@@ -11,7 +11,7 @@ public class OrderResponseDto
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public required OrderStatus Status { get; set; }
     public required string OrderNumber { get; set; }
-    public required CustomerDto Customer { get; set; }
+    public CustomerDto? Customer { get; set; }
     public required LocationDto DestinationLocation { get; set; }
     public List<OrderRowDto> OrderRows { get; set; } = [];
     public List<NotificationDto> Notifications { get; set; } = [];

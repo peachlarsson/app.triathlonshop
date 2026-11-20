@@ -22,6 +22,13 @@ GET {{baseUrl}}/orders?orderStatus=created&orderStatus=confirmed
 Accept: application/json
 
 
+### Search by destination location
+
+GET {{baseUrl}}/orders?destinationLocation=ra
+Accept: application/json
+
+
+
 ### Update order
 PUT {{baseUrl}}/orders/45
 Content-Type: application/json
