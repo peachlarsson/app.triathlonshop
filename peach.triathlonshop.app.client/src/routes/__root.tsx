@@ -18,7 +18,7 @@ export const Route = createRootRouteWithContext<{
         <AppLayout>
           <Outlet />
         </AppLayout>
-        <Toaster duration={5000} />
+        <Toaster duration={5000} position='bottom-right' />
         {import.meta.env.MODE === 'development' && (
           <>
 {/* 
