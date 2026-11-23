@@ -6,6 +6,7 @@ import { Main } from "@/components/layout/main";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { LogisticsHeader } from "./components/logistics-header";
 import { LogisticsOrdersTable } from "./components/logistics-orders-table";
+import { FlightMap } from "./flight-map/flight-map";
 import { useLogisticsOrders } from "./hooks/use-logistics-orders";
 import { OrderStatus, SortKey as SortKeyOrders } from "@/common/schemas/orders-request-dto";
 import { SortDirection } from "@/common/schemas/sort";
@@ -64,6 +65,7 @@ export function Logistics() {
           isLoading={isPending}
           hasError={Boolean(error)}
         />
+        <FlightMap />
         <LogisticsOrdersTable
           data={orders?.data ?? []}
           totalCount={totalCount}
