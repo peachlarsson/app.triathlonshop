@@ -17,12 +17,6 @@ export function FlightMap() {
       aria-labelledby="flight-map-title"
       className="overflow-hidden rounded-xl border bg-card"
     >
-      <div className="px-4 py-3">
-        <h3 id="flight-map-title" className="font-semibold">
-          Flight map
-        </h3>
-        <p className="text-sm text-muted-foreground">Europe overview</p>
-      </div>
       <div className="h-[420px] w-full">
         <Map
           aria-label="Map of Europe"
