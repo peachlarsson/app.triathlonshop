@@ -296,6 +296,35 @@ public class TriathlonShopClient(HttpClient httpClient, IConfiguration configura
         };
     }
 
+    public async Task<Response<GetAllWarehouseStockDto>> GetStockWarehousesAsync()
+    {
+        var httpRequest = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri("stock/warehouses", UriKind.Relative)
+        };
+
+        var response = await httpClient.SendAsync(httpRequest);
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        if (response.IsSuccessStatusCode)
+        {
+            return new Response<GetAllWarehouseStockDto>
+            {
+                IsSuccess = true,
+                StatusCode = (int)response.StatusCode,
+                Content = JsonSerializer.Deserialize<GetAllWarehouseStockDto>(responseContent, jsonSerializerOptions),
+            };
+        }
+
+        return new Response<GetAllWarehouseStockDto>
+        {
+            IsSuccess = false,
+            StatusCode = (int)response.StatusCode,
+            ErrorMessage = responseContent,
+        };
+    }
+
     public async Task<Response<GetAllWarehouseStockDto>> GetAllWarehouseStockAsync()
     {
         var httpRequest = new HttpRequestMessage
