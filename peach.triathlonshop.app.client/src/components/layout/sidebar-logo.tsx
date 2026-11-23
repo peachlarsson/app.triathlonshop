@@ -1,4 +1,4 @@
-import triathlonShopLogo from '@/assets/tri-logo-002.png'
+import triathlonShopLogo from '@/assets/logo-anime-001.png'
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -11,14 +11,14 @@ export function SidebarLogo() {
       <SidebarMenuItem>
         <SidebarMenuButton
           size='lg'
-          className='cursor-default gap-2 hover:bg-transparent active:bg-transparent'
+          className='h-14 cursor-default gap-2 hover:bg-transparent active:bg-transparent'
           asChild
         >
           <div>
             <img
               src={triathlonShopLogo}
               alt='Triathlon Shop'
-              className='size-10 shrink-0 rounded-lg bg-black object-contain'
+              className='size-12 shrink-0 rounded-lg bg-black object-contain group-data-[collapsible=icon]:size-8'
             />
             <span className='truncate font-semibold'>Triathlon Shop</span>
           </div>
