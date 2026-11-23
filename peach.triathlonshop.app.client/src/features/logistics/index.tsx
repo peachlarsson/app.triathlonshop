@@ -1,4 +1,5 @@
 import { getRouteApi } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { type SortingState } from "@tanstack/react-table";
 import { Header } from "@/components/layout/header";
@@ -8,6 +9,7 @@ import { LogisticsHeader } from "./components/logistics-header";
 import { LogisticsOrdersTable } from "./components/logistics-orders-table";
 import { FlightMap } from "./flight-map/flight-map";
 import { useLogisticsOrders } from "./hooks/use-logistics-orders";
+import { fetchWarehouses } from "./data/api";
 import { OrderStatus, SortKey as SortKeyOrders } from "@/common/schemas/orders-request-dto";
 import { SortDirection } from "@/common/schemas/sort";
 import { ColumnId } from "./data/schema";
@@ -35,6 +37,13 @@ export function Logistics() {
     typeof search.destinationLocation === "string"
       ? search.destinationLocation
       : "";
+  const {
+    data: warehouseResponse,
+    error: warehousesError,
+  } = useQuery({
+    queryKey: ["logistics", "warehouses"],
+    queryFn: ({ signal }) => fetchWarehouses(signal),
+  });
   const {
     data: orders,
     error,
@@ -65,7 +74,14 @@ export function Logistics() {
           isLoading={isPending}
           hasError={Boolean(error)}
         />
-        <FlightMap />
+        <FlightMap
+          warehouses={warehouseResponse?.warehouses ?? []}
+          error={
+            warehousesError instanceof Error
+              ? warehousesError.message
+              : undefined
+          }
+        />
         <LogisticsOrdersTable
           data={orders?.data ?? []}
           totalCount={totalCount}
