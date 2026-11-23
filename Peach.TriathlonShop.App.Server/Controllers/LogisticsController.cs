@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Peach.TriathlonShop.Api.Client;
 using Peach.TriathlonShop.Api.Contract.Models;
+using Peach.TriathlonShop.Api.Contract.Models.Stock;
 
 namespace Peach.TriathlonShop.App.Server.Controllers;
 
@@ -38,5 +39,18 @@ public class LogisticsController(ITriathlonShopClient triathlonShopClient) : Con
         };
 
         return Ok(result);
+    }
+
+    [HttpGet("warehouses")]
+    public async Task<ActionResult<GetAllWarehouseStockDto>> GetAllWarehouseStockAsync()
+    {
+        var response = await triathlonShopClient.GetStockWarehousesAsync();
+
+        if (response.IsSuccess)
+        {
+            return Ok(response.Content ?? new GetAllWarehouseStockDto());
+        }
+
+        return StatusCode(response.StatusCode, response.ErrorMessage);
     }
 }

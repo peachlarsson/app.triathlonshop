@@ -1,5 +1,6 @@
 import type { Order, PaginatedResponse } from "../../../common/schemas";
 import { OrderStatus, SortKey, type GetOrdersRequestDto } from "@/common/schemas/orders-request-dto";
+import type { WarehouseResponseDto } from "./schema";
 
 export async function fetchLogisticsOrders(
   request: GetOrdersRequestDto,
@@ -32,4 +33,17 @@ export async function fetchLogisticsOrders(
   }
 
   return (await response.json()) as PaginatedResponse<Order>;
+}
+
+export async function fetchWarehouses(
+  signal: AbortSignal,
+): Promise<WarehouseResponseDto> {
+  const response = await fetch(`/api/logistics/warehouses`, { signal });
+  if (!response.ok) {
+    throw new Error(
+      `Could not load warehouses (HTTP ${response.status}).`,
+    );
+  }
+
+  return (await response.json()) as WarehouseResponseDto;
 }
