@@ -18,6 +18,12 @@ Accept: application/json
 ### Orders ###
 ##############
 
+### Id
+GET {{baseUrl}}/orders?id=12&includeOrderRows=true&includeCustomer=true
+Accept: application/json
+
+### Order status
+
 GET {{baseUrl}}/orders?orderStatus=created&orderStatus=confirmed
 Accept: application/json
 
@@ -115,7 +121,9 @@ Content-Type: application/json
 ### Random stock items
 POST {{baseUrl}}/developer/warehouses/random-stock-items
 Content-Type: application/json
-{}
+{
+  "ContinentName": "Europe"
+}
 
 
 

@@ -32,6 +32,7 @@
     <ProjectReference Include="..\FlightAware.Api.Client\FlightAware.Api.Client.csproj" />
     <ProjectReference Include="..\Peach.TriathlonShop.Api.Contract\Peach.TriathlonShop.Api.Contract.csproj" />
     <ProjectReference Include="..\Peach.TriathlonShop.Database\Peach.TriathlonShop.Database.csproj" />
+    <ProjectReference Include="..\Peach.TriathlonShop.FunctionApp.Business\Peach.TriathlonShop.FunctionApp.Business.csproj" />
     <ProjectReference Include="..\Peach.TriathlonShop.ServiceBus.Client\Peach.TriathlonShop.ServiceBus.Client.csproj" />
   </ItemGroup>
 

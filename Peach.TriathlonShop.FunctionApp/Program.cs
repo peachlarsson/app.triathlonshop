@@ -6,6 +6,7 @@ using Microsoft.Azure.SignalR.Management;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Peach.TriathlonShop.FunctionApp.Business;
 using Peach.TriathlonShop.FunctionApp.Extensions;
 using Peach.TriathlonShop.FunctionApp.Extensions.Options;
 using Peach.TriathlonShop.FunctionApp.Services;
@@ -47,6 +48,12 @@ builder.Services.AddSignalRConnection(builder.Configuration, credential);
 #region API Clients
 
 builder.Services.AddFlightAwareApiClient();
+
+#endregion
+
+#region Business Handlers
+
+builder.Services.AddScoped<OrdersHandler>();
 
 #endregion
 
