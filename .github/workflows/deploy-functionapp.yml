@@ -9,6 +9,7 @@ on:
       - Peach.TriathlonShop.FunctionApp/**
       - Peach.TriathlonShop.Api.Contract/**
       - Peach.TriathlonShop.Database/**
+      - Peach.TriathlonShop.FunctionApp.Business/**
       - Peach.TriathlonShop.ServiceBus.Client/**
   workflow_dispatch:
 
