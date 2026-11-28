@@ -26,9 +26,9 @@ export function useOrders(request: GetOrdersRequestDto) {
   });
 }
 
-export function useOrder(orderId: string) {
+export function useOrder(orderId: number) {
   return useQuery({
-    queryKey: ["order", orderId],
+    queryKey: ["order", String(orderId)],
     queryFn: ({ signal }) => fetchOrder(orderId, signal),
   });
 }

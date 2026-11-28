@@ -26,7 +26,7 @@ export function RecentSales({ orders }: RecentSalesProps) {
         <Link
           key={order.orderNumber}
           to='/orders/$orderId'
-          params={{ orderId: String(order.id) }}
+          params={{ orderId: order.id }}
           className='flex items-center justify-between gap-4 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
         >
           <div className='min-w-0'>

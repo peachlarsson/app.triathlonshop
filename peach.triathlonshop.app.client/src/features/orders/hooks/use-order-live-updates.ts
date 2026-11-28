@@ -8,7 +8,7 @@ interface OrderUpdate {
   Update?: boolean;
 }
 
-export function useOrderLiveUpdates(orderId: string) {
+export function useOrderLiveUpdates(orderId: number) {
   const queryClient = useQueryClient();
   const [error, setError] = useState<string>();
   const [updateVersion, setUpdateVersion] = useState(0);
@@ -40,7 +40,7 @@ export function useOrderLiveUpdates(orderId: string) {
           ) {
             setUpdateVersion((version) => version + 1);
             void queryClient.invalidateQueries({
-              queryKey: ["order", orderId],
+              queryKey: ["order", String(orderId)],
             });
           }
         });
@@ -48,7 +48,7 @@ export function useOrderLiveUpdates(orderId: string) {
           if (!abortController.signal.aborted) {
             setError(undefined);
             void queryClient.invalidateQueries({
-              queryKey: ["order", orderId],
+              queryKey: ["order", String(orderId)],
             });
           }
         });

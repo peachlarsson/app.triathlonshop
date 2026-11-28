@@ -50,7 +50,7 @@ export const logisticsOrdersColumns: ColumnDef<Order>[] = [
     cell: ({ row }) => (
       <Link
         to="/orders/$orderId"
-        params={{ orderId: String(row.original.id) }}
+        params={{ orderId: row.original.id }}
         className="font-medium hover:underline"
       >
         {row.original.orderNumber}

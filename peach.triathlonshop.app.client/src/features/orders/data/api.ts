@@ -5,7 +5,10 @@ import {
   type GetArticlesResponseDto,
 } from "./schema";
 import { SortDirection } from "@/common/schemas/sort";
-import { GetOrdersRequestDto, SortKey } from "@/common/schemas/orders-request-dto";
+import {
+  type GetOrdersRequestDto,
+  SortKey,
+} from "@/common/schemas/orders-request-dto";
 
 export interface OrderLiveUpdateConnectionInfo {
   url: string;
@@ -35,6 +38,8 @@ export async function fetchOrders(
     pageSize: String(request.pageSize ?? 10),
     sortKey: String(request.sortKey ?? SortKey.Id),
     sortDirection: String(request.sortDirection ?? SortDirection.Asc),
+    includeOrderRows: String(request.includeOrderRows ?? false),
+    includeCustomer: String(request.includeCustomer ?? false),
   });
   
   if (request.customerName) params.set("customerName", request.customerName);
@@ -50,17 +55,23 @@ export async function fetchOrders(
 }
 
 export async function fetchOrder(
-  orderId: string,
+  orderId: number,
   signal: AbortSignal,
 ): Promise<Order | null> {
-  const params = new URLSearchParams({ id: orderId });
-  const response = await fetch(`/api/orders?${params.toString()}`, { signal });
-
-  if (!response.ok) {
-    throw new Error(`Could not load order (HTTP ${response.status}).`);
+  if (!Number.isSafeInteger(orderId)) {
+    throw new Error("Invalid order ID.");
   }
 
-  const result = (await response.json()) as PaginatedResponse<Order>;
+  const request: GetOrdersRequestDto = {
+    id: orderId,
+    includeOrderRows: true,
+    includeCustomer: true,
+    pageNumber: 1,
+    pageSize: 100,
+    sortKey: SortKey.Id,
+    sortDirection: SortDirection.Asc,
+  };
+  const result = await fetchOrders(request, signal);
   const order = result.data[0];
   return order
     ? {
