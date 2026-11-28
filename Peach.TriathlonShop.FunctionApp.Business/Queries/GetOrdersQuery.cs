@@ -1,0 +1,23 @@
+﻿using Peach.TriathlonShop.Database.Models.Enums;
+using Peach.TriathlonShop.FunctionApp.Business.Enums.Common;
+using Peach.TriathlonShop.FunctionApp.Business.Enums.Order;
+
+namespace Peach.TriathlonShop.FunctionApp.Business.Queries;
+
+public class GetOrdersQuery
+{
+    public long? Id { get; set; }
+    public string? OrderNumber { get; set; }
+    public List<OrderStatus>? OrderStatuses { get; set; }
+    public string? CustomerName { get; set; }
+    public string? ArticleName { get; set; }
+    public bool IncludeOrderRows { get; set; }
+    public bool IncludeCustomer { get; set; }
+    public string? DestinationCountry { get; set; }
+    public string? DestinationCity { get; set; }
+    public string? DestinationLocation { get; set; }
+    public int PageNumber { get; set; } = 1;
+    public int PageSize { get; set; } = 100;
+    public SortKey SortKey { get; set; } = SortKey.Id;
+    public SortDirection SortDirection { get; set; } = SortDirection.Asc;
+}
