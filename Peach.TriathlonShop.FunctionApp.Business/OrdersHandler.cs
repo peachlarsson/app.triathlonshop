@@ -101,7 +101,7 @@ public class OrdersHandler(TriathlonShopDbContext context)
         {
             Id = c.Id,
             OrderNumber = c.Number,
-            Status = c.Status,
+            Status = c.Status.ToString(),
             DestinationLocation = new LocationDto
             {
                 CountryCode = c.DestinationLocation.Country.Code,

@@ -5,7 +5,7 @@ namespace Peach.TriathlonShop.FunctionApp.Business.ResponseDtos;
 public class OrdersResponseDto
 {
     public required long Id { get; set; }
-    public required OrderStatus Status { get; set; }
+    public required string Status { get; set; }
     public required string OrderNumber { get; set; }
     public CustomerDto? Customer { get; set; }
     public required LocationDto DestinationLocation { get; set; }
